@@ -12,15 +12,20 @@ use DateTime;
 use App\Entity\NmdProduct;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use App\Form\NmdProductType;
-use App\Entity\User;
-use App\Entity\NmdCbl;
-use App\Entity\NmdPartner;
-use App\Entity\NmdTrack;
 
 
 class ProductController extends AbstractController
 {
-    
+    /**
+     * @Route("/product", name="product")
+     */
+    public function index(): Response
+    {
+        return $this->render('product/index.html.twig', [
+            'controller_name' => 'ProductController',
+        ]);
+    }
+
           /**
      * @Route("/nmdProduct", name="nmdProduct")
      */
@@ -141,9 +146,10 @@ class ProductController extends AbstractController
             $roleP='COMPANY';
                 $users=[];
 
-        $message = sprintf("Vos changement on était ajouté!");
-        $this->addFlash('notice', $message);
-
+        $this->addFlash(
+            'notice',
+            'Vos changement ont étaient enregistré!'
+        );
 
        return $this->redirectToRoute('nmdProduct');
         }
@@ -167,80 +173,17 @@ class ProductController extends AbstractController
      /**
      * @Route("/productDashboard", name="productDashboard")
      */
-    public function productDashboard(Request $request, UserInterface $userI): Response
+    public function productDashboard(Request $request): Response
     {
 
-              ini_set('memory_limit', '-1');
-        ini_set('max_execution_time', 600);
-        $userId = $request->get('userId');
-        if($userId!=null and $userId>0){
-            $user=$this->getDoctrine()->getRepository(User::class)->find($userId);
-        }else{$user=$userI;}
-        foreach ($user->getRoles() as $r) {
-            $role = $r;
-        }
-        $userCpv = $user->getCpvCourtierExploitant();
-
-        $repository=$this->getDoctrine()->getRepository(NmdProduct::class);
-        $repository_partenaire=$this->getDoctrine()->getRepository(NmdPartner::class);
-
-        $ventesStatusGlobalRacc=[];
-
-        $num_commande = "";
-        $sql_cluster = "";
-        $join_left="";
-        $monthSelected="";
-
-        $now=new \DateTime();
-        $month=$now->format('m');
-        $year=$now->format('Y');
-        $monthChoice=$request->get('monthChoise');
-        $yearChoice=$request->get('yearChoice');
-        $libelleQuery = $request->get('libelleQuery');
-        if($libelleQuery==null or $libelleQuery=='') {$libelleQuery="date_vente_valid_b";}
-        $sqlSeconde="";
-        if($monthChoice!=null and $monthChoice!=''){
-            $month=$monthChoice;
-        }
-        if($yearChoice!=null and $yearChoice!=''){
-            $year=$yearChoice;
-        }
-
-        $num_commande .= ' YEAR(F.`date_vente_valid_b`) = '.$year;
-
-
-
-            $cpv=$user->getCpvCourtierExploitant();
-            $parentId=$user->getParent();
-            $operatorId=$user->getOperatorId();
-
-            $_org_partner=$repository_partenaire->findOneBy(array('myaccountId'=>$user->getId()));
-            if($_org_partner) $partner=$_org_partner->getPartner();
-            else $partner=$user->getFirstname();
-            $sql_cluster = ' AND `lib_pdv` = "' . addslashes($partner) . '"';
-
-            $ventesStatusGlobalRacc = $repository->productByCategory();
-
-
         return $this->render('product/dashboard.html.twig', [
-
             'pageTitle' => 'Production',
-            'rootTemplate' => 'production',
-            'rootPage' => 'index',
+            'rootTemplate' => 'product',
+            'rootPage' => 'nmdProduct',
             'pageIcon' => 'build',
             'pageColor' => 'md-bg-grey-100',
 
-            'role'=>$role,
-            'm' => $month,
-            'yearChoice' => $year,
-            'userId' => $user->getId(),
-            'libelleQuery' => $libelleQuery,
-            'monthSelected' => $monthSelected,
-
-            'ventesStatusGlobalRacc'=>$ventesStatusGlobalRacc,
-
         ]);
-
     }
 
 }

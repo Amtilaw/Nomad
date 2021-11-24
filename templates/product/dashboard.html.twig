@@ -1,23 +1,30 @@
+{% set mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello HomeController!{% endblock %}
 
-  {% block baseStylesheets %}
+{% block baseStylesheets %}
     <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
     <link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
 
+    <!-- c3.js (charts) -->
+    <link rel="stylesheet" href="{{ asset('bower_components/c3js-chart/c3.min.css') }}">
+
 {% endblock %}
 
+
 {% block body %}
+
     <div id="page_content" class="height-700">
 
         <div id="page_content_inner" class="height-700">
 
             <div class="md-card height-700">
                 <div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
-                    
+
                     <div class="uk-width-large-1-6 uk-width-medium-1-3 js_collapsible_column height-700">
-                        
+
                         <div class="md-card-toolbar {{pageColor}}">
                             <div class="md-card-toolbar-actions uk-hidden-small">
                                 {# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
@@ -34,16 +41,18 @@
 
                         {# menu contextuel #}
                         {% include rootTemplate ~ '/component/contextual_menu.html.twig' %}
-                        
+
                     </div>
-                    
+
                     <div class="uk-flex-item-1">
-                        
+
                         {# nav bar contextuel #}
                         {% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
-                        
+
                         <div class="md-card-content mostly-customized-scrollbar mainScroll">
-                            Product
+
+
+                            <!-- Tabs content -->
                             <div
                                     class="tab-pane fade show active"
                                     id="ex1-tabs-1"
@@ -52,14 +61,14 @@
                             >
                                 <div class="pt-15 pb-15 borderBottom height50">
                                     <h3 class="m-0 fz18 grisFonce title2">
-                                      Liste des produits
-                                        <label style="float: right;margin-right: 20px">Produits</label>
+                                        Histogramme
+                                        <label style="float: right;margin-right: 20px">{{ mois[m - 1] }}</label>
                                     </h3>
                                 </div>
                                 <div class="pt-2 pb-2">
                                     <div class="pt-15 pb-15 borderBottom">
                                         <h5 class="m-0 fz18 textContent">Gestion et distribution des prises</h5>
-                                        <i> <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p></i>
+                                        <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p>
                                     </div>
 
                                     <div class="message">
@@ -68,14 +77,13 @@
                                         </div>
                                         <div class="message-content">
                                             <p>
-                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
-                                                Il est donc possible ue des notifications soient adressées aux comptes principaux disposant de certains rôles
+                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des noifications.
+                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
                                                 IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
                                                 de contacts que vous configurez ici.
                                             </p>
                                         </div>
                                     </div>
-
 
 
                                     <div class="blogFilter">
@@ -84,9 +92,8 @@
                                                     <i class="material-icons" style="margin-right: 5px">filter_list</i>
                                                     <span id="valueFilter">Filtre</span>
                                                 </span>
-                                                
                                         </div>
-                                        <div id="inputSearch" class="borderRight" >
+                                        <div id="inputSearch" class="borderRight">
                                             <select class="selectFilter" id="select_adv_1" name="select_adv_1" multiple>
                                                 <option value="2" selected>Venus</option>
                                                 <option value="3" selected>Earth</option>
@@ -95,15 +102,9 @@
                                         </div>
                                         <div class="floatLeftIcon">
                                             <div class="iconGoSearch">
-                                              <a>              <i class="material-icons">visibility_off</i>
-                                                    </a>
-
-                                                    <a href="{{ path('nmdProduct') }}">
-                                                        <i class="material-icons">account_circle</i>
-                                                    </a>
-
+                                                <i class="material-icons" id="iconGoSearch">help</i>
                                             </div>
-                                            <a class="iconHerarchy" href="{{ path('nmdProduct') }}">
+                                            <a class="iconHerarchy" href="">
                                                 <i class="material-icons">share</i>
                                             </a>
                                             <div class="iconExporter">
@@ -111,84 +112,71 @@
                                             </div>
                                         </div>
                                     </div>
-                                    <div class="table-responsive uk-overflow-containe">
-                                        <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_align">
-                                            <thead>
-                                            <tr>
-                                                <th scope="col" class="checkBoxNomad" data-name="Select" data-priority="5">
-                                                    <input type="checkbox"  class="ts_checkbox_all" id="check-all" />
-                                                </th>
-                                                <th scope="col" class="left-align">Type</th>
-                                                <th scope="col">ID</th>
-                                                <th scope="col">Product Name</th>
-                                                <th scope="col" >price</th>
-                                                <th scope="col" >organization naming</th>
-                                                <th scope="col" >remuneration product name</th>
-                                                <th scope="col" >/</th>
-                                            </tr>
-                                            </thead>
-                                            <tbody id="contentTable">
-                                                    {% for v in users %}
-                                                        <tr dataNom="{{v.lastname}}" dataPrenom="{{v.firstname}}"class="lineEffectif">
-                                                            <td class="checkBoxNomad">
-                                                                <input type="checkbox" class="ts_checkbox" data-md-icheck />
-                                                            </td>
-                                                            <td class="checkBoxNomad">
-                                                            </td>
-                                                            <td>{{v.id}}</td>
-                                                            <td>{{v.lastname}}</td>
-                                                            <td>{{v.firstname}}</td>
-                                                            <td>{{v.email}}</td>
-                                                            <td>{{v.phone}}</td>
-                                                            <td class="blackIcon">
-                                                                <span>
-                                                                                                                                         <a href="{{ path('edit',{productId: v.id}) }}">
-                                                                                                                                           <i class="material-icons" id="right_panel_edit_something_btn">edit</i></a>
-                                                                </span>
-                                                                <span >
-                                                                    <i class="material-icons">delete</i>
-                                                                </span>
-                                                            </td>
-                                                        </tr>
-                                                    {% endfor %}
-                                            </tbody>
-                                        </table>
+
+                                    <div class="uk-grid" style="display: inherit">
+                                        <div class="uk-width-large-1-5 uk-width-medium-1-5 uk-width-small-1-1">
+                                            <div class="md-card">
+                                                <div class="md-card-toolbar">
+                                                    <div class="md-card-toolbar-actions">
+                                                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                                                            <i class="md-icon material-icons">&#xE5D4;</i>
+                                                            <div class="uk-dropdown">
+                                                                <ul class="uk-nav">
+                                                                    <li><a href="#">Action 1</a></li>
+                                                                    <li><a href="#">Action 2</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="md-card-toolbar-heading-text cistomizedTitle">
+                                                        Répartition
+                                                    </h5>
+                                                </div>
+                                                <div class="md-card-content">
+                                                    <div id="pieChartTauxStatutGlobalRacc" class="c3chart"></div>
+                                                </div>
+                                            </div>
+                                        </div>
                                     </div>
 
                                 </div>
                             </div>
+                            <!-- Tabs content -->
+
                         </div>
 
                     </div>
-                    
+
                     <div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
-                        
+
                         <div class="md-card-toolbar md-bg-grey-100">
                             <div class="md-card-toolbar-actions uk-hidden-small">
                                 <a href="#" data-column-toggle>
                                     <i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
                                     <i class="md-icon material-icons" style="display: none"
-                                        title="Expand">format_indent_decrease</i>
+                                       title="Expand">format_indent_decrease</i>
                                 </a>
                             </div>
                             <h3 class="md-card-toolbar-heading-text js_hidden">
-                                Filtres EXEMPLE DEUX
+                                Filtres
                             </h3>
                         </div>
-                        
+
                         {# Filters #}
                         {% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
-                        
+
                     </div>
-                    
+
                 </div>
             </div>
 
         </div>
+        {{dump(ventesStatusGlobalRacc)}}
 
     </div>
 
 {% endblock %}
+
 {% block baseJavascripts %}
 
     <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
@@ -205,42 +193,38 @@
     <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
     <script src="{{ asset('assets/js/nomad/global.js') }}"></script>
 
-    <!-- Start Export xls -->
-    <script src="{{ asset('assets/js/exportXls/xlsx.full.min.js') }}"></script>
-    <script src="{{ asset('assets/js/exportXls/FileServer.min.js') }}"></script>
-          <script>
+    <script src="{{ asset('bower_components/d3/d3.min.js') }}"></script>
+    <script src="{{ asset('bower_components/c3js-chart/c3.min.js') }}"></script>
 
-        var wb = XLSX.utils.book_new();
-        wb.Props = {
-            Title: "SheetJS Tutorial",
-            Subject: "Test",
-            Author: "Red Stapler",
-            CreatedDate: new Date(2017,12,19)
-        };
-        wb.SheetNames.push("data");
+    <script>
 
-        var Results=[];
-        var item=['ID','NOM','Prénom','Email','Téléphone','Rôle'];
+        var dataStatutGlobalRacc=[];
+        var dataSignupTypeEcom=[];
+        var dataLblOffre=[];
+        var dataTypeKO=[];
+        {% for itemTaux in ventesStatusGlobalRacc %}
+        dataStatutGlobalRacc.push(['{{ itemTaux.name }}',{{ (itemTaux.total>0)?itemTaux.total:0 }}]);
+        {% endfor %}
+                //pie statut global racc
+        var ctxPSG = "#pieChartTauxStatutGlobalRacc";
+        c3.generate({
+            bindto: ctxPSG,
+            data: {
+                // iris data from R
+                columns: dataStatutGlobalRacc,
+                type : 'pie',
+                onclick: function (d, i) {  },
+                onmouseover: function (d, i) {  },
+                onmouseout: function (d, i) {  }
+            },
+            color: {
+                pattern: ["#0c486d", "#347fba", "#e53935", "#82cbdd", "#5b99ad", '#aaa58a', '#c46c35', '#d8a42d', '#b04765', '#876ba9','a78743']
+            }
+        });
 
-        Results.push(item);
-                {% for v in users %}
-                    var item=['{{ v.id }}' , '{{ v.lastname }}', '{{ v.firstname }}','{{ v.email }}'];
-                    Results.push(item);
-                {% endfor %}
-        var ws = XLSX.utils.aoa_to_sheet(Results);
-        wb.Sheets["data"] = ws;
-        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
 
-        exportToCsv = function() {
-            saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'Product.xlsx');
-        }
-
-        function s2ab(s) {
-            var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
-            var view = new Uint8Array(buf);  //create uint8array as viewer
-            for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
-            return buf;
-        }
     </script>
-    <!-- End Export xls -->
-  {% endblock %}
+
+
+{% endblock %}
+

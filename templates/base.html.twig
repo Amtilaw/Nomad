@@ -38,6 +38,8 @@
 
         <link rel="stylesheet" href="{{asset('assets/css/app/main_style.css')}}" media="all">
 
+        <link rel="stylesheet" href="{{asset('assets/css/noty.css')}}" media="all">
+
         {% block baseStylesheets %}{% endblock %}
     
     </head>
@@ -68,6 +70,27 @@
 
         <script src="//maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
 
+        <script src="{{asset('assets/js/noty.min.js')}}"> </script>
+
+        <script>
+{% for label, messages in app.flashes %}
+{% for message in messages %}
+{% set theme = label == 'notice' ? 'bg-success' : 'bg-danger' %}
+
+new Noty({
+theme: ' alert {{ theme }} text-white alert-styled-left p-2 notyInfos',
+text: "{{ message }}",
+type: 'info',
+progressBar: false,
+layout: 'topRight',
+timeout: 5000
+}).show();
+
+{{dump(message)}}
+
+{% endfor %}
+{% endfor %}
+        </script>
         <script>
             WebFontConfig = {
                 google: {

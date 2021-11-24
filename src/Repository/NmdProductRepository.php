@@ -48,6 +48,24 @@ class NmdProductRepository extends ServiceEntityRepository
 
   }
 
+      public function productByCategory(){
+
+      $conn = $this->getEntityManager()->getConnection();
+
+      $sql =
+
+        " SELECT COUNT(DISTINCT P.id) as total, C.name as name
+          FROM nmd_product P, nmd_categorie_product C
+          WHERE P.category_id = C.id
+          GROUP BY C.name    
+      ";
+
+      $stmt = $conn->prepare($sql);
+
+      // returns an array of arrays (i.e. a raw data set)
+      return $stmt->executeQuery()->fetchAllAssociative();
+
+  }
 
     // /**
     //  * @return NmdProduct[] Returns an array of NmdProduct objects
