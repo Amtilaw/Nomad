@@ -1,0 +1,793 @@
+{% set mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block baseStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+
+    <!-- c3.js (charts) -->
+    <link rel="stylesheet" href="{{ asset('bower_components/c3js-chart/c3.min.css') }}">
+{% endblock %}
+
+
+{% block body %}
+
+    <div id="page_content" class="height-700">
+
+        <div id="page_content_inner" class="height-700">
+
+            <div class="md-card height-700">
+                <div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
+
+                    <div class="uk-width-large-1-6 uk-width-medium-1-6 js_collapsible_column height-700">
+
+                        <div class="md-card-toolbar {{pageColor}}">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                {# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_decrease</i>
+                                    <i class="md-icon material-icons" style="display: none" title="Expand">format_indent_increase</i>
+                                </a>
+                            </div>
+                            <h1 class="md-card-toolbar-heading-text js_hidden uk-text-overflow pageTitle">
+                                <i class="material-icons">{{pageIcon}}</i></span>
+                                <span>{{pageTitle}}</span>
+                            </h1>
+                        </div>
+
+                        {# menu contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_menu.html.twig' %}
+
+                    </div>
+
+                    <div class="uk-width-large-4-6 uk-width-medium-4-6">
+
+                        {# nav bar contextuel #}
+                        {% include rootTemplate ~ '/component/partials/contextual_secondary_nav_'~ rootPage ~'.html.twig' %}
+
+                        <div class="md-card-content mostly-customized-scrollbar mainScroll">
+
+
+                            <!-- Tabs content -->
+                            <div
+                                    class="tab-pane fade show active"
+                                    id="ex1-tabs-1"
+                                    role="tabpanel"
+                                    aria-labelledby="ex1-tab-1"
+                            >
+                                <div class="pt-15 pb-15 borderBottom height50">
+                                    <h3 class="m-0 fz18 grisFonce title2">
+                                        Répartition des coûts
+                                    </h3>
+                                </div>
+                                <div class="pt-2 pb-2">
+                                    <div class="pt-15 pb-15 borderBottom">
+                                        <h5 class="m-0 fz18 textContent">Gestion et distribution des prises</h5>
+                                        <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p>
+                                    </div>
+
+                                    <div class="message">
+                                        <div class="message-icon">
+                                            <i class="material-icons">info</i>
+                                        </div>
+                                        <div class="message-content">
+                                            <p>
+                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+                                                de contacts que vous configurez ici.
+                                            </p>
+                                        </div>
+                                    </div>
+
+                                    {% set totalV=0 %}
+                                    {% for item in ventes %}
+                                        {% set totalV=totalV+item.total %}
+                                    {% endfor %}
+
+                                    {% set points=0 %}
+                                    {% set pointspallier=0 %}
+                                    {% set totalPointsRetenus=0 %}
+                                    {% set totalProductPoints=0 %}
+                                    {% for item in ventes %}
+
+                                        {% set points=points + (item.total * ((item.points>0)?(item.points):0)) %}
+                                        {% set pointRetenu=(item.total * ((item.points>0)?(item.points):0)) * (item.rem_percent / 100) %}
+                                        {% set pointspallier=pointspallier + ((item.total) * ((item.coefficient>0)?(item.coefficient):0)) %}
+                                        {% set totalPointsRetenus=totalPointsRetenus + (pointRetenu) %}
+                                        {% set totalProductPoints=totalProductPoints + (pointRetenu * pallier.coefficient) %}
+
+                                    {% endfor %}
+                                    <div class="uk-grid" style="display: inherit">
+
+                                        <div class="uk-width-large-1-4 uk-width-medium-1-4 uk-width-small-1-1">
+                                            <div class="md-card minHeight178">
+                                                <div class="md-card-content">
+                                                   <h4>
+                                                       <a href="">
+                                                           {{ user.lastname }} {{ user.firstname }}
+                                                       </a>
+                                                   </h4>
+                                                    <h3 class="text-center">
+                                                        {{ mois[m - 1] }} {{ yearChoise }}
+                                                    </h3>
+                                                    <div class=" pl-3">
+                                                        <p class="mb-0"><i>Jours travaillés : 14</i></p>
+                                                        <p class="mb-0 mt-0"><i>Jours fériés : 14</i></p>
+                                                        <p class="mb-0 mt-0"><i>Jours off : 14</i></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="uk-width-large-1-4 uk-width-medium-1-4 uk-width-small-1-1">
+
+                                            <div class="md-card minHeight178">
+                                                <div class="md-card-content">
+                                                    <h4>
+                                                        TOTAL VENTE GLOBAL
+                                                    </h4>
+                                                    <h2 class="text-center">
+                                                        {{ totalV }}
+                                                    </h2>
+                                                    <div class="pl-3">
+                                                        <p class="mb-0 "><i>Total m-1 : {{ totalVente_1 }}</i></p>
+                                                        <p class="mb-0 mt-0"><i>Variation : {{ (totalVente_1>0)?(((totalV-totalVente_1)/totalVente_1)*100)|round:(totalV*100) }} %</i></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="uk-width-large-1-4 uk-width-medium-1-4 uk-width-small-1-1">
+
+                                            <div class="md-card minHeight178">
+                                                <div class="md-card-content">
+                                                    <h4>
+                                                        COEFFICIENT PALLIER
+                                                    </h4>
+                                                    <h2 class="text-center">
+                                                        {{ pointspallier }}
+                                                    </h2>
+                                                    <div class="pl-3">
+                                                        <p class="mb-0"><i>Points pallier : {{ totalVente_1 }}</i></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="uk-width-large-1-4 uk-width-medium-1-4 uk-width-small-1-1">
+
+                                            <div class="md-card minHeight178">
+                                                <div class="md-card-content">
+                                                    <h4>
+                                                        TOTAL PRODUCT POINTS
+                                                    </h4>
+                                                    <h2 class="text-center">
+                                                        {{ totalProductPoints }}
+                                                    </h2>
+                                                    <div class="pl-3">
+                                                        <p class="mb-0"><i>Points retenus : {{ totalPointsRetenus }}</i></p>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+
+                                    </div>
+                                    <div class="uk-grid" style="display: inherit">
+                                        <div class="uk-width-xLarge-2-5 uk-width-medium-2-5 uk-width-small-1-1">
+                                            <div class="md-card">
+                                                <div class="md-card-toolbar">
+                                                    <div class="md-card-toolbar-actions">
+                                                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                                                            <i class="md-icon material-icons">&#xE5D4;</i>
+                                                            <div class="uk-dropdown">
+                                                                <ul class="uk-nav">
+                                                                    <li><a href="#">Action 1</a></li>
+                                                                    <li><a href="#">Action 2</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="md-card-toolbar-heading-text cistomizedTitle">
+                                                        Répartition
+                                                    </h5>
+                                                </div>
+                                                <div class="md-card-content">
+                                                    <div id="c3_chart_bar_stacked" class="c3chart"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+                                        <div class="uk-width-large-1-5 uk-width-medium-1-5 uk-width-small-1-1">
+                                            <div class="md-card">
+                                                <div class="md-card-toolbar">
+                                                    <div class="md-card-toolbar-actions">
+                                                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                                                            <i class="md-icon material-icons">&#xE5D4;</i>
+                                                            <div class="uk-dropdown">
+                                                                <ul class="uk-nav">
+                                                                    <li><a href="#">Action 1</a></li>
+                                                                    <li><a href="#">Action 2</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="md-card-toolbar-heading-text cistomizedTitle">
+                                                        Répartition
+                                                    </h5>
+                                                </div>
+                                                <div class="md-card-content">
+                                                    <div id="pieChartTauxStatutGlobalRacc" class="c3chart"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="uk-width-large-1-5 uk-width-medium-1-5 uk-width-small-1-1">
+                                            <div class="md-card">
+                                                <div class="md-card-toolbar">
+                                                    <div class="md-card-toolbar-actions">
+                                                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                                                            <i class="md-icon material-icons">&#xE5D4;</i>
+                                                            <div class="uk-dropdown">
+                                                                <ul class="uk-nav">
+                                                                    <li><a href="#">Action 1</a></li>
+                                                                    <li><a href="#">Action 2</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="md-card-toolbar-heading-text cistomizedTitle">
+                                                        Répartition
+                                                    </h5>
+                                                </div>
+                                                <div class="md-card-content">
+                                                    <div id="pieChartTauxSignupTypeEcom" class="c3chart"></div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                        <div class="uk-width-large-1-5 uk-width-medium-1-5 uk-width-small-1-1">
+                                            <div class="md-card">
+                                                <div class="md-card-toolbar">
+                                                    <div class="md-card-toolbar-actions">
+                                                        <div class="md-card-dropdown" data-uk-dropdown="{pos:'bottom-right'}">
+                                                            <i class="md-icon material-icons">&#xE5D4;</i>
+                                                            <div class="uk-dropdown">
+                                                                <ul class="uk-nav">
+                                                                    <li><a href="#">Action 1</a></li>
+                                                                    <li><a href="#">Action 2</a></li>
+                                                                </ul>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <h5 class="md-card-toolbar-heading-text cistomizedTitle">
+                                                        Répartition
+                                                    </h5>
+                                                </div>
+                                                <div class="md-card-content">
+                                                    <div id="pieChartTauxLblOffre" class="c3chart"></div>
+                                                </div>
+                                            </div>
+
+                                        </div>
+
+                                        <div class="uk-width-1-1 mt-3">
+                                            <div class="blogFilter">
+                                                <div class="filterTitle">
+                                                <span class="text_dark">
+                                                    <i class="material-icons" style="margin-right: 5px">filter_list</i>
+                                                    <span id="valueFilter">Filtre</span>
+                                                </span>
+                                                </div>
+                                                <div id="inputSearch" class="borderRight">
+                                                    <select class="selectFilter" id="select_adv_1" name="select_adv_1" multiple>
+                                                        <option value="2" selected>Venus</option>
+                                                        <option value="3" selected>Earth</option>
+                                                    </select>
+
+                                                </div>
+                                                <div class="floatLeftIcon">
+                                                    <div class="iconGoSearch">
+                                                        <i class="material-icons" id="iconGoSearch">help</i>
+                                                    </div>
+                                                    <a class="iconHerarchy" href="">
+                                                        <i class="material-icons">share</i>
+                                                    </a>
+                                                    <div class="iconExporter">
+                                                        <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="table-responsive uk-overflow-containe">
+                                                <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair ts_align" >
+                                                    <thead>
+                                                    <tr>
+                                                        <th scope="col">Total</th>
+                                                        <th scope="col">SignupType Ecom</th>
+                                                        <th scope="col">Lbl Offre</th>
+                                                        <th scope="col">Statut Glob Racc</th>
+                                                        <th scope="col">TAUX</th>
+                                                        <th scope="col">Valeur point</th>
+                                                        <th scope="col">POINTS</th>
+                                                        <th scope="col">POINTS PALLIER</th>
+                                                        <th scope="col">POINTS RETENUS</th>
+                                                        <th scope="col">Total Product Points</th>
+                                                    </tr>
+                                                    </thead>
+                                                    <tbody id="contentTable">
+
+                                                    {% for item in ventes %}
+
+                                                        {% set pointRetenu=(item.total * ((item.points>0)?(item.points):0)) * (item.rem_percent / 100) %}
+
+                                                        <tr>
+                                                            <td>
+                                                                <a href="{{ path('remuneration_detailremunerationBruillon',{userId: userId, monthChoise: m, yearChoice: yearChoise, libelleQuery:libelleQuery, signup_type_ecom: item.signup_type_ecom, lbl_offre:item.lbl_offre, statut_global_racc:item.statut_global_racc}) }}">
+                                                                    {{ item.total }}
+                                                                </a>
+                                                            </td>
+
+                                                            <td>{{ item.signup_type_ecom }}</td>
+                                                            <td>{{ item.lbl_offre }}</td>
+                                                            <td>{{ item.statut_global_racc }}</td>
+                                                            <td>{{ item.rem_percent }} %</td>
+                                                            <td>{{ ((item.points>0)?(item.points):0) }}</td>
+                                                            <td style="text-align: right;">{{ (item.total * ((item.points>0)?(item.points):0)) }}</td>
+                                                            <td style="text-align: right;">{{ ((item.total) * ((item.coefficient>0)?(item.coefficient):0)) }}</td>
+                                                            <td style="text-align: right;">{{ pointRetenu }}</td>
+                                                            <td style="text-align: right;">{{ (pointRetenu * pallier.coefficient) }}</td>
+                                                        </tr>
+                                                    {% endfor %}
+                                                    </tbody>
+                                                </table>
+                                            </div>
+                                        </div>
+
+                                    </div>
+
+                                    <div class="table-responsive uk-overflow-containe" style="display: none">
+                                        <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair ts_align" >
+                                            <tbody id="contentTable">
+                                                {% for itemQ in banusMalusTotal.qualitees %}
+                                                    <tr>
+                                                        <td>{{ itemQ.total }}</td>
+                                                        <td style="width: 71%">Bonus Malus <b>{{ itemQ.status }}</b></td>
+                                                        <td style="text-align: right;"><b>{{ itemQ.coefficient }}</b></td>
+                                                        <td style="text-align: right;"><b>{{ itemQ.total_bonus_malus_quality }}</b></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                    <div class="table-responsive uk-overflow-containe" style="display: none">
+                                        <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair ts_align" >
+                                            <thead>
+                                                <tr>
+                                                    <th scope="col">Total</th>
+                                                    <th scope="col" style="width: 80%">Statut</th>
+                                                    <th scope="col">%</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody id="contentTable">
+
+                                                {% for itemTaux in taux %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{ path('remuneration_detailremunerationBruillon',{userId: userId, monthChoise: m, yearChoice: yearChoise, libelleQuery:libelleQuery, statut_global_racc:itemTaux.status}) }}">
+                                                                {{ itemTaux.total }}
+                                                            </a>
+                                                        </td>
+                                                        <td style="width: 80%">Taux de {{ itemTaux.status }}</td>
+                                                        <td style="text-align: right;"><b>{{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }} %</b></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="table-responsive uk-overflow-containe" style="display: none">
+                                        <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair ts_align" >
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Total</th>
+                                                <th scope="col" style="width: 80%">Statut</th>
+                                                <th scope="col">%</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="contentTable">
+
+                                                {% for itemTaux in tauxSignupTypeEcom %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{ path('remuneration_detailremunerationBruillon',{userId: userId, monthChoise: m, yearChoice: yearChoise, libelleQuery:libelleQuery, signup_type_ecom: itemTaux.status}) }}">
+                                                                {{ itemTaux.total }}
+                                                            </a>
+                                                        </td>
+                                                        <td style="width: 80%">Taux de {{ itemTaux.status }}</td>
+                                                        <td style="text-align: right;"><b>{{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }} %</b></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="table-responsive uk-overflow-containe" style="display: none">
+                                        <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair ts_align" >
+                                            <thead>
+                                            <tr>
+                                                <th scope="col">Total</th>
+                                                <th scope="col" style="width: 80%">Statut</th>
+                                                <th scope="col">%</th>
+                                            </tr>
+                                            </thead>
+                                            <tbody id="contentTable">
+
+                                                {% for itemTaux in tauxLblOffre %}
+                                                    <tr>
+                                                        <td>
+                                                            <a href="{{ path('remuneration_detailremunerationBruillon',{userId: userId, monthChoise: m, yearChoice: yearChoise, libelleQuery:libelleQuery, lbl_offre:itemTaux.status}) }}">
+                                                                {{ itemTaux.total }}
+                                                            </a>
+                                                        </td>
+                                                        <td style="width: 80%">Taux de {{ itemTaux.status }}</td>
+                                                        <td style="text-align: right;"><b>{{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }} %</b></td>
+                                                    </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Tabs content -->
+
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-large-1-6 uk-width-medium-1-6 js_collapsible_column ">
+
+                        <div class="md-card-toolbar md-bg-grey-100">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+                                    <i class="md-icon material-icons" style="display: none"
+                                       title="Expand">format_indent_decrease</i>
+                                </a>
+                            </div>
+                            <h3 class="md-card-toolbar-heading-text js_hidden">
+                                Filtres
+                            </h3>
+                        </div>
+
+                        {# Filters #}
+                        {% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block baseJavascripts %}
+
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- tablesorter -->
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-columnSelector.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-print.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js')}}"></script>
+    <!-- ionrangeslider -->
+    <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{ asset('assets/js/nomad/global.js') }}"></script>
+
+    <script src="{{ asset('bower_components/d3/d3.min.js') }}"></script>
+    <script src="{{ asset('bower_components/c3js-chart/c3.min.js') }}"></script>
+
+    <script type="text/javascript">
+        google.charts.load("current", {packages:["corechart"]});
+        google.charts.setOnLoadCallback(drawChart);
+        function drawChart() {
+            var data = google.visualization.arrayToDataTable([
+                ['Jour', 'Vente(s)'],
+                ['Lundi', {{ regroupementDayVentes[0] }}],
+                ['Mardi', {{ regroupementDayVentes[1] }}],
+                ['Mercredi', {{ regroupementDayVentes[2] }}],
+                ['Jeudi', {{ regroupementDayVentes[3] }}],
+                ['Vendredi', {{ regroupementDayVentes[4] }}],
+                ['Samedi', {{ regroupementDayVentes[5] }}],
+                ['Dimanche', {{ regroupementDayVentes[6] }}]]);
+
+            var options = {
+                title: 'Ventes par jour',
+                legend: { position: 'none' },
+                colors: ['#1A73E8'],
+                histogram: { bucketSize: 5 }
+            };
+
+
+
+            var chart = new google.visualization.Histogram(document.getElementById('chart_div'));
+            chart.draw(data, options);
+        }
+    </script>
+    <script>
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: ["Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"],
+                datasets: [{
+                    label: 'Nombre des ventes',
+                    data: [{{ regroupementDayVentes[0] }}, {{ regroupementDayVentes[1] }}, {{ regroupementDayVentes[2] }}, {{ regroupementDayVentes[3] }}, {{ regroupementDayVentes[4] }}, {{ regroupementDayVentes[5] }}, {{ regroupementDayVentes[6] }}],
+                    backgroundColor: [
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+    {#Pie Chart#}
+    <script>
+        var labelsStatutGlobalRacc=[];
+        var dataStatutGlobalRacc=[];
+        var labelsSignupTypeEcom=[];
+        var dataSignupTypeEcom=[];
+        var labelsLblOffre=[];
+        var dataLblOffre=[];
+        {% for itemTaux in taux %}
+        labelsStatutGlobalRacc.push('{{ itemTaux.status }}');
+        dataStatutGlobalRacc.push({{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }});
+        {% endfor %}
+        {% for itemTaux in tauxSignupTypeEcom %}
+        labelsSignupTypeEcom.push('{{ itemTaux.status }}');
+        dataSignupTypeEcom.push({{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }});
+        {% endfor %}
+        {% for itemTaux in tauxLblOffre %}
+        labelsLblOffre.push('{{ itemTaux.status }}');
+        dataLblOffre.push({{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }});
+        {% endfor %}
+        //pie statut global racc
+        var ctxPSG = document.getElementById("pieChartTauxStatutGlobalRacc").getContext('2d');
+        var myPieChartSG = new Chart(ctxPSG, {
+            type: 'pie',
+            data: {
+                labels: labelsStatutGlobalRacc,
+                datasets: [{
+                    data: dataStatutGlobalRacc,
+                    backgroundColor: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#616161", "#5AD3D1", "#1A73E8", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        //pie signup type ecom
+        var ctxPST = document.getElementById("pieChartTauxSignupTypeEcom").getContext('2d');
+        var myPieChartST = new Chart(ctxPST, {
+            type: 'pie',
+            data: {
+                labels: labelsSignupTypeEcom,
+                datasets: [{
+                    data: dataSignupTypeEcom,
+                    backgroundColor: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#616161", "#5AD3D1", "#1A73E8", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        //pie lbl offre
+        var ctxPL = document.getElementById("pieChartTauxLblOffre").getContext('2d');
+        var myPieChartL = new Chart(ctxPL, {
+            type: 'pie',
+            data: {
+                labels: labelsLblOffre,
+                datasets: [{
+                    data: dataLblOffre,
+                    backgroundColor: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#616161", "#5AD3D1", "#1A73E8", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        //line
+        var labelsRegroupementperdays=[];
+        var dataRegroupementperdays=[];
+        {% for item in regroupementDateVentes %}
+
+        labelsRegroupementperdays.push('{{ item.date_cbl|date('d/m/Y') }}');
+        dataRegroupementperdays.push({{ (item.total>0)?(item.total):0 }});
+
+        {% endfor %}
+        var ctxL = document.getElementById("lineChart").getContext('2d');
+        var myLineChart = new Chart(ctxL, {
+            type: 'line',
+            data: {
+                labels: labelsRegroupementperdays,
+                datasets: [{
+                    label: "Répartition par Jours",
+                    data: dataRegroupementperdays,
+                    backgroundColor: [
+                        '#616161',
+                    ],
+                    borderColor: [
+                        'rgba(97, 97, 97, 0.76)',
+                    ],
+                    borderWidth: 2
+                }
+                ]
+            },
+            options: {
+                responsive: true
+            }
+        });
+    </script>
+
+
+
+    <script>
+        var c3chart_bar_stacked_id = '#c3_chart_bar_stacked';
+
+        if ( $(c3chart_bar_stacked_id).length ) {
+
+            var c3chart_bar_stacked = c3.generate({
+                bindto: c3chart_bar_stacked_id,
+                data: {
+
+                    columns: [
+                        ['Ventes par jour', {{ regroupementDayVentes[0] }}, {{ regroupementDayVentes[1] }}, {{ regroupementDayVentes[2] }}, {{ regroupementDayVentes[3] }}, {{ regroupementDayVentes[4] }}, {{ regroupementDayVentes[5] }}, {{ regroupementDayVentes[6] }}]
+                    ],
+                    type: 'bar',
+                    groups: [
+                        ['Ventes par jour']
+                    ]
+                },
+                grid: {
+                    y: {
+                        lines: [
+                            {
+                                value: 0
+                            }
+                        ]
+                    }
+                },
+
+                color: {
+                    pattern: ['#1A73E8', '#ff7f0e', '#2ca02c', '#d62728', '#9467bd', '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+                }
+            });
+
+            $window.on('debouncedresize', function () {
+                c3chart_bar_stacked.resize();
+            })
+
+        }
+    </script>
+    <script>
+        var labelsStatutGlobalRacc=[];
+        var dataStatutGlobalRacc=[];
+        var labelsSignupTypeEcom=[];
+        var dataSignupTypeEcom=[];
+        var labelsLblOffre=[];
+        var dataLblOffre=[];
+        {% for itemTaux in taux %}
+        dataStatutGlobalRacc.push(['{{ itemTaux.status }}', {{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }}]);
+        {% endfor %}
+        {% for itemTaux in tauxSignupTypeEcom %}
+
+        dataSignupTypeEcom.push(['{{ itemTaux.status }}',{{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }}]);
+        {% endfor %}
+        {% for itemTaux in tauxLblOffre %}
+
+        dataLblOffre.push(['{{ itemTaux.status }}',{{ ((totalV>0)?((itemTaux.total*100)/totalV):((itemTaux.total*100)))|round(1, 'floor') }}]);
+        {% endfor %}
+        //pie statut global racc
+        var ctxPSG = "#pieChartTauxStatutGlobalRacc";
+        c3.generate({
+            bindto: ctxPSG,
+            data: {
+                // iris data from R
+                columns: dataStatutGlobalRacc,
+                type : 'pie',
+                onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            },
+            color: {
+                pattern: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360", '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+            }
+        });
+
+        //pie signup type ecom
+        var ctxPST = "#pieChartTauxSignupTypeEcom";
+        c3.generate({
+            bindto: ctxPST,
+            data: {
+                // iris data from R
+                columns: dataSignupTypeEcom,
+                type : 'pie',
+                onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            },
+            color: {
+                pattern: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360", '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+            }
+        });
+
+        //pie lbl offre
+        var ctxPL = "#pieChartTauxLblOffre";
+        c3.generate({
+            bindto: ctxPL,
+            data: {
+                // iris data from R
+                columns: dataLblOffre,
+                type : 'pie',
+                onclick: function (d, i) { console.log("onclick", d, i); },
+                onmouseover: function (d, i) { console.log("onmouseover", d, i); },
+                onmouseout: function (d, i) { console.log("onmouseout", d, i); }
+            },
+            color: {
+                pattern: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360", '#8c564b', '#e377c2', '#7f7f7f', '#bcbd22', '#17becf']
+            }
+        });
+
+        //line
+        var labelsRegroupementperdays=[];
+        var dataRegroupementperdays=[];
+        {% for item in regroupementDateVentes %}
+
+        dataRegroupementperdays.push(['{{ item.date_cbl|date('d/m/Y') }}',{{ (item.total>0)?(item.total):0 }}]);
+
+        {% endfor %}
+        var ctxL = "#lineChart";
+        c3.generate({
+            bindto: ctxL,
+            data: {
+                columns: dataRegroupementperdays
+            }
+        });
+    </script>
+
+
+{% endblock %}

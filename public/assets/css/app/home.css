@@ -1,0 +1,40 @@
+/* Devices examples */
+
+.product-device {
+    position: absolute;
+    right: 10%;
+    bottom: 7%;
+    width: 195px;
+    height: 310px;
+    background-color: #333;
+    border-radius: 21px;
+    transform: rotate(30deg);
+}
+
+.product-device::before {
+    position: absolute;
+    top: 10%;
+    right: 10px;
+    bottom: 10%;
+    left: 10px;
+    content: "";
+    background-color: rgba(255, 255, 255, .1);
+    border-radius: 5px;
+}
+
+.product-device-2 {
+    top: 7%;
+    right: auto;
+    bottom: 0;
+    left: 12%;
+    background-color: #e5e5e5;
+}
+
+
+.md-card-content {
+    padding-bottom: 0 !important;
+}
+
+.tab_menu{
+    box-shadow: none;
+}

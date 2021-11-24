@@ -1,0 +1,345 @@
+{% set mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block baseStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+
+{% endblock %}
+
+
+{% block body %}
+
+    <div id="page_content" class="height-700">
+
+        <div id="page_content_inner" class="height-700">
+
+            <div class="md-card height-700">
+                <div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
+
+                    <div class="uk-width-large-1-6 uk-width-medium-1-3 js_collapsible_column height-700">
+
+                        <div class="md-card-toolbar {{pageColor}}">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                {# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_decrease</i>
+                                    <i class="md-icon material-icons" style="display: none" title="Expand">format_indent_increase</i>
+                                </a>
+                            </div>
+                            <h1 class="md-card-toolbar-heading-text js_hidden uk-text-overflow pageTitle">
+                                <i class="material-icons">{{pageIcon}}</i></span>
+                                <span>{{pageTitle}}</span>
+                            </h1>
+                        </div>
+
+                        {# menu contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_menu.html.twig' %}
+
+                    </div>
+
+                    <div class="uk-flex-item-1">
+
+                        {# nav bar contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
+
+                        <div class="md-card-content mostly-customized-scrollbar mainScroll">
+
+
+                            <!-- Tabs content -->
+                            <div
+                                    class="tab-pane fade show active"
+                                    id="ex1-tabs-1"
+                                    role="tabpanel"
+                                    aria-labelledby="ex1-tab-1"
+                            >
+                                <div class="pt-15 pb-15 borderBottom height50">
+                                    <h3 class="m-0 fz18 grisFonce title2">
+                                        Histogramme
+                                        <label style="float: right;margin-right: 20px">{{ mois[m - 1] }}</label>
+                                    </h3>
+                                </div>
+                                <div class="pt-2 pb-2">
+                                    <div class="pt-15 pb-15 borderBottom">
+                                        <h5 class="m-0 fz18 textContent">Gestion et distribution des prises</h5>
+                                        <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p>
+                                    </div>
+
+                                    <div class="message">
+                                        <div class="message-icon">
+                                            <i class="material-icons">info</i>
+                                        </div>
+                                        <div class="message-content">
+                                            <p>
+                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+                                                de contacts que vous configurez ici.
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="blogFilter">
+                                        <div class="filterTitle">
+                                                <span class="text_dark">
+                                                    <i class="material-icons" style="margin-right: 5px">filter_list</i>
+                                                    <span id="valueFilter">Filtre</span>
+                                                </span>
+                                        </div>
+                                        <div id="inputSearch" class="borderRight">
+                                            <select class="selectFilter" id="select_adv_1" name="select_adv_1" multiple>
+                                                <option value="2" selected>Venus</option>
+                                                <option value="3" selected>Earth</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="floatLeftIcon">
+                                            <div class="iconGoSearch">
+                                                <i class="material-icons" id="iconGoSearch">help</i>
+                                            </div>
+                                            <a class="iconHerarchy" href="">
+                                                <i class="material-icons">share</i>
+                                            </a>
+                                            <div class="iconExporter">
+                                                <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="">
+                                        <div class="">
+                                            <canvas id="myChart" class="mt-2" style="max-width: 100%;height: 500px;margin-bottom: 20px"></canvas>
+                                        </div>
+
+                                    </div>
+                                    <div class="uk-grid">
+                                        <div class="uk-width-large-1 uk-width-medium-1-3">
+                                            <canvas id="pieChartTauxStatutGlobalRacc" style="max-width: 100%;height: 300px;margin-bottom: 20px"></canvas>
+                                        </div>
+                                        <div class="uk-width-large-1 uk-width-medium-1-3">
+                                            <canvas id="pieChartTauxSignupTypeEcom" style="max-width: 100%;height: 300px;margin-bottom: 20px"></canvas>
+                                        </div>
+                                        <div class="uk-width-large-1 uk-width-medium-1-3">
+                                            <canvas id="pieChartTauxLblOffre" style="max-width: 100%;height: 300px;margin-bottom: 20px"></canvas>
+                                        </div>
+                                        <div class="uk-width-large-1 uk-width-medium-1-3">
+                                            <canvas id="pieChartTauxTypeKO" style="max-width: 100%;height: 400px;margin-bottom: 20px"></canvas>
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Tabs content -->
+
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
+
+                        <div class="md-card-toolbar md-bg-grey-100">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+                                    <i class="md-icon material-icons" style="display: none"
+                                       title="Expand">format_indent_decrease</i>
+                                </a>
+                            </div>
+                            <h3 class="md-card-toolbar-heading-text js_hidden">
+                                Filtres
+                            </h3>
+                        </div>
+
+                        {# Filters #}
+                        {% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block baseJavascripts %}
+
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- tablesorter -->
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-columnSelector.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-print.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js')}}"></script>
+    <!-- ionrangeslider -->
+    <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{ asset('assets/js/nomad/global.js') }}"></script>
+
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    <script type="text/javascript" src="{{ asset('assets/mdb/mdb4/js') }}/mdb.min.js"></script>
+
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" ></script>
+    <script>
+        var labels=[];
+        var data=[];
+        {% for item in ventes %}
+        labels.push('{{ mois[(item.month_date_vente_valid_b) - 1] }}');
+        data.push({{ item.total }});
+        {% endfor %}
+        var ctx = document.getElementById("myChart").getContext('2d');
+        var myChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Nombre des ventes - Production',
+                    data: data,
+                    backgroundColor: [
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                        '#1A73E8',
+                    ],
+                    borderColor: [
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                        'rgba(54, 162, 235, 1)',
+                    ],
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    yAxes: [{
+                        ticks: {
+                            beginAtZero: true
+                        }
+                    }]
+                }
+            }
+        });
+    </script>
+
+    {#Pie Chart#}
+    <script>
+        var labelsStatutGlobalRacc=[];
+        var dataStatutGlobalRacc=[];
+        var labelsSignupTypeEcom=[];
+        var dataSignupTypeEcom=[];
+        var labelsLblOffre=[];
+        var dataLblOffre=[];
+        var labelsTypeKO=[];
+        var dataTypeKO=[];
+        {% for itemTaux in ventesStatusGlobalRacc %}
+        labelsStatutGlobalRacc.push('{{ itemTaux.statut_global_racc }}');
+        dataStatutGlobalRacc.push({{ (itemTaux.total>0)?itemTaux.total:0 }});
+        {% endfor %}
+        {% for itemTaux in ventesSignupTypeEcom %}
+        labelsSignupTypeEcom.push('{{ itemTaux.signup_type_ecom }}');
+        dataSignupTypeEcom.push({{ (itemTaux.total>0)?itemTaux.total:0 }});
+        {% endfor %}
+        {% for itemTaux in ventesLblOffre %}
+        labelsLblOffre.push('{{ itemTaux.lbl_offre }}');
+        dataLblOffre.push({{ (itemTaux.total>0)?itemTaux.total:0 }});
+        {% endfor %}
+        {% for itemTaux in ventesTypesKO %}
+        labelsTypeKO.push('{{ itemTaux.etat_de_la_vente }}');
+        dataTypeKO.push({{ (itemTaux.total>0)?itemTaux.total:0 }});
+        {% endfor %}
+        //pie statut global racc
+        var ctxPSG = document.getElementById("pieChartTauxStatutGlobalRacc").getContext('2d');
+        var myPieChartSG = new Chart(ctxPSG, {
+            type: 'pie',
+            data: {
+                labels: labelsStatutGlobalRacc,
+                datasets: [{
+                    data: dataStatutGlobalRacc,
+                    backgroundColor: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#616161", "#5AD3D1", "#1A73E8", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        //pie signup type ecom
+        var ctxPST = document.getElementById("pieChartTauxSignupTypeEcom").getContext('2d');
+        var myPieChartST = new Chart(ctxPST, {
+            type: 'pie',
+            data: {
+                labels: labelsSignupTypeEcom,
+                datasets: [{
+                    data: dataSignupTypeEcom,
+                    backgroundColor: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#616161", "#5AD3D1", "#1A73E8", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        //pie lbl offre
+        var ctxPL = document.getElementById("pieChartTauxLblOffre").getContext('2d');
+        var myPieChartL = new Chart(ctxPL, {
+            type: 'pie',
+            data: {
+                labels: labelsLblOffre,
+                datasets: [{
+                    data: dataLblOffre,
+                    backgroundColor: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360"],
+                    hoverBackgroundColor: ["#616161", "#5AD3D1", "#1A73E8", "#A8B3C5", "#616774"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+        //pie par type de KO
+        var ctxPTKO = document.getElementById("pieChartTauxTypeKO").getContext('2d');
+        var myPieChartTKO = new Chart(ctxPTKO, {
+            type: 'pie',
+            data: {
+                labels: labelsTypeKO,
+                datasets: [{
+                    data: dataTypeKO,
+                    backgroundColor: ["#616161", "#46BFBD", "#1A73E8", "#949FB1", "#4D5360", "#18B3C5", "#516774"],
+                    hoverBackgroundColor: ["#616161", "#5AD3D1", "#1A73E8", "#A8B3C5", "#616774", "#18B3C5", "#516774"]
+                }]
+            },
+            options: {
+                responsive: true
+            }
+        });
+
+    </script>
+
+
+{% endblock %}

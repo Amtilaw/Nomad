@@ -1,0 +1,83 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block baseStylesheets %}
+    <link rel="stylesheet" href="{{asset('assets/css/app/home.css')}}" media="all">
+{% endblock %}
+
+{% block body %}
+
+    <div id="page_content">
+
+        <div id="page_content_inner">
+
+            <div class="app_container_small">
+
+                {% include 'home/component/tab_menu.html.twig' %}
+                
+                <div style="height:360px;" class="position-relative overflow-hidden p-3 p-md-5 text-center bg-light">
+                    <div class="col-md-5 p-lg-5 mx-auto my-5">
+                        <h1 class="display-4 fw-normal">Provad</h1>
+                        <p class="lead fw-normal">And an even wittier subheading to boot. Jumpstart your marketing
+                            efforts
+                            with this example based on Apple’s marketing pages.</p>
+                    </div>
+                    <div class="product-device shadow-sm d-none d-md-block"></div>
+                    <div class="product-device product-device-2 shadow-sm d-none d-md-block"></div>
+                </div>
+
+                <div class="d-flex justify-content-center align-items-center pricing_table pricing_table_a uk-grid uk-grid-small uk-grid-width-medium-1-2 uk-grid-width-large-1-4 uk-margin-large-bottom"
+                    data-uk-grid-margin data-uk-grid-match="{target:'.md-card-content'}">
+
+                    <a href="{{ path('production_index') }}">
+                    <div>
+                        <div class="md-card">
+                            <div class="md-card-content padding-reset">
+                                <div class="pricing_table_plan md-bg-pink-200 md-color-white">Production</div>
+                                <div class="pricing_table_price">
+                                    <span class="menu_icon"><i class="material-icons md-48"
+                                            style="margin-bottom:4rem;">build</i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+
+                    <a href="{{ path('sectors_index') }}">
+                    <div>
+                        <div class="md-card">
+                            <div class="md-card-content padding-reset">
+                                <div class="pricing_table_plan md-bg-blue-200 md-color-white">Secteurs</div>
+                                <div class="pricing_table_price">
+                                    <span class="menu_icon"><i class="material-icons md-48" style="margin-bottom:4rem;">tab_unselected</i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+
+                    <a href="{{ path('effectif_index') }}">
+                    <div>
+                        <div class="md-card">
+                            <div class="md-card-content padding-reset">
+                                <div class="pricing_table_plan md-bg-green-200 md-color-white">Effectifs</div>
+                                <div class="pricing_table_price">
+                                     <span class="menu_icon"><i class="material-icons md-48" style="margin-bottom:4rem;">group</i></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    </a>
+
+
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+    
+{% endblock %}

@@ -1,0 +1,414 @@
+{% set mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block baseStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+{% endblock %}
+
+
+{% block body %}
+
+    <div id="page_content" class="height-700">
+
+        <div id="page_content_inner" class="height-700">
+
+            <div class="md-card height-700">
+                <div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
+
+                    <div class="uk-width-large-1-6 uk-width-medium-1-6 js_collapsible_column height-700">
+
+                        <div class="md-card-toolbar {{pageColor}}">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                {# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_decrease</i>
+                                    <i class="md-icon material-icons" style="display: none" title="Expand">format_indent_increase</i>
+                                </a>
+                            </div>
+                            <h1 class="md-card-toolbar-heading-text js_hidden uk-text-overflow pageTitle">
+                                <i class="material-icons">{{pageIcon}}</i></span>
+                                <span>{{pageTitle}}</span>
+                            </h1>
+                        </div>
+
+                        {# menu contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_menu.html.twig' %}
+
+                    </div>
+
+                    <div class="uk-flex-item-1">
+
+                        {# nav bar contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
+
+                        <div class="md-card-content mostly-customized-scrollbar mainScroll">
+
+
+                            <!-- Tabs content -->
+                            <div
+                                    class="tab-pane fade show active"
+                                    id="ex1-tabs-1"
+                                    role="tabpanel"
+                                    aria-labelledby="ex1-tab-1"
+                            >
+                                <div class="pt-15 pb-15 borderBottom height50">
+                                    <h3 class="m-0 fz18 grisFonce title2">
+                                        Déclaratif
+                                        <label style="float: right;margin-right: 20px">{{ mois[m - 1] }}</label>
+                                    </h3>
+                                </div>
+                                <div class="pt-2 pb-2">
+                                    <div class="pt-15 pb-15 borderBottom">
+                                        <h5 class="m-0 fz18 textContent">Gestion et distribution des prises</h5>
+                                        <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p>
+                                    </div>
+
+                                    <div class="message">
+                                        <div class="message-icon">
+                                            <i class="material-icons">info</i>
+                                        </div>
+                                        <div class="message-content">
+                                            <p>
+                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+                                                de contacts que vous configurez ici.
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="blogFilter">
+                                        <div class="filterTitle">
+                                                <span class="text_dark">
+                                                    <i class="material-icons" style="margin-right: 5px">filter_list</i>
+                                                    <span id="valueFilter">Filtre</span>
+                                                </span>
+                                        </div>
+                                        <div id="inputSearch" class="borderRight">
+                                            <select class="selectFilter" id="select_adv_1" name="select_adv_1" multiple>
+                                                <option value="2" selected>Venus</option>
+                                                <option value="3" selected>Earth</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="floatLeftIcon">
+                                            <div class="iconGoSearch">
+                                                <i class="material-icons" id="iconGoSearch">help</i>
+                                            </div>
+                                            <a class="iconHerarchy" href="">
+                                                <i class="material-icons">share</i>
+                                            </a>
+                                            <div class="iconExporter">
+                                                <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive uk-overflow-containe">
+                                        <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_align">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col"  style="max-width:119px;">Code contrat</th>
+                                                <th scope="col" >Dans prod ?</th>
+                                                <th scope="col" >Panier</th>
+                                                <th scope="col"  style="display:none;">Offre</th>
+                                                <th scope="col" >Produit</th>
+                                                <th scope="col" >Categorie</th>
+                                                <th scope="col" >Mig / Conq</th>
+                                                <th scope="col" >Date enr. contrat</th>
+                                                <th scope="col"  style="display:none;">Date enr. contrat</th>
+                                                <th scope="col" >Ville</th>
+                                                <th scope="col" >CP</th>
+                                                <th scope="col" >Code vendeur</th>{# 11 TO EXCEL #}
+                                                <th scope="col" >Prénom vendeur</th>
+                                                <th scope="col" >Nom vendeur</th>
+                                                <th scope="col" >Equipe de ventes</th>
+                                                <th scope="col" >Nom Client</th>{# TO EXCEL 15 #}
+                                                <th scope="col" >Num mobile</th>{#  TO EXCEL #}
+                                                <th scope="col" >Fixe phone</th>
+                                                <th scope="col" >Opérateur</th>
+                                                <th scope="col" >Prise ID</th>
+                                                <th scope="col" >état</th>
+
+                                                <th scope="col" >Num. apt./étage</th>{# TO EXCEL 21#}
+                                                <th scope="col" >Adresse</th>
+                                                <th scope="col" >Date RDV</th>
+                                                <th scope="col" >Commentaire Ventes</th>
+                                                <th scope="col" >Is new Customer</th>
+                                                <th scope="col" >Date / Lieu de naissance</th>
+                                                <th scope="col" >Contact Email</th>
+                                                <th scope="col" >identity_document_type</th>
+                                                <th scope="col" >identity_document_number</th>
+                                                <th scope="col" >is_new_phone_number</th>
+
+                                                <th scope="col" >pto_number</th> {# 31 #}
+                                                <th scope="col" >is_know_pto_number</th>
+                                                <th scope="col" >is_have_pto_number</th>
+                                                <th scope="col" >is_annuaire_universel_inscription</th>
+                                                <th scope="col" >is_parental_activation</th>
+                                                <th scope="col" >is_anti_prospection</th>
+                                                <th scope="col" >is_sans_adresses_complete</th>
+                                                <th scope="col" >is_sans_prenom_complet</th>
+                                                <th scope="col" >is_anti_annuaire_inverse</th>
+                                                <th scope="col" >phone_number_to_keep</th>
+
+                                                <th scope="col" >rio_code</th>{# 41 #}
+                                                <th scope="col" >ouverture_bo_at</th>
+                                                <th scope="col" >appel_bo_at</th>
+                                                <th scope="col" >status_bo_at</th>
+                                                <th scope="col" >affectation_bo_at</th>
+                                                <th scope="col" >is_piece_validated</th>
+                                                <th scope="col" >num_panier</th>
+                                                <th scope="col" >typ_logm</th>
+                                                <th scope="col" >is_liste_rouge</th>
+                                                <th scope="col" >Téléopérateur</th>
+
+                                                <th scope="col" >Status Bo</th> {# 51 #}
+                                                <th scope="col" >Niveau refus</th>
+                                                <th scope="col" >Commentaires Bo</th>
+                                                <th scope="col" >Adresse from prises</th>
+
+                                            </tr>
+                                            </thead>
+                                            <tbody id="contentTable">
+                                            {% for v in declaratif %}
+
+                                                <tr>
+
+                                                    {# command#}
+                                                    {% if v.num_cbl in allSalesListArray %}
+                                                        <td style="max-width:170px;"><span class="font-weight-semibold text-primary" style="cursor: pointer" onclick="showInfoTrack('{{ v.id }}')">{{v.num_cbl}}</span></td>
+                                                    {% else %}
+                                                        <td style="max-width:170px;"><span class="font-weight-semibold text-danger" style="cursor: pointer" onclick="showInfoTrack('{{ v.id }}')">{{v.num_cbl}}</span></td>
+                                                    {% endif %}
+
+                                                    {# in prod ? #}
+                                                    {% if v.num_cbl in allSalesListArray %}
+                                                        <td> - </td>
+                                                    {% else %}
+                                                        <td><span class="font-weight-semibold text-danger">Absent</span></td>
+                                                    {% endif %}
+
+                                                    {% if is_granted('ROLE_COMPANY')%}
+                                                        {% if v.num_panier != null and v.num_panier != '' %}
+                                                            <td id="track_{{ v.id }}" onclick="updatePanier('{{ v.id }}','{{v.num_panier}}')">{{v.num_panier}}</td>
+                                                        {% else %}
+                                                            <td id="track_{{ v.id }}" onclick="updatePanier('{{ v.id }}','')"> - </td>
+                                                        {% endif %}
+                                                    {% else %}
+                                                        {% if v.num_panier != null and v.num_panier != '' %}
+                                                            <td>{{v.num_panier}}</td>
+                                                        {% else %}
+                                                            <td> - </td>
+                                                        {% endif %}
+                                                    {% endif %}
+
+                                                    <td style="display:none;">{{v.lbl_offre}}</td>
+                                                    <td>{{v.product}}</td>
+                                                    <td>{{v.categoryName}}</td>
+
+                                                    {# mig / conq #}
+                                                    {% if 'MIG' in v.signup_type_ecom  %}
+                                                        <td>MIG.</td>
+                                                    {% elseif 'CONQUETE' in v.signup_type_ecom or 'VLA' in v.signup_type_ecom   %}
+                                                        <td>CONQ.</td>
+                                                    {% else %}
+                                                        <td> - </td>
+                                                    {% endif %}
+
+                                                    <td>
+                                                        <span style="display:none;">{{v.date|date("Y/m/d")}} - </span>
+                                                        <span> {{v.date|date("d/m/Y")}}</span>
+                                                    </td>
+
+                                                    <td style="display:none;">{{v.date|date("d/m/Y")}}</td>
+
+                                                    <td>{{v.libelle_comm}}</td>
+
+                                                    <td>{{v.code_post_titu}}</td>
+
+                                                    <td>{{v.prestataire_id}}</td>
+
+                                                    <td>{{v.firstname}}</td>
+
+                                                    <td>{{v.lastname}}</td>
+                                                    <td>
+
+                                                        {% for userBis in usersInfosForSellsView_complete %}
+
+                                                            {# Si le vendeur est un Manager , il se verra lui même #}
+                                                            {% if v.parent == userBis.id and v.roles == 'a:1:{i:0;s:12:"ROLE_MANAGER";}' %}
+                                                                {{v.firstname|upper}} {{v.lastname|upper}}
+                                                            {% elseif v.parent == userBis.id and v.roles == 'a:1:{i:0;s:11:"ROLE_SELLER";}' %}
+                                                                {{userBis.firstname|upper}} {{userBis.lastname|upper}}
+                                                            {% endif %}
+
+                                                        {% endfor %}
+
+                                                    </td>
+
+                                                    <td>{{v.sex_genre}} {{v.last_name|upper}} {{v.name|upper}}</td>
+                                                    <td>{{v.tel}}</td>
+                                                    <td>{{v.fix_phone}}</td>
+
+                                                    <td>{{v.libelle}}</td>
+                                                    <td>{{v.fdr_id}}</td>
+                                                    <td>{{v.etat}}</td>
+                                                    <td>{{v.num_apt}} / {{v.etage}}</td>
+                                                    <td>{{v.apartment_number}} {{v.street_number}} {{v.street_name}} {{v.cp}} {{v.ville}}</td>
+                                                    <td>{{v.date_rdv}}</td>
+                                                    <td>{{v.commentaire}}</td>
+                                                    <td>{{v.is_new_customer}}</td>
+                                                    <td>{{v.birth_date|date("d/m/Y")}}</td>
+                                                    <td>{{v.contact_email}}</td>
+                                                    <td>{{v.identity_document_type}}</td>
+                                                    <td>{{v.identity_document_number}}</td>
+                                                    <td>{{v.is_new_phone_number}}</td>
+                                                    <td>{{v.pto_number}}</td>
+                                                    <td>{{v.is_know_pto_number}}</td>
+                                                    <td>{{v.is_have_pto_number}}</td>
+                                                    <td>{{v.is_annuaire_universel_inscription}}</td>
+                                                    <td>{{v.is_parental_activation}}</td>
+                                                    <td>{{v.is_anti_prospection}}</td>
+                                                    <td>{{v.is_sans_adresses_complete}}</td>
+                                                    <td>{{v.is_sans_prenom_complet}}</td>
+                                                    <td>{{v.is_anti_annuaire_inverse}}</td>
+                                                    <td>{{v.phone_number_to_keep}}</td>
+                                                    <td>{{v.rio_code}}</td>
+                                                    <td>{{v.ouverture_bo_at}}</td>
+                                                    <td>{{v.appel_bo_at}}</td>
+                                                    <td>{{v.status_bo_at}}</td>
+                                                    <td>{{v.affectation_bo_at}}</td>
+                                                    <td>{{v.is_piece_validated}}</td>
+                                                    <td>{{v.num_panier}}</td>
+                                                    <td>{{v.typ_logm}}</td>
+                                                    <td>{{v.is_liste_rouge}}</td>
+
+                                                    <td>{{v.lastnameTelepro}} {{v.firstnameTelepro}}</td>
+
+                                                    {% if v.status_bo == '2'  %}
+                                                        <td><span class="font-weight-semibold text-danger">Refus_bo</span></td>
+                                                    {% else %}
+                                                        <td> Ok_bo </td>
+                                                    {% endif %}
+
+                                                    {% if v.refus_bo_status != null  %}
+                                                        <td><span class="font-weight-semibold">{{v.refus_bo_status}}</span></td>
+                                                    {% else %}
+                                                        <td> - </td>
+                                                    {% endif %}
+
+                                                    <td>{{v.commentaire}}</td>
+                                                    <td>{{ (v.numr_voie is defined)?(v.numr_voie):(v.street_number) }} {{ (v.ss_numr_voie is defined)?(v.ss_numr_voie):'' }} {{ (v.nom_voie is defined)?(v.nom_voie):(v.street_name) }} / {{ (v.code_postal is defined)?(v.code_postal):(v.cp) }} {{v.villeFromPrises}}  </td>
+
+                                                </tr>
+
+                                            {% endfor %}
+
+                                            </tbody>
+                                        </table>
+
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Tabs content -->
+
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-large-1-6 uk-width-medium-1-6 js_collapsible_column collapsed">
+
+                        <div class="md-card-toolbar md-bg-grey-100">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+                                    <i class="md-icon material-icons" style="display: none"
+                                       title="Expand">format_indent_decrease</i>
+                                </a>
+                            </div>
+                            <h3 class="md-card-toolbar-heading-text js_hidden">
+                                Filtres
+                            </h3>
+                        </div>
+
+                        {# Filters #}
+                        {% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+{% endblock %}
+
+{% block baseJavascripts %}
+
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- tablesorter -->
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-columnSelector.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-print.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js')}}"></script>
+    <!-- ionrangeslider -->
+    <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{ asset('assets/js/nomad/global.js') }}"></script>
+
+    <!-- Start Export xls -->
+    <script src="{{ asset('assets/js/exportXls/xlsx.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/exportXls/FileServer.min.js') }}"></script>
+    <!-- End Export xls -->
+
+    <script>
+
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "SheetJS Tutorial",
+            Subject: "Test",
+            Author: "Red Stapler",
+            CreatedDate: new Date(2017,12,19)
+        };
+        wb.SheetNames.push("data");
+
+        var Results=[];
+        var item=['Code contrat','Produit','Catégorie'];
+
+
+        Results.push(item);
+        {% for item in declaratif %}
+
+        var item=['{{ item.num_cbl }}','{{ item.product }}','{{ item.categoryName }}'];
+        Results.push(item);
+        {% endfor %}
+        var ws = XLSX.utils.aoa_to_sheet(Results);
+        wb.Sheets["data"] = ws;
+        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+
+        exportToCsv = function() {
+            saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'declaratif.xlsx');
+        }
+
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+            var view = new Uint8Array(buf);  //create uint8array as viewer
+            for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+            return buf;
+        }
+
+    </script>
+
+{% endblock %}

@@ -1,0 +1,468 @@
+{% set mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block baseStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+{% endblock %}
+
+
+{% block body %}
+
+    <div id="page_content" class="height-700">
+
+        <div id="page_content_inner" class="height-700">
+
+            <div class="md-card height-700">
+                <div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
+
+                    <div class="uk-width-large-1-6 uk-width-medium-1-3 js_collapsible_column height-700">
+
+                        <div class="md-card-toolbar {{pageColor}}">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                {# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_decrease</i>
+                                    <i class="md-icon material-icons" style="display: none" title="Expand">format_indent_increase</i>
+                                </a>
+                            </div>
+                            <h1 class="md-card-toolbar-heading-text js_hidden uk-text-overflow pageTitle">
+                                <i class="material-icons">{{pageIcon}}</i></span>
+                                <span>{{pageTitle}}</span>
+                            </h1>
+                        </div>
+
+                        {# menu contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_menu.html.twig' %}
+
+                    </div>
+
+                    <div class="uk-width-large-5-6 uk-width-medium-2-3">
+
+                        {# nav bar contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
+
+                        <div class="md-card-content mostly-customized-scrollbar mainScroll">
+
+
+                            <!-- Tabs content -->
+                            <div
+                                    class="tab-pane fade show active"
+                                    id="ex1-tabs-1"
+                                    role="tabpanel"
+                                    aria-labelledby="ex1-tab-1"
+                            >
+                                <div class="pt-15 pb-15 borderBottom height50">
+                                    <h3 class="m-0 fz18 grisFonce title2">
+                                        <a href="{{ path('production_index',{monthChoise: m, yearChoice: yearChoice }) }}" class="mr-2">
+                                            <i class="fas fa-arrow-left"></i>
+                                        </a>
+                                        Ventes par Date
+                                        <label style="float: right;margin-right: 20px">{{ mois[m - 1] }}</label>
+                                    </h3>
+                                </div>
+                                <div class="pt-2 pb-2">
+                                    <div class="pt-15 pb-15 borderBottom">
+                                        <h5 class="m-0 fz18 textContent">Gestion et distribution des prises</h5>
+                                        <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p>
+                                    </div>
+
+                                    <div class="message">
+                                        <div class="message-icon">
+                                            <i class="material-icons">info</i>
+                                        </div>
+                                        <div class="message-content">
+                                            <p>
+                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+                                                de contacts que vous configurez ici.
+                                            </p>
+                                        </div>
+                                    </div>
+
+
+                                    <div class="blogFilter">
+                                        <div class="filterTitle">
+                                                <span class="text_dark">
+                                                    <i class="material-icons" style="margin-right: 5px">filter_list</i>
+                                                    <span id="valueFilter">Filtre</span>
+                                                </span>
+                                        </div>
+                                        <div id="inputSearch" class="borderRight">
+                                            <select class="selectFilter" id="select_adv_1" name="select_adv_1" multiple>
+                                                <option value="2" selected>Venus</option>
+                                                <option value="3" selected>Earth</option>
+                                            </select>
+
+                                        </div>
+                                        <div class="floatLeftIcon">
+                                            <div class="iconGoSearch">
+                                                <i class="material-icons" id="iconGoSearch">help</i>
+                                            </div>
+                                            <a class="iconHerarchy" href="">
+                                                <i class="material-icons">share</i>
+                                            </a>
+                                            <div class="iconExporter">
+                                                <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="table-responsive uk-overflow-containe">
+                                        <table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_align">
+                                            <thead>
+                                            <tr>
+                                                <th scope="col" >Code contrat</th>
+                                                <th scope="col" >Offre</th>
+                                                <th scope="col" >Mig / Conq</th>
+                                                <th scope="col" >V8</th>
+                                                <th scope="col" >Date contrat</th>
+                                                <th scope="col" >Date vente validée</th>
+                                                <th scope="col" >Statut vente</th>
+                                                <th scope="col" >Dernier modification Racc</th>
+                                                <th scope="col" >Mois racc.</th>
+                                                <th scope="col" >Date racc</th>
+                                                <th scope="col" >Date annu</th>
+                                                <th scope="col" >Date résil</th>
+                                                <th scope="col" >Ville</th>
+                                                <th scope="col" >CP</th>
+                                                <th scope="col" >Nom client</th>
+                                                <th scope="col" >Pré. client</th>
+
+                                                {% if is_granted('ROLE_COMPANY') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_MANAGER') %}
+                                                    <th scope="col" >Nom. Vend</th>
+                                                {% endif %}
+
+                                                {% if is_granted('ROLE_COMPANY') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_MANAGER') %}
+                                                    <th scope="col" >Pré. Vend</th>
+                                                {% endif %}
+
+                                                {% if is_granted('ROLE_COMPANY') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_MANAGER') %}
+                                                    <th scope="col" >code Vend</th>
+                                                {% endif %}
+
+                                            </tr>
+                                            </thead>
+                                            <tbody id="contentTable">
+                                            {% for v in ventes %}
+
+                                                <tr>
+
+                                                    <td>
+                                                        <span class="font-weight-semibold text-primary">{{v.num_commande}}</span>
+                                                    </td>
+
+                                                    <td>{{v.lbl_offre}}</td>
+
+                                                    {# Mig / conq #}
+                                                    {% if 'MIG' in v.signup_type_ecom  %}
+
+                                                        <td>MIG.</td>
+
+                                                    {% elseif 'CONQUETE' in v.signup_type_ecom or 'VLA' in v.signup_type_ecom   %}
+
+                                                        <td>CONQ.</td>
+
+                                                    {% else %}
+
+                                                        <td>Non renseigné</td>
+
+                                                    {% endif %}
+
+                                                    {# V8 #}
+                                                    {% if v.box_v8 == '1'  %}
+                                                        <td>V8</td>
+                                                    {% else %}
+                                                        <td>0</td>
+                                                    {% endif %}
+
+                                                    {# Date contrat #}
+                                                    <td>
+													<span class="text-muted font-size-sm">
+														<span style="display:none;">{{v.date_cmd_a|date("Y/m/d")}} - </span>
+													</span>
+                                                        <span> {{v.date_cmd_a|date("d/m/Y")}}</span>
+                                                    </td>
+
+                                                    <td style="display:none;">{{v.date_cmd_a|date("d/m/Y")}}</td>
+
+                                                    {# Date vente validées #}
+                                                    {% if v.date_vente_valid_b != NULL and v.date_vente_valid_b != "" and v.date_vente_valid_b != "0000-00-00 00:00:00"%}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;">{{v.date_vente_valid_b|date("Y/m/d")}} - </span>
+													    </span>
+                                                            <span> {{v.date_vente_valid_b|date("d/m/Y")}}</span>
+                                                        </td>
+
+                                                        <td style="display:none;">{{v.date_vente_valid_b|date("d/m/Y")}}</td>
+
+                                                    {% else %}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;"></span>
+													    </span>
+                                                            <span> - </span>
+                                                        </td>
+
+                                                        <td style="display:none;"> - </td>
+
+                                                    {% endif %}
+
+                                                    {# Statut vente #}
+                                                    <td>
+                                                        <ul class="list-unstyled mb-0">
+                                                            <li>
+                                                                {% if v.statut_global_racc == "Raccorde" %}
+                                                                    <i class="icon-checkmark font-size-base text-success mr-2"></i>
+                                                                    Raccordé RAS
+
+                                                                {% elseif v.statut_global_racc == "Racco KO" %}
+                                                                    <i class="icon-cancel-circle2 font-size-base text-danger mr-2"></i>
+                                                                    Racco KO
+
+                                                                {% elseif v.statut_global_racc == "en cours de rattrapage" or v.statut_global_racc == "en cours" %}
+                                                                    <i class="icon-folder-open font-size-base text-orange mr-2"></i>
+                                                                    Dossier en cours
+
+                                                                {% else %}
+                                                                    <i class="icon-question4 font-size-base text-grey mr-2"></i>
+                                                                    Non renseigné
+                                                                {% endif %}
+
+
+                                                                {# {% if v.statut_global_racc != "Raccorde" %}
+                                                             / {{v.etat_de_la_vente|capitalize}}
+                                                        {% endif %} #}
+
+                                                            </li>
+
+                                                        </ul>
+                                                    </td>
+
+                                                    <td> {{v.etat_de_la_vente|capitalize}} {{v.statut_ko_vv_sbl}}</td>
+
+                                                    {# Mois de racc #}
+                                                    {% if v.rac_planifie != "" and v.rac_planifie != null   %}
+                                                        <td>{{v.rac_planifie|date("Y-m")}}</td>
+                                                    {% else %}
+                                                        <td> - </td>
+                                                    {% endif %}
+
+                                                    {# Date racc #}
+                                                    {% if v.rac_planifie != "" and v.rac_planifie != null and v.rac_planifie != "0000-00-00 00:00:00"%}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;">{{v.rac_planifie|date("Y/m/d")}} - </span>
+													    </span>
+                                                            <span> {{v.rac_planifie|date("d/m/Y")}}</span>
+                                                        </td>
+
+                                                        <td style="display:none;">{{v.rac_planifie|date("d/m/Y")}}</td>
+
+                                                    {% else %}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;"></span>
+													    </span>
+                                                            <span> - </span>
+                                                        </td>
+
+                                                        <td style="display:none;"> - </td>
+
+                                                    {% endif %}
+
+                                                    {# Date annulation #}
+                                                    {% if v.date_annu != "" and v.date_annu != null and v.date_annu != "0000-00-00 00:00:00"%}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;">{{v.date_annu|date("Y/m/d")}} - </span>
+													    </span>
+                                                            <span> {{v.date_annu|date("d/m/Y")}}</span>
+                                                        </td>
+
+                                                        <td style="display:none;">{{v.date_annu|date("d/m/Y")}}</td>
+
+                                                    {% else %}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;"></span>
+													    </span>
+                                                            <span> - </span>
+                                                        </td>
+
+                                                        <td style="display:none;"> - </td>
+
+                                                    {% endif %}
+
+                                                    {# Date résiliation #}
+                                                    {% if v.date_maj_motif != "" and v.date_maj_motif != null and v.date_maj_motif != "0000-00-00 00:00:00"%}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;">{{v.date_maj_motif|date("Y/m/d")}} - </span>
+													    </span>
+                                                            <span> {{v.date_maj_motif|date("d/m/Y")}}</span>
+                                                        </td>
+
+                                                        <td style="display:none;">{{v.date_maj_motif|date("d/m/Y")}}</td>
+
+                                                    {% else %}
+
+                                                        <td>
+													    <span class="text-muted font-size-sm">
+													    	<span style="display:none;"></span>
+													    </span>
+                                                            <span> - </span>
+                                                        </td>
+
+                                                        <td style="display:none;"> - </td>
+
+                                                    {% endif %}
+
+                                                    <td>{{v.libelle_comm}}</td>
+
+                                                    <td>{{v.code_post_titu}}</td>
+
+                                                    <td>
+                                                        <span>{{v.nom_user|capitalize}}</span>
+                                                    </td>
+
+                                                    <td>
+                                                        <span>{{v.prenom_user|capitalize}}</span>
+                                                    </td>
+
+                                                    {% if is_granted('ROLE_COMPANY') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_MANAGER') %}
+                                                        <td>
+                                                            {{v.lastname|capitalize}}
+                                                        </td>
+                                                    {% endif %}
+
+                                                    {% if is_granted('ROLE_COMPANY') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_MANAGER') %}
+                                                        <td>
+                                                            {{v.firstname|capitalize}}
+                                                        </td>
+                                                    {% endif %}
+
+                                                    {% if is_granted('ROLE_COMPANY') or is_granted('ROLE_DIRECTOR') or is_granted('ROLE_MANAGER') %}
+                                                        <td>
+                                                            {{v.code_vendeur}}
+                                                        </td>
+                                                    {% endif %}
+
+                                                </tr>
+
+                                            {% endfor %}
+
+                                            </tbody>
+                                        </table>
+                                    </div>
+
+                                </div>
+                            </div>
+                            <!-- Tabs content -->
+
+                        </div>
+
+                    </div>
+
+                    <div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
+
+                        <div class="md-card-toolbar md-bg-grey-100">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+                                    <i class="md-icon material-icons" style="display: none"
+                                       title="Expand">format_indent_decrease</i>
+                                </a>
+                            </div>
+                            <h3 class="md-card-toolbar-heading-text js_hidden">
+                                Filtres
+                            </h3>
+                        </div>
+
+                        {# Filters #}
+                        {% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
+
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+
+{% endblock %}
+
+{% block baseJavascripts %}
+
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- tablesorter -->
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-columnSelector.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-print.min.js')}}"></script>
+    <script src="{{asset('bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js')}}"></script>
+    <!-- ionrangeslider -->
+    <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{ asset('assets/js/nomad/global.js') }}"></script>
+
+    <!-- Start Export xls -->
+    <script src="{{ asset('assets/js/exportXls/xlsx.full.min.js') }}"></script>
+    <script src="{{ asset('assets/js/exportXls/FileServer.min.js') }}"></script>
+    <!-- End Export xls -->
+
+    <script>
+
+
+        var wb = XLSX.utils.book_new();
+        wb.Props = {
+            Title: "SheetJS Tutorial",
+            Subject: "Test",
+            Author: "Red Stapler",
+            CreatedDate: new Date(2017,12,19)
+        };
+        wb.SheetNames.push("data");
+
+        var Results=[];
+        var item=['Code contrat','Offre','Mig / Conq','Date contrat','Date vente validée','Statut vente'];
+
+
+        Results.push(item);
+        {% for item in ventes %}
+
+        var item=['{{ item.num_commande }}', '{{ item.lbl_offre }}', '{% if 'MIG' in item.signup_type_ecom  %}MIG.{% elseif 'CONQUETE' in item.signup_type_ecom or 'VLA' in item.signup_type_ecom   %}CONQ.{% else %}Non renseigné{% endif %}' ,'{{item.date_cmd_a|date("Y/m/d")}}', '{{item.date_vente_valid_b|date("Y/m/d")}}','{% if item.statut_global_racc == "Raccorde" %}Raccordé RAS{% elseif item.statut_global_racc == "Racco KO" %}Racco KO{% elseif item.statut_global_racc == "en cours de rattrapage" or item.statut_global_racc == "en cours" %}Dossier en cours{% else %}Non renseigné{% endif %}'];
+        Results.push(item);
+        {% endfor %}
+        var ws = XLSX.utils.aoa_to_sheet(Results);
+        wb.Sheets["data"] = ws;
+        var wbout = XLSX.write(wb, {bookType:'xlsx',  type: 'binary'});
+
+        exportToCsv = function() {
+            saveAs(new Blob([s2ab(wbout)],{type:"application/octet-stream"}), 'production.xlsx');
+        }
+
+        function s2ab(s) {
+            var buf = new ArrayBuffer(s.length); //convert s to arrayBuffer
+            var view = new Uint8Array(buf);  //create uint8array as viewer
+            for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
+            return buf;
+        }
+
+    </script>
+
+{% endblock %}
