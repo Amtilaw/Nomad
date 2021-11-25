@@ -20,7 +20,6 @@ use App\Entity\NmdTrack;
 
 class ProductController extends AbstractController
 {
-    
           /**
      * @Route("/nmdProduct", name="nmdProduct")
      */
@@ -110,8 +109,15 @@ class ProductController extends AbstractController
         }
         $form->handleRequest($request);
         if ($form->isSubmitted() && $form->isValid()) {
+
+        if (isset($_POST['annuler'])){
+          $message = sprintf("Changement annulé");
+        $this->addFlash('other', $message);
+         return $this->redirectToRoute('nmdProduct');
+        }
+
           $entityManager = $this->getDoctrine()->getManager();
-           $productInfos = $form->getData();
+          $productInfos = $form->getData();
           $entityManager->persist($productInfos);
 
 //          $productInfos->setProduct($_POST['product']);
@@ -159,6 +165,7 @@ class ProductController extends AbstractController
             'productInfos'=>$productInfos,
             'productIds' => $productId,
             'form' => $form,
+            'product' => $productInfos,
 
         ]);
 
@@ -221,7 +228,6 @@ class ProductController extends AbstractController
 
             $ventesStatusGlobalRacc = $repository->productByCategory();
 
-
         return $this->render('product/dashboard.html.twig', [
 
             'pageTitle' => 'Production',
@@ -242,6 +248,5 @@ class ProductController extends AbstractController
         ]);
 
     }
-
 }
 

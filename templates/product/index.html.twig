@@ -1,3 +1,5 @@
+{% set mois=['Janvier','Février','Mars','Avril','Mai','Juin','Juillet','Août','Septembre','Octobre','Novembre','Décembre'] %}
+
 {% extends 'base.html.twig' %}
 
 {% block title %}Hello HomeController!{% endblock %}
@@ -53,13 +55,13 @@
                                 <div class="pt-15 pb-15 borderBottom height50">
                                     <h3 class="m-0 fz18 grisFonce title2">
                                       Liste des produits
-                                        <label style="float: right;margin-right: 20px">Produits</label>
+                                        <label style="float: right;margin-right: 20px">{{ mois[m - 1] }}</label>
                                     </h3>
                                 </div>
                                 <div class="pt-2 pb-2">
                                     <div class="pt-15 pb-15 borderBottom">
-                                        <h5 class="m-0 fz18 textContent">Gestion et distribution des prises</h5>
-                                        <i> <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p></i>
+                                        <h5 class="m-0 fz18 textContent">Gestion et distributio{{ mois[m - 1] }}n des prises</h5>
+                                        <i> <p class="textContent">Les prises que vous visualis{{ mois[m - 1] }}er prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p></i>
                                     </div>
 
                                     <div class="message">
@@ -68,9 +70,9 @@
                                         </div>
                                         <div class="message-content">
                                             <p>
-                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
-                                                Il est donc possible ue des notifications soient adressées aux comptes principaux disposant de certains rôles
-                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+                                                Certains produits Google Cloud n'utilisent pas {{ mois[m - 1] }}les contacts essentiels pour envoyer des notifications.
+                                                Il est donc possible ue des notifications soien{{ mois[m - 1] }}t adressées aux comptes principaux disposant de certains rôles
+                                                IAM (par exemple, administrateur de la facturat{{ mois[m - 1] }}ion ou propriétaire du projet) plutôt qu'aux membres de la liste
                                                 de contacts que vous configurez ici.
                                             </p>
                                         </div>

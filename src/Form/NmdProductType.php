@@ -14,7 +14,8 @@ use Symfony\Component\Form\Extension\Core\Type\ColorType;
 use Symfony\Component\Form\Extension\Core\Type\CheckboxType;
 use Symfony\Component\Form\Extension\Core\Type\FileType;
 use Symfony\Component\Form\Extension\Core\Type\TextareaType;
-
+use Symfony\Bridge\Doctrine\Form\Type\EntityType;
+use App\Entity\NmdCategorieProduct;
 
 class NmdProductType extends AbstractType
 {
@@ -26,7 +27,6 @@ class NmdProductType extends AbstractType
             ->add('price', NumberType::class, ['required' => false,])
             ->add('description', TextareaType::class, ['required' => false,])
 //            ->add('createdAt', DateType::class, ['required' => false,])
-            //->add('categoryId')
             ->add('organizationPrice', NumberType::class, ['required' => false,])
             ->add('organizationNaming', TextType::class, ['required' => false,])
             ->add('organizationCategory', TextType::class, ['required' => false,])
