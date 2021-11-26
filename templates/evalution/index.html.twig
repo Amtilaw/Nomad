@@ -1,0 +1,99 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block baseStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+{% endblock %}
+
+
+{% block body %}
+
+    <div id="page_content" class="height-700">
+
+        <div id="page_content_inner" class="height-700">
+
+                                        <h3 class="heading_a">Formulaire</h3>
+                                        
+                                 
+                                        <div class="md-card-content">
+                                            <div class="uk-grid">
+                                                <div class="uk-width-1-1">
+                                                    <ul class="uk-tab" data-uk-tab="{connect:'#tabs_1_content'}" id="tabs_1">
+                                                        <li class="uk-active"><a href="#">Evaluation</a></li>
+
+                                                    </ul>
+                                                   
+                                                            <div class="uk-grid" >
+                                                                
+                                                                   {% for v in all  %}
+                                                               {%  if v.id == 2 %}
+                                                                      <form name="form1" method="post" action="/evalution">
+                      
+                                                                   <div>
+                                                                 {{v.question}}
+                                                                 </div>
+                                                                  {% if v.question_1  != "" %}
+                                                                 <div>
+                                                                    {{ v.question_1 }}
+                                                                    <input type="radio" name="reponse" value="{{ v.question_1 }}" class="md-input label-fixed customizedInput" />
+                                                                </div>
+                                                                {% endif %}
+                                                                 {% if v.question_2  != "" %}
+                                                                <div >
+                                                                    {{ v.question_2 }}
+                                                                    <input type="radio" name="reponse" value="{{ v.question_2 }}" class="md-input label-fixed customizedInput" />
+                                                                </div>
+                                                                {% endif %}
+                                                                 {% if v.question_3  != "" %}
+                                                                <div >
+                                                                    {{ v.question_3 }}
+                                                                    <input type="radio" name="reponse" value="{{ v.question_3 }}" class="md-input label-fixed customizedInput" />
+                                                                </div>
+                                                                {% endif %}
+                                                                {% if v.question_4  != "" %}
+                                                                
+                                                                <div>
+                                                                    {{ v.question_4 }}
+                                                                    <input type="radio" name="reponse" value="{{ v.question_4 }}" class="md-input label-fixed customizedInput" />
+                                                                </div>
+                                                                <input type="hidden" name="id_question" value="{{v.id}}" />
+                                                                <input type="hidden" name="id_user" value="{{user.id}}" />
+                                                                {% endif %}
+                                                                   <div class="mt50">
+                                        
+                                            <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)"  name="Bouton" type="submit" >ENREGISTRER</button>
+                                
+                                          </div>
+                                            </form>
+                                                                
+                                                                 {% endif %}
+                                                                 {% endfor %}
+                                                        </div>
+              
+                                     
+                                </div>
+                                </div>
+                                </div>
+                              
+
+        </div>
+
+    </div>
+    
+{% endblock %}
+
+{% block baseJavascripts %}
+
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- ionrangeslider -->
+    <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{ asset('assets/js/prisesNeuves.js') }}"></script>
+
+    <button onclick="myFunction()">Click me</button>
+
+
+{% endblock %}
