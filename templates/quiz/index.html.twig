@@ -73,7 +73,7 @@
                                                                         <label><input class="uk-radio" type="radio" name="reponse" id="1-4"> D</label><br>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="uk-form-label data-uk-grid-margin" id="question1-2" hidden>
@@ -84,7 +84,7 @@
                                                                         <label><input class="uk-radio" type="radio" name="reponse2" id="2-3"> C</label><br>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="uk-form-label data-uk-grid-margin" id="question1-3" hidden>
@@ -96,7 +96,7 @@
                                                                         <label><input class="uk-radio" type="checkbox" name="reponse3" id="3-4"> D</label><br>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="uk-form-label data-uk-grid-margin" id="question1-4" hidden>
@@ -105,7 +105,7 @@
                                                                         <textarea class="uk-textarea" rows="5" placeholder="Entrer réponse"></textarea>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -122,7 +122,7 @@
                                                                         <label><input class="uk-radio" type="radio" name="reponse1" id="2-3"> C</label><br>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="uk-form-label data-uk-grid-margin" id="question2-2" hidden>
@@ -131,7 +131,7 @@
                                                                         <textarea class="uk-textarea" rows="5" placeholder="Entrer réponse"></textarea>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -148,7 +148,7 @@
                                                                         <label><input class="uk-radio" type="radio" name="reponse1" id="3-3"> C</label><br>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="uk-form-label data-uk-grid-margin" id="question3-2" hidden>
@@ -157,7 +157,7 @@
                                                                         <textarea class="uk-textarea" rows="5" placeholder="Entrer réponse"></textarea>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                                 <div class="uk-form-label data-uk-grid-margin" id="question3-3" hidden>
@@ -167,7 +167,7 @@
                                                                         <label><input class="uk-radio" type="radio" name="reponse1" id="3-2"> B</label><br>
 
                                                                         <button type="button" class="md-btn md-btn-primary submitbTN" onclick="nextQuestion()">SUIVANT</button>
-                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" href="javascript:void(0)">RETOUR</button>
+                                                                        <button type="button" class="md-btn md-btn-default cancelBtn" onclick="previousQuestion()">RETOUR</button>
                                                                     </div>
                                                                 </div>
                                                             </li>
@@ -288,11 +288,20 @@
                 questionSetCount++;
                 questionCount=1;
                 player.api("play");
+                this.innerHTML="<p>Questionnaire réussi</p>";
             }
             else {
                 player.api("pause");
                 document.getElementById('questionSet'+questionSetCount).hidden = false;
                 document.getElementById('question'+questionSetCount+'-'+questionCount).hidden = false;
+            }
+        }
+
+        function previousQuestion(){
+            if(questionCount > 1){
+                document.getElementById('question'+questionSetCount+'-'+questionCount).hidden = true;
+                questionCount--;
+                quizzIsDone();
             }
         }
  
