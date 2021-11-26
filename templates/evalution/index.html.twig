@@ -26,9 +26,9 @@
                                                     </ul>
                                                    
                                                             <div class="uk-grid" >
-                                                                
+                                                                {% set i = 1 %}
                                                                    {% for v in all  %}
-                                                               {%  if v.id == 2 %}
+                                                               {%  if v.id == i %}
                                                                       <form name="form1" method="post" action="/evalution">
                       
                                                                    <div>
@@ -64,8 +64,9 @@
                                                                    <div class="mt50">
                                         
                                             <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)"  name="Bouton" type="submit" >ENREGISTRER</button>
-                                
+                                        <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)"  name="suivant"  onclick="incrementCount()" type="button">Suivant</button>
                                           </div>
+
                                             </form>
                                                                 
                                                                  {% endif %}
@@ -94,6 +95,11 @@
     <script src="{{ asset('assets/js/prisesNeuves.js') }}"></script>
 
     <button onclick="myFunction()">Click me</button>
-
+<script>
+var incrementCount = function(){
+ console.log('{{  }}')
+   
+}
+</script>
 
 {% endblock %}
