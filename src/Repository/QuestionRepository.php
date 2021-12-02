@@ -19,6 +19,25 @@ class QuestionRepository extends ServiceEntityRepository
         parent::__construct($registry, Question::class);
     }
 
+    public function questionByVideoAndPallier($videoId) {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT DISTINCT q.libelle as questionLibelle,
+                       q.id_type_id as tipe,
+                       p.timecode,
+                       p.titre_groupe_question,
+                       q.id
+                FROM `question` q, `pallier` p
+                WHERE id_video_id = $videoId AND
+                      q.id_pallier_id = p.id 
+                ORDER BY `timecode`,`ordering` ASC ";
+
+        $stmt = $conn->prepare($sql);
+
+        return $stmt->executeQuery()->fetchAllAssociative();
+
+    }
+
     // /**
     //  * @return Question[] Returns an array of Question objects
     //  */

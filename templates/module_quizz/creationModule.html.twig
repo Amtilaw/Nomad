@@ -1,0 +1,39 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ModuleQuizzController!{% endblock %}
+
+{% block body %}
+  <h1>Creation d'un module</h1>
+  <div style="margin:30px">
+    <form action="{{ path('module',{id_formation: id_formation}) }}" method="POST">
+    <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Nom du module</label>
+  <input type="text" class="form-control" id="nomModule" placeholder="Module" name="moduleName">
+</div>
+  <label for="formation" class="form-label">Nom de la formation</label>
+<select class="form-select" aria-label="Default select example" name="formation">
+  <option selected>Selectioné la formation lié au module</option>
+  {% for formation in formations %}
+    <option value="{{ formation.id }}"
+    {% if formation.id == id_formation %}
+      selected="selected"
+    {% endif %}
+    >{{ formation.nom }}</option>
+  {% endfor %}
+</select>
+<br>
+<label for="lvl" class="form-label">Difficulté du module</label>
+<select class="form-select" aria-label="Default select example" name="lvl">
+  <option selected>Choisisser la difficulté du module</option>
+  {% for level in levels %}
+    <option value="{{ level.id }}"
+    >{{ level.nom }}</option>
+  {% endfor %}
+</select>
+<br>
+ <div class="col-12">
+    <button class="btn btn-primary" type="submit">Créer le module</button>
+  </div>
+</form>
+  </div>
+{% endblock %}

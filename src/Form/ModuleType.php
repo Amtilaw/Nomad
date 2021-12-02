@@ -2,33 +2,30 @@
 
 namespace App\Form;
 
-use App\Entity\Question;
+use App\Entity\Module;
 use Symfony\Component\Form\AbstractType;
 use Symfony\Component\Form\FormBuilderInterface;
 use Symfony\Component\OptionsResolver\OptionsResolver;
+use App\Form\LevelType;
+use App\Form\FormationType;
 
-class QuestionType extends AbstractType
+class ModuleType extends AbstractType
 {
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
-            ->add('libelle')
-            ->add('CreatedAt')
-            ->add('modifyAt')
-            ->add('ordering')
-            ->add('id_pallier')
-            ->add('id_lvl')
-            ->add('id_module')
-            ->add('id_video')
-            ->add('id_pdf')
-            ->add('id_type')
+            ->add('nom')
+//            ->add('createdAt')
+//            ->add('modifyAt')
+            //->add('id_lvl', LevelType::class)
+          //  ->add('id_formation' FormationType::class)
         ;
     }
 
     public function configureOptions(OptionsResolver $resolver): void
     {
         $resolver->setDefaults([
-            'data_class' => Question::class,
+            'data_class' => Module::class,
         ]);
     }
 }

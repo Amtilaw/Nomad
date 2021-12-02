@@ -1,0 +1,59 @@
+label.box {
+  display: flex;
+  margin-top: 10px;
+  padding: 10px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  border: 1px solid #ddd;
+}
+
+#proposition0:checked ~ label.label0,
+#proposition1:checked ~ label.label1,
+#proposition2:checked ~ label.label2,
+#proposition3:checked ~ label.label3,
+#proposition4:checked ~ label.label4,
+#proposition5:checked ~ label.label5,
+#proposition6:checked ~ label.label6,
+#proposition7:checked ~ label.label7,
+#proposition8:checked ~ label.label8 {
+  border-color: #1976d2;
+}
+
+#proposition0:checked ~ label.label0 .circle,
+#proposition1:checked ~ label.label1 .circle,
+#proposition2:checked ~ label.label2 .circle,
+#proposition3:checked ~ label.label3 .circle,
+#proposition4:checked ~ label.label4 .circle,
+#proposition5:checked ~ label.label5 .circle,
+#proposition6:checked ~ label.label6 .circle,
+#proposition7:checked ~ label.label7 .circle,
+#proposition8:checked ~ label.label8 .circle {
+  border: 6px solid #0c3053;
+  background-color: #fff;
+}
+
+label.box:hover {
+  background: #1976d2;
+}
+
+label.box .course {
+  display: flex;
+  align-items: center;
+  width: 100%;
+}
+
+label.box .circle {
+  height: 22px;
+  width: 22px;
+  border-radius: 50%;
+  margin-right: 15px;
+  border: 2px solid #ddd;
+  display: inline-block;
+}
+
+input[type="radio"] {
+  display: none;
+}
+input[type="checkbox"] {
+  display: none;
+}

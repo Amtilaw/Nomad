@@ -1,0 +1,47 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Hello ModuleQuizzController!{% endblock %}
+
+{% block body %}
+  <h1>Creation d'une question</h1>
+  <div style="margin:30px">
+    <form action="{{ path('createQuestion') }}" method="POST">
+    <div class="mb-3">
+  <label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
+  <input type="text" class="form-control" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
+</div>
+  <label for="formation" class="form-label">Type de proposition</label>
+<select class="form-select" aria-label="Default select example" name="type">
+  <option selected>Selectionné le type de question</option>
+  {% for type in types %}
+    <option value="{{ type.id }}"
+    >{{ type.nom }}</option>
+  {% endfor %}
+</select>
+<br>
+<label for="lvl" class="form-label">Difficulté de la question</label>
+<select class="form-select" aria-label="Default select example" name="lvl">
+  <option selected>Choisisser la difficulté de la question</option>
+  {% for level in levels %}
+    <option value="{{ level.id }}"
+    >{{ level.nom }}</option>
+  {% endfor %}
+</select>
+<div class="form-check">
+  <input class="form-check-input" type="checkbox" name="flexRadioDefault" id="haveAVideo">
+  <label class="form-check-label" for="flexRadioDefault1">
+    attacher une vidéo à cette question
+  </label>
+</div>
+</div>
+<br>
+ <div class="col-12">
+    <button class="btn btn-primary" type="submit">Créer le module</button>
+  </div>
+</form>
+  </div>
+  <script>
+    let addVideo = document.getElementById("haveAVideo");
+    console.log(addVideo.checked);
+  </script>
+{% endblock %}
