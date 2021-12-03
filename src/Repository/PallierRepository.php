@@ -19,17 +19,17 @@ class PallierRepository extends ServiceEntityRepository
         parent::__construct($registry, Pallier::class);
     }
 
-public function pallierByVideo($videoId) {
+    public function pallierByVideo($videoId)
+    {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT * FROM `pallier` WHERE id_video_id = $videoId ORDER BY `ordering` ASC ";
-
+        $sql = "SELECT DISTINCT id_pallier_id as id_pallier, pallier.timecode FROM `question`, `pallier` WHERE id_video_id = $videoId
+        AND question.id_pallier_id = pallier.id ORDER BY `ordering` ASC ";
         $stmt = $conn->prepare($sql);
 
         return $stmt->executeQuery()->fetchAllAssociative();
-
     }
-    
+
     // /**
     //  * @return Pallier[] Returns an array of Pallier objects
     //  */
