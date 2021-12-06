@@ -30,6 +30,17 @@ class PallierRepository extends ServiceEntityRepository
         return $stmt->executeQuery()->fetchAllAssociative();
     }
 
+    public function allPallier()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT * FROM `pallier`;";
+
+        $stmt = $conn->prepare($sql);
+
+        return $stmt->executeQuery()->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Pallier[] Returns an array of Pallier objects
     //  */

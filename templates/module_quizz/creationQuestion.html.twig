@@ -55,6 +55,39 @@
 							<h1>Creation d'une question</h1>
 							<div style="margin:30px">
 								<form action="{{ path('createQuestion') }}" method="POST">
+
+
+                                 	<label for="formation" class="form-label">Le nom de la Formation</label>
+									<br>
+									<select class="form-select" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
+										<option selected>Nom de la formation</option>
+										{% for formatio in formation %}
+											<option value=" {{ formatio.id }} ">{{ formatio.nom }}</option>
+										{% endfor %}
+									</select>
+                                    <br>
+										<label for="formation" class="form-label">Le nom du module</label>
+									<br>
+									<select class="form-select" aria-label="Default select example" name="Module" id="Module">
+										<option selected>Module</option>
+										
+										{% for module in modules %}
+											<option value=" {{ module.id }} ">{{ module.nom }}</option>
+										{% endfor %}
+										
+									</select>
+
+
+
+
+
+
+
+
+
+
+
+
 									<div class="mb-3">
 										<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
 										<input type="text" class="form-control" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
@@ -74,7 +107,7 @@
 										</div>
 										<div class="mb-3">
 											<label for="exampleFormControlInput1" class="form-label">Libelle de la proposition n°2</label>
-											<input type="text" class="form-control" id="libelleProps2" placeholder="Paris" name="libelleProps2">
+											<input type="text" class="form-control" id="libelleProps2" placeholder="Marseille" name="libelleProps2">
 										</div>
 										<div id="newPropsAdd"></div>
 										<button id="buttonAddProps" class="btn btn-primary" onclick="addProps()" type="button">Ajouter une proposition</button>
@@ -111,7 +144,7 @@
 
 										<div class="mb-3">
 											<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
-											<input type="text" class="form-control" id="libelleProps2" placeholder="Paris" name="libelleProps2">
+											<input type="text" class="form-control" id="pallier" placeholder="minute.seconde" name="pallier">
 										</div>
 
 
