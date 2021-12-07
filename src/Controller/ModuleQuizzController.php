@@ -209,7 +209,7 @@ class ModuleQuizzController extends AbstractController
    $idq=1;
           $proposition ->setLibelle($_POST['libelleProps' . $i]);
           $proposition->setIdQuestion($repositoryProposition->find($question));
-          var_dump($id_question);
+          // var_dump($id_question);
     
         }
       }
@@ -502,36 +502,28 @@ class ModuleQuizzController extends AbstractController
     // Connexion à MySQL
     $connection = mysqli_connect("localhost", "root", "", "nomad-3");
 
+    // var_dump($_POST);
     if (!$connection) { // Contrôler la connexion
       $MessageConnexion = die("connection impossible");
     } else {
       if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
         $id = $_POST['id'];
-        $name = $_POST['name'];
-        $description = $_POST['description'];
-        if (isset($_POST['isAdditionalProduct'])) {
-          $isAdditionalProduct = $_POST['isAdditionalProduct'];
-        } else {
-          $isAdditionalProduct = 0;
-        }
-        $internName = $_POST['internName'];
-        $operatorid = $_POST['operatorid'];
-
+        $libelle = $_POST['libelle'];
+        $CreatedAt = $_POST['CreatedAt'];
+        $modifyAt = $_POST['modifyAt'];
         // Requête d'insertion
-        $ModifCategory = "UPDATE  nmd_categorie_product  set 
-            name = '$name',
-            description = '$description', 
-            is_Additional_Product = '$isAdditionalProduct' ,
-            intern_Name = '$internName',
-            operator_id = '$operatorid'
+        $ModifCategory = "UPDATE  Question  set 
+            libelle = '$libelle',
+             modify_at = '$modifyAt', 
+            Created_at = '$CreatedAt'
             where id='$id';";
 
         // Exécution de la reqête
         mysqli_query($connection, $ModifCategory) or die('Erreur SQL !' . $ModifCategory . '<br>' . mysqli_error($connection));
-        return $this->redirectToRoute("module_module_quizz");
+        return $this->redirectToRoute("module_listequestion");
       }
       if (isset($_POST['annuler'])) {
-        return $this->redirectToRoute("_index");
+        return $this->redirectToRoute("module_listequestion");
       }
     }
     return $this->render('module_quizz/edit.html.twig', [

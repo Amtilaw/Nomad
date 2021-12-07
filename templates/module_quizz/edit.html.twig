@@ -94,20 +94,20 @@
                                                                 <div class="uk-width-1 md-input-filled">
                                                                 
                                                                     <label>Intituler de la question</label>
-                                                                    <input type="text" name="name" value="{{ categoryInfos.libelle }}" class="md-input label-fixed customizedInput" />
+                                                                    <input type="text" name="libelle" value="{{ categoryInfos.libelle }}" class="md-input label-fixed customizedInput" />
                                                                 </div>
                                                                 <input type="hidden" name="id" value="{{ categoryInfos.id  }}" />
                                                             </div>
                                                              <div class="uk-grid" data-uk-grid-margin>
                                                                 <div class="uk-width-medium-1-2 md-input-filled">
                                                                     <label>Crée a la date du </label>
-                                                                    <input type="text" name="description" value="{{ categoryInfos.CreatedAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput" />
+                                                                    <input type="text" name="CreatedAt" value="{{ categoryInfos.CreatedAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput" />
                                                                 </div>
                                                             
                                                                 <div class="uk-width-medium-1-2 md-input-filled">
                                 
                                                                   <label>modifier a la date du </label>
-                                                                    <input type="text" name="description" value="{{ categoryInfos.modifyAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput" />
+                                                                    <input type="text" name="modifyAt" value="{{ categoryInfos.modifyAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput" />
                                                                 </div>
                                                            
                                                                 
