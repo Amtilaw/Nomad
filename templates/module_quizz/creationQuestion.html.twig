@@ -54,7 +54,7 @@
 
 							<h1>Creation d'une question</h1>
 							<div style="margin:30px">
-								<form action="{{ path('createQuestion') }}" method="POST">
+								<form action="{{ path('module_createQuestion') }}" method="POST">
 
 
                                  	<label for="formation" class="form-label">Le nom de la Formation</label>
@@ -228,7 +228,7 @@ $("#newPropsAdd").append(newProps);
 }
 
 function getPalliersByVideo(idVideo) {
-const url = "{{ path('createQuestion') }}";
+const url = "{{ path('module_createQuestion') }}";
 
 console.log(idVideo);
 

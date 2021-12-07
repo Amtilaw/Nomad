@@ -37,6 +37,24 @@ class QuestionRepository extends ServiceEntityRepository
         return $stmt->executeQuery()->fetchAllAssociative();
 
     }
+    /**
+     * @return Question[] Returns an array of NmdCategorieProduct objects
+     */
+
+    public function isAll()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql =
+
+            " SELECT *
+            
+          FROM `Question`
+        ";
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllAssociative();
+    } 
 
     // /**
     //  * @return Question[] Returns an array of Question objects

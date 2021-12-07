@@ -10,6 +10,13 @@ use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\RedirectResponse;
 use Symfony\Component\HttpFoundation\JsonResponse;
+use App\Entity\NmdPartner;
+use App\Entity\NmdUserConfiguration;
+use App\Entity\User;
+use Symfony\Component\Security\Core\Security;
+use Symfony\Component\Security\Core\User\UserInterface;
+use DateTime;
+use App\Entity\NmdCategorieProduct;
 
 
 use App\Form\FormationType;
@@ -26,10 +33,14 @@ use App\Entity\Video;
 use App\Repository\PallierRepository;
 use Symfony\Component\Validator\Constraints\Json;
 
+
+/**
+ * @Route("/module", name="module_")
+ */
 class ModuleQuizzController extends AbstractController
 {
   /**
-   * @Route("/module/quizz", name="module_quizz")
+   * @Route("/module_quizz", name="module_quizz")
    */
   public function index(Request $request): Response
   {
@@ -189,22 +200,24 @@ class ModuleQuizzController extends AbstractController
 
     // enrefistrment des proposition
     for ($i = 1; $i < 30; $i++) {
-     
+      $proposition = new Proposition();
     if (isset($_POST['libelleProps1']) ) {
-      $entityManager = $this->getDoctrine()->getManager();
+   
       if(isset($_POST['libelleProps' . $i])) {
           $proposition = new Proposition();
           $id_question = $question->getId();
-   
+   $idq=1;
           $proposition ->setLibelle($_POST['libelleProps' . $i]);
-          $proposition->setIdQuestion($repositoryProposition->find($id_question));
+          $proposition->setIdQuestion($repositoryProposition->find($question));
           var_dump($id_question);
     
         }
       }
+      $entityManager = $this->getDoctrine()->getManager();
+      $entityManager->persist($proposition);
       $entityManager->flush();
 
-      $entityManager->persist($proposition);
+     
     }
 
 
@@ -223,4 +236,316 @@ class ModuleQuizzController extends AbstractController
       'pageColor' => 'md-bg-grey-100',
     ]);
   }
-}
+
+
+
+
+  /**
+   * @Route("/listequestion", name="listequestion")
+   */
+    public function listequestion(Request $request, UserInterface $userI): Response
+    {
+        $repository_question = $this->getDoctrine()->getRepository(Question::class);
+
+        $all = $repository_question->isall();
+
+        $isEnabled = $request->get('isEnabled');
+        if ($isEnabled == null or $isEnabled == '') {
+            $isEnabled = '1';
+        }
+        $sqlIsEnabled = "";
+        $repository_user = $this->getDoctrine()->getRepository(User::class);
+        $userId = $request->get('userId');
+        $categoryID = $request->get('categoryId');
+        if ($userId == null or $userId == '') {
+            $rolesI = $userI->getRoles();
+            foreach ($rolesI as $rI) {
+                $roleI = $rI;
+            }
+            if ($roleI == 'ROLE_FINANCIAL') {
+                $userId = $userI->getParent();
+            }
+            if ($roleI == 'ROLE_COMPANY' or $roleI == 'ROLE_USER') {
+                $userId = $userI->getId();
+            }
+        }
+        $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
+        $cpv = $user->getCpvCourtierExploitant();
+
+        $now = new DateTime();
+        $month = $now->format('m');
+        $year = $now->format('Y');
+
+        $roles = $user->getRoles();
+        foreach ($roles as $r) {
+            $role = $r;
+        }
+
+        $isAll = $request->get('isAll');
+        if ($isEnabled == '1') {
+            $sqlIsEnabled = " AND is_enabled='1' ";
+        } else {
+            $sqlIsEnabled = " AND (is_enabled='0' OR is_enabled IS NULL) ";
+        }
+        if ($role == 'ROLE_COMPANY' or $role == 'ROLE_USER') {
+            $roleP = 'COMPANY';
+            if ($isAll != null and $isAll == 'yes') {
+                $users = [];
+                $allDirectors = $repository_user->DirecteursForPartner($cpv, $sqlIsEnabled);
+                foreach ($allDirectors as $itemDirector) {
+                    $managers = [];
+                    $director_id = $itemDirector['id'];
+                    $allManagers = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
+                    foreach ($allManagers as $itemManager) {
+                        $manager_id = $itemManager['id'];
+                        $sellers = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
+                        $managers[] = [
+                            'id' => $itemManager['id'],
+                            'is_enabled' => $itemManager['is_enabled'],
+                            'lastname' => $itemManager['lastname'],
+                            'firstname' => $itemManager['firstname'],
+                            'email' => $itemManager['email'],
+                            'phone' => $itemManager['phone'],
+                            'role' => 'ROLE_MANAGER',
+                            'sellers' => $sellers
+                        ];
+                    }
+
+                    $users[] = [
+                        'id' => $itemDirector['id'],
+                        'is_enabled' => $itemDirector['is_enabled'],
+                        'lastname' => $itemDirector['lastname'],
+                        'firstname' => $itemDirector['firstname'],
+                        'email' => $itemDirector['email'],
+                        'phone' => $itemDirector['phone'],
+                        'role' => 'ROLE_DIRECTOR',
+                        'managers' => $managers
+                    ];
+                }
+            } else {
+                $users = [];
+                $usersLists = $repository_user->DirecteursForPartner($cpv, $sqlIsEnabled);
+                foreach ($usersLists as $itemList) {
+                    $users[] = [
+                        'id' => $itemList['id'],
+                        'is_enabled' => $itemList['is_enabled'],
+                        'lastname' => $itemList['lastname'],
+                        'firstname' => $itemList['firstname'],
+                        'email' => $itemList['email'],
+                        'phone' => $itemList['phone'],
+                        'role' => 'ROLE_DIRECTOR'
+                    ];
+                }
+            }
+
+            if ($request->get('director_id') and $request->get('director_id') != '') {
+                $roleP = 'DIRECTOR';
+                $director_id = $request->get('director_id');
+                $user = $repository_user->find($director_id);
+                $users = [];
+
+                if ($isAll != null and $isAll == 'yes') {
+                    $allManagers = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
+                    foreach ($allManagers as $itemManager) {
+                        $manager_id = $itemManager['id'];
+                        $sellers = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
+                        $users[] = [
+                            'id' => $itemManager['id'],
+                            'is_enabled' => $itemManager['is_enabled'],
+                            'lastname' => $itemManager['lastname'],
+                            'firstname' => $itemManager['firstname'],
+                            'email' => $itemManager['email'],
+                            'phone' => $itemManager['phone'],
+                            'role' => 'ROLE_MANAGER',
+                            'sellers' => $sellers
+                        ];
+                    }
+                } else {
+                    $users = [];
+                    $usersLists = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
+                    foreach ($usersLists as $itemList) {
+                        $users[] = [
+                            'id' => $itemList['id'],
+                            'is_enabled' => $itemList['is_enabled'],
+                            'lastname' => $itemList['lastname'],
+                            'firstname' => $itemList['firstname'],
+                            'email' => $itemList['email'],
+                            'phone' => $itemList['phone'],
+                            'role' => 'ROLE_MANAGER'
+                        ];
+                    }
+                }
+            }
+            if ($request->get('manager_id') and $request->get('manager_id') != '') {
+                $users = [];
+                $roleP = 'MANAGER';
+                $manager_id = $request->get('manager_id');
+                $user = $repository_user->find($manager_id);
+                $usersLists = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
+                foreach ($usersLists as $itemList) {
+                    $users[] = [
+                        'id' => $itemList['id'],
+                        'is_enabled' => $itemList['is_enabled'],
+                        'lastname' => $itemList['lastname'],
+                        'firstname' => $itemList['firstname'],
+                        'email' => $itemList['email'],
+                        'phone' => $itemList['phone'],
+                        'role' => 'ROLE_SELLER'
+                    ];
+                }
+            }
+        }
+        if ($role == 'ROLE_DIRECTOR') {
+            $roleP = 'DIRECTOR';
+            $director_id = $userId;
+
+            if ($isAll != null and $isAll == 'yes') {
+                $allManagers = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
+                foreach ($allManagers as $itemManager) {
+                    $manager_id = $itemManager['id'];
+                    $sellers = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
+                    $users[] = [
+                        'id' => $itemManager['id'],
+                        'is_enabled' => $itemManager['is_enabled'],
+                        'lastname' => $itemManager['lastname'],
+                        'firstname' => $itemManager['firstname'],
+                        'email' => $itemManager['email'],
+                        'phone' => $itemManager['phone'],
+                        'role' => 'ROLE_MANAGER',
+                        'sellers' => $sellers
+                    ];
+                }
+            } else {
+                $usersLists = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
+                foreach ($usersLists as $itemList) {
+                    $users[] = [
+                        'id' => $itemList['id'],
+                        'is_enabled' => $itemList['is_enabled'],
+                        'lastname' => $itemList['lastname'],
+                        'firstname' => $itemList['firstname'],
+                        'email' => $itemList['email'],
+                        'phone' => $itemList['phone'],
+                        'role' => 'ROLE_MANAGER'
+                    ];
+                }
+            }
+
+            if ($request->get('manager_id') and $request->get('manager_id') != '') {
+                $roleP = 'MANAGER';
+                $manager_id = $request->get('manager_id');
+                $user = $repository_user->find($manager_id);
+                $usersLists = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
+                foreach ($usersLists as $itemList) {
+                    $users[] = [
+                        'id' => $itemList['id'],
+                        'is_enabled' => $itemList['is_enabled'],
+                        'lastname' => $itemList['lastname'],
+                        'firstname' => $itemList['firstname'],
+                        'email' => $itemList['email'],
+                        'phone' => $itemList['phone'],
+                        'role' => 'ROLE_SELLER'
+                    ];
+                }
+            }
+        }
+        if ($role == 'ROLE_MANAGER') {
+            $roleP = 'MANAGER';
+            $manager_id = $userId;
+            $usersLists = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
+            foreach ($usersLists as $itemList) {
+                $users[] = [
+                    'id' => $itemList['id'],
+                    'is_enabled' => $itemList['is_enabled'],
+                    'lastname' => $itemList['lastname'],
+                    'firstname' => $itemList['firstname'],
+                    'email' => $itemList['email'],
+                    'phone' => $itemList['phone'],
+                    'role' => 'ROLE_SELLER'
+                ];
+            }
+        }
+
+
+
+
+
+        return $this->render('module_quizz/listequestion.html.twig', [
+            'pageTitle' => 'categorys',
+            'rootTemplate' => 'category',
+            'pageIcon' => 'group',
+            'rootPage' => 'lists',
+            'pageColor' => 'md-bg-grey-100',
+
+            //data
+            'users' => $users,
+            'm' => $month,
+            'yearChoise' => $year,
+            'userId' => $userId,
+            'isAll' => $isAll,
+            'user' => $user,
+            'role' => $roleP,
+            'isEnabled' => $isEnabled,
+            'all' => $all,
+            'categoryId' => $categoryID
+        ]);
+    }
+
+  /**
+   * @Route("/edit/{categoryId}", name="edit")
+   */
+  public function edit(Request $request, userinterface $user, $categoryId): Response
+  {
+
+    $repository_quizz = $this->getDoctrine()->getRepository(Question::class);
+
+    $categoryInfos = $repository_quizz->find($categoryId);
+    // Connexion à MySQL
+    $connection = mysqli_connect("localhost", "root", "", "nomad-3");
+
+    if (!$connection) { // Contrôler la connexion
+      $MessageConnexion = die("connection impossible");
+    } else {
+      if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
+        $id = $_POST['id'];
+        $name = $_POST['name'];
+        $description = $_POST['description'];
+        if (isset($_POST['isAdditionalProduct'])) {
+          $isAdditionalProduct = $_POST['isAdditionalProduct'];
+        } else {
+          $isAdditionalProduct = 0;
+        }
+        $internName = $_POST['internName'];
+        $operatorid = $_POST['operatorid'];
+
+        // Requête d'insertion
+        $ModifCategory = "UPDATE  nmd_categorie_product  set 
+            name = '$name',
+            description = '$description', 
+            is_Additional_Product = '$isAdditionalProduct' ,
+            intern_Name = '$internName',
+            operator_id = '$operatorid'
+            where id='$id';";
+
+        // Exécution de la reqête
+        mysqli_query($connection, $ModifCategory) or die('Erreur SQL !' . $ModifCategory . '<br>' . mysqli_error($connection));
+        return $this->redirectToRoute("module_module_quizz");
+      }
+      if (isset($_POST['annuler'])) {
+        return $this->redirectToRoute("_index");
+      }
+    }
+    return $this->render('module_quizz/edit.html.twig', [
+      'pageTitle' => 'categorie',
+      'rootTemplate' => 'category',
+      'pageIcon' => 'group',
+      'rootPage' => 'edit',
+      'pageColor' => 'md-bg-grey-100',
+
+      'user' => $user,
+      'userIdToEdit' => $categoryId,
+      'categoryInfos' => $categoryInfos
+
+    ]);
+  }
+
+  }
