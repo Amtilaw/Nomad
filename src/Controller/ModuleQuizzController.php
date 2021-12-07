@@ -223,4 +223,42 @@ class ModuleQuizzController extends AbstractController
       'pageColor' => 'md-bg-grey-100',
     ]);
   }
+
+  /**
+   * @Route("/formulaires", name="displayFormulaires")
+   */
+  public function displayFormulaires(Request $request): Response
+  {
+    $repository = $this->getDoctrine()->getRepository(Formation::class);
+    $allFormations=$repository->findBy(array(), array('id' => 'ASC'));
+    
+    $formations=[];
+    foreach ($allFormations as $formation){
+      $allModules = $formation->getModules();
+      $modules = [];
+      foreach ($allModules as $module){
+        $level = $this->getDoctrine()->getRepository(Level::class)->find($module->getIdLvl());
+        $modules[]=[
+          'id'=>$module->getId(),
+          'nom'=>$module->getNom(),
+          'level'=>$level->getNom()
+        ];
+      }
+      $formations[]=[
+        'id'=>$formation->getId(),
+        'nom'=>$formation->getNom(),
+        'modules'=>$modules
+      ];
+    }
+
+    return $this->render('formulaires/index.html.twig', [
+        'pageTitle' => 'Formulaires évaluation',
+        'rootTemplate' => 'module_quizz',
+        'pageIcon' => 'group',
+        'rootPage' => 'lists',
+        'pageColor' => 'md-bg-grey-100',
+
+        'formations'=>$formations
+    ]);
+  }
 }
