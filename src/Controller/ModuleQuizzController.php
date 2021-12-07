@@ -132,7 +132,7 @@ class ModuleQuizzController extends AbstractController
 
     $question = new Question();
     $palliers = new Pallier();
-    $proposition = new Proposition();
+    
 
     // enregistrement du palier
 
@@ -189,24 +189,22 @@ class ModuleQuizzController extends AbstractController
 
     // enrefistrment des proposition
     for ($i = 1; $i < 30; $i++) {
-    $id_question = $question->getId();
+     
     if (isset($_POST['libelleProps1']) ) {
       $entityManager = $this->getDoctrine()->getManager();
-   
-
       if(isset($_POST['libelleProps' . $i])) {
-        $proposition->setLibelle($_POST['libelleProps' . $i]);
+          $proposition = new Proposition();
+          $id_question = $question->getId();
+   
+          $proposition ->setLibelle($_POST['libelleProps' . $i]);
           $proposition->setIdQuestion($repositoryProposition->find($id_question));
           var_dump($id_question);
-          
-
-        $entityManager->persist($proposition);
-
-        $entityManager->flush();
+    
+        }
       }
-     } 
+      $entityManager->flush();
 
-
+      $entityManager->persist($proposition);
     }
 
 
