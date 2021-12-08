@@ -255,6 +255,7 @@ class ModuleQuizzController extends AbstractController
     ]);
   }
 
+<<<<<<< HEAD
 
 
 
@@ -542,12 +543,15 @@ class ModuleQuizzController extends AbstractController
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($proposition);
             $entityManager->flush();
-          }
 
         }
+     
+    }
+
+
       
-      $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
-      $entityManager = $this->getDoctrine()->getManager();
+    $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
+    $entityManager = $this->getDoctrine()->getManager();
 
     $question->setLibelle($_POST['libelle']);
     //  $question->setCreatedAt(new \DateTime());
@@ -557,11 +561,11 @@ class ModuleQuizzController extends AbstractController
     $entityManager->flush();
 
     $entityManager = $this->getDoctrine()->getManager();
-      }  
-  
+       
+  }
 
     if (isset($_POST['annuler'])) {
-      return $this->redirectToRoute("module_formations");
+      return $this->redirectToRoute("module_listequestion");
     }
    
 
@@ -580,7 +584,8 @@ class ModuleQuizzController extends AbstractController
     ]);
   }
 
-
+}
+=======
   /**
    * @Route("/formations", name="formations")
    */
@@ -619,3 +624,4 @@ class ModuleQuizzController extends AbstractController
     ]);
   }
 }
+>>>>>>> nizar

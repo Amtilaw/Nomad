@@ -132,7 +132,7 @@
                                                     <td></td>
                                                     <td class="blackIcon">
                                                         <span>
-                                                            <a href="{{ path('module', {id: formation.id}) }}">
+                                                            <a href="{{ path('module_module', {id: formation.id}) }}">
                                                                 <i class="material-icons">add</i>
                                                             </a>
                                                         </span>
@@ -148,14 +148,15 @@
                                                 </tr>
                                                 <tbody id="{{ 'modules-' ~ count}}" hidden>
                                                 {% for module in formation.modules %}
-                                                    <tr>
+                                                    <tr onclick='location.href="{{ path('module_listequestion',{moduleId: module.id}) }}"'>
                                                         <td></td>
                                                         <td></td>
                                                         <td></td>
-                                                        <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.id}}</td>
+                                                        <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;" >{{module.id}}</td>
                                                         <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.nom}}</td>
                                                         <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.level}}</td>
                                                     </tr>
+                                                    
                                                 {% endfor %}
                                                 </tbody>
                                             {% endfor %}
