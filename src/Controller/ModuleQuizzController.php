@@ -243,11 +243,10 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/listequestion", name="listequestion")
    */
-    public function listequestion(Request $request, UserInterface $userI): Response
+    public function listequestion(Request $request, UserInterface $userI, QuestionRepository $questionRepository): Response
     {
-        $repository_question = $this->getDoctrine()->getRepository(Question::class);
 
-        $all = $repository_question->isall();
+        $all = $questionRepository->isall();
 
         $isEnabled = $request->get('isEnabled');
         if ($isEnabled == null or $isEnabled == '') {

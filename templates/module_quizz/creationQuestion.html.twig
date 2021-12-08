@@ -40,7 +40,7 @@
 
 				<div
 					class="uk-flex-item-1">
-
+					<!-- -->
 					{# nav bar contextuel #}
 					{% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
 
@@ -57,83 +57,130 @@
 								<form action="{{ path('module_createQuestion') }}" method="POST">
 
 
-                                 	<label for="formation" class="form-label">Le nom de la Formation</label>
-									<br>
-									<select class="form-select" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
-										<option selected>Nom de la formation</option>
-										{% for formatio in formation %}
-											<option value=" {{ formatio.id }} ">{{ formatio.nom }}</option>
-										{% endfor %}
-									</select>
-                                    <br>
-										<label for="formation" class="form-label">Le nom du module</label>
-									<br>
-									<select class="form-select" aria-label="Default select example" name="Module" id="Module">
-										<option selected>Module</option>
-										
-										{% for module in modules %}
-											<option value=" {{ module.id }} ">{{ module.nom }}</option>
-										{% endfor %}
-										
-									</select>
+									<div class="md-card-content">
+										<div class="uk-grid">
+											<div class="uk-width-1-1">
+												<ul class="uk-tab" data-uk-tab="{connect:'#tabs_1_content'}" id="tabs_1">
+													<li class="uk-active"><a href="#">Question</a></li>
+
+												</ul>
+												<ul id="tabs_1_content" class="uk-switcher uk-margin">
+													<li>
+														<div class="uk-grid" data-uk-grid-margin>
+															
+															<div class="uk-width-1 md-input-filled">
+																<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
+																<input type="text" class="form-control" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
+															</div>
+
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="formation" class="form-label">Le nom de la Formation</label>
+																<br>
+																<select class="form-select" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
+																<option selected>Nom de la formation</option>
+																{% for formatio in formation %}
+																	<option value=" {{ formatio.id }} ">{{ formatio.nom }}</option>
+																{% endfor %}
+																</select>
+															</div>
+															
+															<div class="uk-width-medium-1-2 md-input-filled">
+																	<label for="formation" class="form-label">Le nom du module</label>
+																	<br>
+																	<select class="form-select" aria-label="Default select example" name="Module" id="Module">
+																	<option selected>Module</option>		
+																		{% for module in modules %}
+																				<option value=" {{ module.id }} ">{{ module.nom }}</option>
+																		{% endfor %}
+																	</select>
+															</div>
+
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="lvl" class="form-label">Difficulté de la question</label>
+																<br>
+																<select class="form-select" aria-label="Default select example" name="lvl">
+																<option selected>Choisisser la difficulté de la question</option>
+																{% for level in levels %}
+																	<option value="{{ level.id }}">{{ level.nom }}</option>
+																{% endfor %}
+																</select>
+															</div>
+															
+															<div class="uk-width-medium-1-2 md-input-filled">
+																	<label for="formation" class="form-label">Type de proposition</label>
+																	<br>
+																	<select class="form-select" aria-label="Default select example" name="type" id="typeProps">
+																	<option selected>Selectionné le type de question</option>
+																		{% for type in types %}
+																			<option value=" {{ type.id }} ">{{ type.nom }}</option>
+																		{% endfor %}
+																	</select>
+															</div>
 
 
+														</div>
+														<div class="uk-grid" data-uk-grid-margin id="propositionsAdd">
+
+																	<div class="uk-width-medium-1-2 md-input-filled" >
+																		<label for="exampleFormControlInput1" class="form-label">Libelle de la proposition n°1</label>
+																		<input type="text" class="form-control" id="libelleProps1" placeholder="Paris" name="libelleProps1">
+																	</div>
+
+																	<div  class="uk-width-medium-1-2 md-input-filled">
+																		<label for="exampleFormControlInput1" class="form-label">Libelle de la proposition n°2</label>
+																		<input type="text" class="form-control" id="libelleProps2" placeholder="Marseille" name="libelleProps2">
+																	</div>
+																	<div id="newPropsAdd">
+																	</div>
+
+																	<button id="buttonAddProps" class="btn btn-primary" onclick="addProps()" type="button">Ajouter une proposition</button>
+
+																	
+														</div>
+
+														<div class="uk-grid" data-uk-grid-margin id="propositionsAdd">
+
+																	<div class="uk-width-medium-1-2 md-input-filled" >
+																		<label class="form-check-label" for="flexRadioDefault1">attacher une vidéo à cette question </label>
+																		<input class="form-check-input" type="checkbox" name="flexRadioDefault" id="haveAVideo">
+																	 </div>
+
+														</div>
+
+														<div  class="uk-grid" data-uk-grid-margin id="videoSelection" >
+
+																	<div  class="uk-width-medium-1-2 md-input-filled" id="videoSelection">
+																		<label for="lvl" class="form-label">video selection</label>
+																		<br>
+																		<select class="form-select" aria-label="Default select example" name="video" id="idVideoForm">
+																		    {% for video in videos %}
+																			    <option value="{{ video.id }}">{{ video.url }}</option>
+																			{% endfor %}
+																		</select>
+																	</div>
 
 
+																	<div  class="uk-width-medium-1-2 md-input-filled" id="videoSelection">
+											                            <label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
+											                            <input type="text" class="form-control" id="pallier" placeholder="minute.seconde" name="pallier">
+										                            </div>
+																				
+														</div>
+																	
+																			
 
-
-
-
-
-
-
-
-									<div class="mb-3">
-										<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
-										<input type="text" class="form-control" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
-									</div>
-									<label for="formation" class="form-label">Type de proposition</label>
-									<select class="form-select" aria-label="Default select example" name="type" id="typeProps">
-										<option selected>Selectionné le type de question</option>
-										{% for type in types %}
-											<option value=" {{ type.id }} ">{{ type.nom }}</option>
-										{% endfor %}
-									</select>
-
-									<div id="propositionsAdd">
-										<div class="mb-3">
-											<label for="exampleFormControlInput1" class="form-label">Libelle de la proposition n°1</label>
-											<input type="text" class="form-control" id="libelleProps1" placeholder="Paris" name="libelleProps1">
+														</div>
+													</li>
+												</ul>
+											</div>
 										</div>
-										<div class="mb-3">
-											<label for="exampleFormControlInput1" class="form-label">Libelle de la proposition n°2</label>
-											<input type="text" class="form-control" id="libelleProps2" placeholder="Marseille" name="libelleProps2">
-										</div>
-										<div id="newPropsAdd"></div>
-										<button id="buttonAddProps" class="btn btn-primary" onclick="addProps()" type="button">Ajouter une proposition</button>
 									</div>
+                                                                
 
-									<br>
-									<label for="lvl" class="form-label">Difficulté de la question</label>
-									<select class="form-select" aria-label="Default select example" name="lvl">
-										<option selected>Choisisser la difficulté de la question</option>
-										{% for level in levels %}
-											<option value="{{ level.id }}">{{ level.nom }}</option>
-										{% endfor %}
-									</select>
-									<div class="form-check">
-										<input class="form-check-input" type="checkbox" name="flexRadioDefault" id="haveAVideo">
-										<label class="form-check-label" for="flexRadioDefault1">
-											attacher une vidéo à cette question
-										</label>
-									</div>
-									<div id="videoSelection">
-										<label for="lvl" class="form-label">video selection</label>
-										<select class="form-select" aria-label="Default select example" name="video" id="idVideoForm">
-											{% for video in videos %}
-												<option value="{{ video.id }}">{{ video.url }}</option>
-											{% endfor %}
-										</select>
+									
+									
+									{# <div id="videoSelection">
+										
 
 										<label for="lvl" class="form-label">selection pallier</label>
 										<select class="form-select" aria-label="Default select example" name="video" id="selectPallier">
@@ -145,10 +192,10 @@
 										<div class="mb-3">
 											<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
 											<input type="text" class="form-control" id="pallier" placeholder="minute.seconde" name="pallier">
-										</div>
+										</div> 
 
 
-									</div>
+									</div>#}
 								</div>
 								<br>
 								<div class="col-12">
