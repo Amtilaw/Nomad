@@ -1,39 +1,171 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ModuleQuizzController!{% endblock %}
+{% block title %}Hello HomeController!{% endblock %}
+
+{% block baseStylesheets %}
+    <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+{% endblock %}
+
 
 {% block body %}
-  <h1>Creation d'un module</h1>
-  <div style="margin:30px">
-    <form action="{{ path('module',{id_formation: id_formation}) }}" method="POST">
-    <div class="mb-3">
-  <label for="exampleFormControlInput1" class="form-label">Nom du module</label>
-  <input type="text" class="form-control" id="nomModule" placeholder="Module" name="moduleName">
-</div>
-  <label for="formation" class="form-label">Nom de la formation</label>
-<select class="form-select" aria-label="Default select example" name="formation">
-  <option selected>Selectioné la formation lié au module</option>
-  {% for formation in formations %}
-    <option value="{{ formation.id }}"
-    {% if formation.id == id_formation %}
-      selected="selected"
-    {% endif %}
-    >{{ formation.nom }}</option>
-  {% endfor %}
-</select>
-<br>
-<label for="lvl" class="form-label">Difficulté du module</label>
-<select class="form-select" aria-label="Default select example" name="lvl">
-  <option selected>Choisisser la difficulté du module</option>
-  {% for level in levels %}
-    <option value="{{ level.id }}"
-    >{{ level.nom }}</option>
-  {% endfor %}
-</select>
-<br>
- <div class="col-12">
-    <button class="btn btn-primary" type="submit">Créer le module</button>
-  </div>
-</form>
-  </div>
+
+    <div id="page_content" class="height-700">
+
+        <div id="page_content_inner" class="height-700">
+
+            <div class="md-card height-700">
+                <div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
+                    
+                    <div class="uk-width-large-1-6 uk-width-medium-1-3 js_collapsible_column height-700">
+                        
+                        <div class="md-card-toolbar {{pageColor}}">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                {# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_decrease</i>
+                                    <i class="md-icon material-icons" style="display: none" title="Expand">format_indent_increase</i>
+                                </a>
+                            </div>
+                            <h1 class="md-card-toolbar-heading-text js_hidden uk-text-overflow pageTitle">
+                                <i class="material-icons">{{pageIcon}}</i></span>
+                                <span>{{pageTitle}}</span>
+                            </h1>
+                        </div>
+
+                        {# menu contextuel #}
+                        {% include rootTemplate ~ '/component/contextual_menu.html.twig' %}
+                        
+                    </div>
+                    
+                    <div class="uk-flex-item-1">
+                        
+                        <div class="md-card-content mostly-customized-scrollbar mainScroll">
+
+
+                            <!-- Tabs content -->
+                            <div
+                                    class="tab-pane fade show active"
+                                    id="ex1-tabs-1"
+                                    role="tabpanel"
+                                    aria-labelledby="ex1-tab-1"
+                            >
+                                <div class="pt-15 pb-15 pl-3 borderBottom height50">
+                                    <h3 class="m-0 title2">
+                                      Créer un module de formation
+                                    </h3>
+                                </div>
+                                <div class="pt-2 pb-2">
+
+                                    <div class="message">
+                                        <div class="message-icon">
+                                            <i class="material-icons">info</i>
+                                        </div>
+                                        <div class="message-content">
+                                            <p>
+                                                Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+                                                de contacts que vous configurez ici.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <form class="uk-form" action="{{ path('module',{id_formation: id_formation}) }}" method="POST">
+                                        <div class="uk-form-row">
+                                            <h3 class="heading_a">Module</h3>
+
+                                            <div class="md-card-content">
+                                                <div class="uk-grid">
+                                                    <div class="uk-width-1-1">
+                                                        <ul class="uk-tab" id="tabs_1_content" class="uk-switcher uk-margin">
+                                                            <li>
+                                                                <div class="uk-grid" data-uk-grid-margin>
+                                                                    <div class="uk-margin uk-width-medium-1-1 md-input-filled">
+                                                                        <label>Nom du module</label>
+                                                                        <input type="text" name="moduleName" placeholder="Module" class="md-input label-fixed customizedInput uk-form-large uk-form-controls"/>
+                                                                    </div>
+
+                                                                    <div class="uk-margin uk-width-medium-1-2 md-input-filled">
+                                                                      <label for="formation">Nom de la formation</label>
+                                                                      <select class="md-input label-fixed customizedInput uk-form-large uk-form-controls" name="formation">
+                                                                        <option selected>Sélectionnez la formation liée au module</option>
+                                                                        {% for formation in formations %}
+                                                                          <option value="{{ formation.id }}" 
+                                                                            {% if formation.id == id_formation %} selected="selected" {% endif %}>
+                                                                            {{ formation.nom }}
+                                                                          </option>
+                                                                        {% endfor %}
+                                                                      </select>
+                                                                    </div>
+
+                                                                    <div class="uk-margin uk-width-medium-1-2 md-input-filled">
+                                                                      <label for="lvl">Difficulté du module</label>
+                                                                      <select class="md-input label-fixed customizedInput uk-form-large uk-form-controls" name="lvl">
+                                                                        <option selected>Choisissez la difficulté du module</option>
+                                                                          {% for level in levels %}
+                                                                            <option value="{{ level.id }}">{{ level.nom }}</option>
+                                                                          {% endfor %}
+                                                                      </select>
+                                                                    </div>
+
+                                                                </div>
+                                                            </li>
+                                                        </ul>
+                                                    </div>
+                                                </div>
+                                            </div>
+
+                                            <div class="mt50">
+                                                <button class="md-btn md-btn-primary submitbTN" name="submit" value="valider" href="javascript:void(0)">ENREGISTRER</button>
+                                                <button class="md-btn md-btn-default cancelBtn" name="submit" value="annuler" href="javascript:void(0)">ANNULER</button>
+                                            </div>
+                                        </div>
+                                    </form>
+                                </div>
+                            </div>
+                            <!-- Tabs content -->
+
+                        </div>
+
+                    </div>
+                    
+                    <div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
+                        
+                        <div class="md-card-toolbar md-bg-grey-100">
+                            <div class="md-card-toolbar-actions uk-hidden-small">
+                                <a href="#" data-column-toggle>
+                                    <i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+                                    <i class="md-icon material-icons" style="display: none"
+                                        title="Expand">format_indent_decrease</i>
+                                </a>
+                            </div>
+                            <h3 class="md-card-toolbar-heading-text js_hidden">
+                                Filtres
+                            </h3>
+                        </div>
+                        
+                        {# Filters #}
+                        {% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
+                        
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+    
+{% endblock %}
+
+{% block baseJavascripts %}
+
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- ionrangeslider -->
+    <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script src="{{ asset('assets/js/prisesNeuves.js') }}"></script>
+
+
 {% endblock %}

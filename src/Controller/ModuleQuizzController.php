@@ -101,7 +101,14 @@ class ModuleQuizzController extends AbstractController
 
       $entityManager->flush();
 
-      return new Response('Saved new product with id ' . $module->getId());
+      $message = sprintf('Module créé');
+      $this->addFlash('notice', $message);
+      return $this->redirectToRoute('formations');
+    }
+    if($request->get('submit') == 'annuler'){
+        $message = sprintf('Création de module abandonnée');
+        $this->addFlash('', $message);
+        return $this->redirectToRoute('formations');
     }
 
 
@@ -110,6 +117,11 @@ class ModuleQuizzController extends AbstractController
       'id_formation' => $id_formation,
       'formations' => $formations,
       'levels' => $levels,
+      'pageTitle' => 'Création de Module',
+      'rootTemplate' => 'module_quizz',
+      'pageIcon' => 'group',
+      'rootPage' => 'lists',
+      'pageColor' => 'md-bg-grey-100',
     ]);
   }
 
@@ -243,6 +255,7 @@ class ModuleQuizzController extends AbstractController
     ]);
   }
 
+<<<<<<< HEAD
 
 
 
@@ -572,3 +585,43 @@ class ModuleQuizzController extends AbstractController
   }
 
 }
+=======
+  /**
+   * @Route("/formations", name="formations")
+   */
+  public function displayFormations(Request $request): Response
+  {
+    $repository = $this->getDoctrine()->getRepository(Formation::class);
+    $allFormations=$repository->findBy(array(), array('id' => 'ASC'));
+    
+    $formations=[];
+    foreach ($allFormations as $formation){
+      $allModules = $formation->getModules();
+      $modules = [];
+      foreach ($allModules as $module){
+        $level = $this->getDoctrine()->getRepository(Level::class)->find($module->getIdLvl());
+        $modules[]=[
+          'id'=>$module->getId(),
+          'nom'=>$module->getNom(),
+          'level'=>$level->getNom()
+        ];
+      }
+      $formations[]=[
+        'id'=>$formation->getId(),
+        'nom'=>$formation->getNom(),
+        'modules'=>$modules
+      ];
+    }
+
+    return $this->render('formations/index.html.twig', [
+        'pageTitle' => 'Formations évaluation',
+        'rootTemplate' => 'module_quizz',
+        'pageIcon' => 'group',
+        'rootPage' => 'lists',
+        'pageColor' => 'md-bg-grey-100',
+
+        'formations'=>$formations
+    ]);
+  }
+}
+>>>>>>> nizar
