@@ -45,7 +45,7 @@
 
                         <div class="md-card-content mostly-customized-scrollbar mainScroll">
 
-
+                          {# {{dump(module)}} #}
                             <!-- Tabs content -->
                             <div
                                     class="tab-pane fade show active"
@@ -55,14 +55,12 @@
                             >
                                 <div class="pt-15 pb-15 borderBottom height50">
                                     <h3 class="m-0 fz18 grisFonce title2">
-                                        Répartition par semaine
-                                        <label style="float: right;margin-right: 20px">mois</label>
+                                        Le module {{module.nom}}
                                     </h3>
                                 </div>
                                 <div class="pt-2 pb-2">
                                     <div class="pt-15 pb-15 borderBottom">
-                                        <h5 class="m-0 fz18 textContent">Gestion et distribution des prises</h5>
-                                        <p class="textContent">Les prises que vous visualiser prennent en compte la derniere reception du <span id="maxDate">{{ ""|date('d/m/Y') }}</span></p>
+                                        <p class="textContent">Affichage de la liste des question Pour le module {{module.nom}} </p>
                                     </div>
 
                                     <div class="message">
@@ -137,9 +135,10 @@
                                             </thead>
                                             <tbody id="contentTable">
                                                 
-                                                {% for v in all %}   
-
-                                                     <tr dataID="{{v.id}}" dataName="{{v.libelle}}"  class="lineEffectif">
+                                                {% for v in all %}
+                                                {% if v.id_module_id == moduleId %}
+                                                
+                                                               <tr dataID="{{v.id}}" dataName="{{v.libelle}}"  class="lineEffectif">
                                                                 <td class="checkBoxNomad">
                                                                     <input type="checkbox" class="ts_checkbox" data-md-icheck />
                                                     </td>
@@ -167,7 +166,9 @@
                                                                     </span>
                                                                 </td>
                                                             </tr>
+                                                            {% endif %}
                                                     {% endfor %}
+
                                                     </tbody>
                                         </table>
                                     </div>

@@ -109,7 +109,24 @@
                                                                   <label>modifier a la date du </label>
                                                                     <input type="text" name="modifyAt" value="{{ categoryInfos.modifyAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput" />
                                                                 </div>
-                                                           
+
+                                                                {% set countProps = 0 %}
+                                                                  {# {{ dump(PropositionAModifier) }} #}
+                                                                {% for Proposition in PropositionAModifier %}
+                                                                {% set countProps = countProps + 1 %}
+
+                                                                <div class="uk-width-medium-1-2 md-input-filled">
+                                                                    <label>Proposition </label>
+                                                                    <input type="text" name="libelleProps{{countProps}}" value="{{ Proposition.libelle }}" class="md-input label-fixed customizedInput" />
+                                                                </div>
+                                                                
+
+                                                                
+
+                                                                <input type="hidden" name="id-Prop{{countProps}}" value="{{ Proposition.id  }}" />
+
+                                                                {% endfor %}
+
                                                                 
                                                                 {# <div class="uk-width-medium-1-2 md-input-filled">
                                                                     <label>internName </label>

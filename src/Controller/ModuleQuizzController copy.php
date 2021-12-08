@@ -30,7 +30,6 @@ use App\Entity\Pallier;
 use App\Entity\Type;
 use App\Entity\Proposition;
 use App\Entity\Video;
-use App\Repository\ModuleRepository;
 use App\Repository\PallierRepository;
 use App\Repository\PropositionRepository;
 use phpDocumentor\Reflection\Types\Null_;
@@ -141,8 +140,6 @@ class ModuleQuizzController extends AbstractController
     $videos = $repositoryVideo->findAll();
     $palierTime= $repositoryPalier->allPallier();
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
-    $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
-    
     
     // ce que j'enredistre dans la bdd 
 
@@ -203,7 +200,7 @@ class ModuleQuizzController extends AbstractController
       // return new Response('Saved new product with id ' . $question->getId());
     }
 
-    // enregistrment des proposition
+    // enrefistrment des proposition
     for ($i = 1; $i < 30; $i++) {
       $proposition = new Proposition();
     if (isset($_POST['libelleProps1']) ) {
@@ -211,10 +208,9 @@ class ModuleQuizzController extends AbstractController
       if(isset($_POST['libelleProps' . $i])) {
           $proposition = new Proposition();
           $id_question = $question->getId();
-          var_dump($id_question);
    
           $proposition ->setLibelle($_POST['libelleProps' . $i]);
-          $proposition->setIdQuestion($repositoryQuestion->find($id_question));
+          $proposition->setIdQuestion($repositoryProposition->find($question));
           // var_dump($id_question);
     
         }
@@ -247,13 +243,12 @@ class ModuleQuizzController extends AbstractController
 
 
   /**
-   * @Route("/listequestion/{moduleId}", name="listequestion")
+   * @Route("/listequestion", name="listequestion")
    */
-    public function listequestion(Request $request, UserInterface $userI, QuestionRepository $questionRepository,PropositionRepository $propositionRepository , $moduleId , ModuleRepository $moduleRepository): Response
+    public function listequestion(Request $request, UserInterface $userI, QuestionRepository $questionRepository,PropositionRepository $propositionRepository): Response
     {
 
         $all = $questionRepository->isall();
-        $module = $moduleRepository->find($moduleId);
 
         $isEnabled = $request->get('isEnabled');
         if ($isEnabled == null or $isEnabled == '') {
@@ -495,8 +490,6 @@ class ModuleQuizzController extends AbstractController
             'isEnabled' => $isEnabled,
             'all' => $all,
             'proposition' => $proposition,
-            'moduleId' => $moduleId,
-            'module' => $module,
             'categoryId' => $categoryID
 
         ]);
@@ -508,17 +501,13 @@ class ModuleQuizzController extends AbstractController
   public function edit(Request $request, userinterface $user, $categoryId, PropositionRepository $propositionRepository , QuestionRepository $questionRepository): Response
   {
 
-    if (isset($_POST['id'])) {
-      $categoryId = $_POST['id'];
-    }
-
-    $PropositionAModifier = $propositionRepository->propositionParQuestion($categoryId);
     $repository_quizz = $this->getDoctrine()->getRepository(Question::class);
 
     $categoryInfos = $repository_quizz->find($categoryId);
-  
+    // Connexion à MySQL
+    $connection = mysqli_connect("localhost", "root", "", "nomad-3");
     $entityManager = $this->getDoctrine()->getManager();
-    
+    var_dump($_POST);
  
       if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
         for ($i = 0; $i < 30; $i++) 
@@ -541,8 +530,8 @@ class ModuleQuizzController extends AbstractController
     $entityManager = $this->getDoctrine()->getManager();
 
     $question->setLibelle($_POST['libelle']);
-    //  $question->setCreatedAt(new \DateTime());
-     $question->setModifyAt(new \DateTime());
+    $question->setCreatedAt(new \DateTime());
+    $question->setModifyAt(new \DateTime());
     $entityManager->persist($question);
 
     $entityManager->flush();
@@ -550,10 +539,44 @@ class ModuleQuizzController extends AbstractController
     $entityManager = $this->getDoctrine()->getManager();
        
   }
+       
+       
+       
+       
+   
 
     if (isset($_POST['annuler'])) {
       return $this->redirectToRoute("module_listequestion");
     }
+
+     $PropositionAModifier = $propositionRepository->propositionParQuestion($categoryId);
+
+   
+    
+    if ($_POST) {
+      var_dump($_POST);
+      var_dump($_POST['id']);
+    }
+
+    // if (isset($_POST['Bouton'])) {
+    // $question = $entityManager->getRepository(Question::class)->find($_POST['$id']);
+
+    // if (isset($_POST['questionLibelle'])) {
+    //   $entityManager = $this->getDoctrine()->getManager();
+
+    //   $question->setLibelle($_POST['questionLibelle']);
+    //   $question->setCreatedAt(new \DateTime());
+    //   $question->setModifyAt(new \DateTime());
+    //   $entityManager->persist($question);
+
+    //   $entityManager->flush();
+
+
+    //   // return new Response('Saved new product with id ' . $question->getId());
+    // }
+  
+    
+
    
 
     return $this->render('module_quizz/edit.html.twig', [
