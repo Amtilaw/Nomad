@@ -120,6 +120,7 @@
                                             </thead>
                                             <tbody id="contentTable">
                                             {% for formation in formations %}
+                                                {% set count = ( count | default(0) ) + 1 %}
                                                 <tr>
                                                     <td class="checkBoxNomad">
                                                         <input type="checkbox" class="ts_checkbox checkPartner" data-md-icheck />
@@ -131,20 +132,21 @@
                                                     <td></td>
                                                     <td class="blackIcon">
                                                         <span>
-                                                            <a href="">
+                                                            <a href="{{ path('module', {id: formation.id}) }}">
                                                                 <i class="material-icons">add</i>
-                                                            </a>
-                                                        </span>
-                                                        <span>
-                                                            <a href="">
-                                                                <i class="material-icons">edit</i>
                                                             </a>
                                                         </span>
                                                         <span >
                                                             <i class="material-icons">delete</i>
                                                         </span>
+                                                        <span class="expand">
+                                                            <a onclick="displayModules('{{count}}')">
+                                                                <i class="material-icons">expand_more</i>
+                                                            </a>
+                                                        </span>
                                                     </td>
                                                 </tr>
+                                                <tbody id="{{ 'modules-' ~ count}}" hidden>
                                                 {% for module in formation.modules %}
                                                     <tr>
                                                         <td></td>
@@ -153,18 +155,9 @@
                                                         <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.id}}</td>
                                                         <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.nom}}</td>
                                                         <td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.level}}</td>
-                                                        <td class="blackIcon">
-                                                            <span>
-                                                                <a href="">
-                                                                    <i class="material-icons">edit</i>
-                                                                </a>
-                                                            </span>
-                                                            <span >
-                                                                <i class="material-icons">delete</i>
-                                                            </span>
-                                                        </td>
                                                     </tr>
                                                 {% endfor %}
+                                                </tbody>
                                             {% endfor %}
 
                                             </tbody>
@@ -205,5 +198,36 @@
         </div>
 
     </div>
+
+{% endblock %}
+
+{% block baseJavascripts %}
+
+    <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+    <!-- ionrangeslider -->
+    <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+    <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+    <script>
+
+    var expands = document.getElementsByClassName('expand');
+
+    function displayModules(count){
+        document.getElementById('modules-'+count).hidden = false;
+        expands[count-1].innerHTML = `
+        <a onclick="hideModules(`+count+`)">
+            <i class="material-icons">expand_less</i>
+        </a>`;
+    }
+
+    function hideModules(count){
+        document.getElementById('modules-'+count).hidden = true;
+        expands[count-1].innerHTML = `
+        <a onclick="displayModules(`+count+`)">
+            <i class="material-icons">expand_more</i>
+        </a>`;
+    }
+
+    </script>
 
 {% endblock %}
