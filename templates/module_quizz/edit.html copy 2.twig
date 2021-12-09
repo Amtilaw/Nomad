@@ -8,8 +8,6 @@
 {% endblock %}
 
 {% block body %}
-{{dump(categoryId)}}
-
 	<div id="page_content" class="height-700">
 
 		<div id="page_content_inner" class="height-700">
@@ -56,8 +54,7 @@
 
 							<h1>Creation d'une question</h1>
 							<div style="margin:30px">
-							
-								<form action="{{ path('module_edit',{categoryId}) }}" method="POST">
+								<form action="{{ path('module_createQuestion') }}" method="POST">
 
 
 									<div class="md-card-content">
@@ -75,7 +72,6 @@
 																<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
 																<input type="text" name="libelle" value="{{ categoryInfos.libelle }}" class="md-input label-fixed customizedInput" />
 															</div>
-															<input type="hidden" name="id" value="{{ categoryInfos.id  }}" />
 
                                                             </br>
 
@@ -114,7 +110,11 @@
                                                 </div>
 
 
-                                                                <div id="newPropsAdd">
+                                                                <div class="uk-width-medium-1-2 md-input-filled" data-uk-grid-margin>
+
+					
+																	<div id="newPropsAdd">
+																	</div>
 																	
 														        </div>
                                                    
@@ -131,12 +131,7 @@
 #}
                                                         
                                                             
-                                                       <div class="uk-grid">
-											<div class="uk-width-1-1">
-												
-												<ul id="tabs_1_content" class="uk-switcher uk-margin">
-													<li>
-													
+
 															<div class="uk-width-medium-1-2 md-input-filled">
 																<label for="formation" class="form-label">Le nom de la Formation</label>
 																<br>
@@ -226,9 +221,6 @@
 																			
 
 														</div>
-														 <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)"  name="Bouton" type="submit" >ENREGISTRER</button>
-                                            </form>
-                                            <button class="md-btn md-btn-default cancelBtn" href="javascript:void(0)"  name="annuler">ANNULER</button>
 													</li>
 												</ul>
 											</div>
@@ -256,8 +248,10 @@
 
 									</div>#}
 								</div>
-								
-								
+								<br>
+								<div class="col-12">
+									<button class="btn btn-primary" type="submit">Créer la question</button>
+								</div>
 							</form>
 						</div>
 
@@ -284,7 +278,6 @@
 					{# Filters #}
 					{% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
 
-					
 				</div>
 
 			</div>
@@ -329,15 +322,14 @@ function addProps() {
 countProps++;
 let newProps = document.createElement("div");
 
-newProps.innerHTML = ` <div class="uk-width-medium-1-2 md-input-filled">
-                            <label for="exampleFormControlInput1" class="form-label"> Libelle de la question </label>
-						    <input type="text" class="form-control" id="libelleProps${countProps}" placeholder="Paris" name="libelleProps${countProps}">
-						</div>`
+newProps.innerHTML = ` <div class = "mb-3"> <label for="exampleFormControlInput1" class="form-label"> Libelle de la question </label>
+											<input type="text" class="form-control" id="libelleProps${countProps}" placeholder="Paris" name="libelleProps${countProps}">
+										</div > `
 $("#newPropsAdd").append(newProps);
 }
 
 function getPalliersByVideo(idVideo) {
-const url = "{{ path('module_edit',{categoryId}) }}";
+const url = "{{ path('module_createQuestion') }}";
 
 console.log(idVideo);
 

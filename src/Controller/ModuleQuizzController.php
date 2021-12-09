@@ -130,6 +130,8 @@ class ModuleQuizzController extends AbstractController
    */
   public function createQuestion(Request $request): Response
   {
+
+    
     $palliers = ["0" => ["id" => 1, "timecode" => 2.3]];
     if ($request->isXmlHttpRequest()) {
       $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
@@ -222,6 +224,7 @@ class ModuleQuizzController extends AbstractController
    
       if(isset($_POST['libelleProps' . $i])) {
           $proposition = new Proposition();
+        
           $id_question = $question->getId();
           var_dump($id_question);
    
@@ -520,13 +523,39 @@ class ModuleQuizzController extends AbstractController
   public function edit(Request $request, userinterface $user, $categoryId, PropositionRepository $propositionRepository , QuestionRepository $questionRepository): Response
   {
 
+    var_dump($_POST);
+    $palliers = ["0" => ["id" => 1, "timecode" => 2.3]];
+    if ($request->isXmlHttpRequest()) {
+      $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
+      $palliers = $repositoryPallier->pallierByVideo($request->request->get("idVideo"));
+      return new JsonResponse(json_encode($palliers));
+    }
+
+    $repository = $this->getDoctrine()->getRepository(Type::class);
+    $types = $repository->findAll();
+    $repositoryFormation =  $this->getDoctrine()->getRepository(Formation::class);
+    $repositoryModule =  $this->getDoctrine()->getRepository(Module::class);
+    
+
+    $formation = $repositoryFormation->findAll();
+    $modules = $repositoryModule->findAll();
+    $repositoryLvl = $this->getDoctrine()->getRepository(Level::class);
+    $levels = $repositoryLvl->findAll();
+    $repositoryType = $this->getDoctrine()->getRepository(Type::class);
+    $repositoryVideo = $this->getDoctrine()->getRepository(Video::class);
+    $repositoryPalier = $this->getDoctrine()->getRepository(Pallier::class);
+    $videos = $repositoryVideo->findAll();
+    $palierTime = $repositoryPalier->allPallier();
+    $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
+    $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
+
     if (isset($_POST['id'])) {
       $categoryId = $_POST['id'];
     }
-
+    $entityManager = $this->getDoctrine()->getManager();
     $PropositionAModifier = $propositionRepository->propositionParQuestion($categoryId);
     $repository_quizz = $this->getDoctrine()->getRepository(Question::class);
-
+    $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
     $categoryInfos = $repository_quizz->find($categoryId);
   
     $entityManager = $this->getDoctrine()->getManager();
@@ -537,14 +566,41 @@ class ModuleQuizzController extends AbstractController
         {
           if (isset($_POST['libelleProps' . $i])) 
           {
+          if (isset($_POST['id-Prop' . $i])) 
+           {
+
+
+
+
             $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop' . $i]);
             $proposition->setLibelle($_POST['libelleProps' . $i]);
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($proposition);
             $entityManager->flush();
-          }
+           
+           }else {
+            // enregistrment des proposition
+            for ($i = 1; $i < 30; $i++) {
+              if (isset($_POST['libelleProps' . $i])) {
+              $proposition = new Proposition();
 
+              $id_question = $question->getId();
+              var_dump($id_question);
+
+              $proposition->setLibelle($_POST['libelleProps' . $i]);
+              $proposition->setIdQuestion($repositoryQuestion->find($id_question));
+              // var_dump($id_question);
+
+              }
+            }
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($proposition);
+            $entityManager->flush();
+           }
+          
+          }
         }
+        
       
       $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
       $entityManager = $this->getDoctrine()->getManager();
@@ -567,15 +623,21 @@ class ModuleQuizzController extends AbstractController
 
     return $this->render('module_quizz/edit.html.twig', [
       'pageTitle' => 'categorie',
-      'rootTemplate' => 'category',
+      'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'edit',
       'pageColor' => 'md-bg-grey-100',
 
       'user' => $user,
-      'userIdToEdit' => $categoryId,
+      'categoryId' => $categoryId,
       'categoryInfos' => $categoryInfos,
-      'PropositionAModifier'=> $PropositionAModifier
+      'PropositionAModifier'=> $PropositionAModifier,
+      'types' => $types,
+      'formation' => $formation,
+      'levels' => $levels,
+      'videos' => $videos,
+      'palliers' => $palliers,
+      'modules' => $modules
 
     ]);
   }
