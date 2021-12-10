@@ -31,6 +31,18 @@ class PropositionRepository extends ServiceEntityRepository
         return $stmt->executeQuery()->fetchAllAssociative();
 
     }
+
+    public function AllProposition()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT *
+                FROM `proposition` ";
+
+        $stmt = $conn->prepare($sql);
+
+        return $stmt->executeQuery()->fetchAllAssociative();
+    }
     // /**
     //  * @return Proposition[] Returns an array of Proposition objects
     //  */

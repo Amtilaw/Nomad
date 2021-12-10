@@ -41,7 +41,7 @@
                     <div class="uk-flex-item-1">
                         
                         {# nav bar contextuel #}
-                        {% include rootTemplate ~ '/component/partials/contextual_secondary_nav_'~ rootPage ~'.html.twig' %}
+                        {% include rootTemplate ~ '/component/partials/contextual_secondary_nav_'~ rootPage ~'2.html.twig' %}
 
 
                         <div class="md-card-content mostly-customized-scrollbar mainScroll">
@@ -57,12 +57,12 @@
                             >
                                 <div class="pt-15 pb-15 borderBottom height50">
                                     <h3 class="m-0 fz18 grisFonce title2">
-                                        Le module {{module.nom}}
+                                         {{question.libelle}}
                                     </h3>
                                 </div>
                                 <div class="pt-2 pb-2">
                                     <div class="pt-15 pb-15 borderBottom">
-                                        <p class="textContent">Affichage de la liste des question Pour le module {{module.nom}} </p>
+                                        <p class="textContent">Affichage de la liste des proposition Pour la question </p>
                                     </div>
 
                                     <div class="message">
@@ -96,28 +96,19 @@
                                         </div>
                                         <div class="floatLeftIcon">
                                             <div class="iconGoSearch">
-                                                {% if(isEnabled=='1') %}
-                                                    <a href="{{ path('module_module_quizz',{isAll: ((isAll=='yes')?'no':'yes'), isEnabled: 0 }) }}">
-                                                        <i class="material-icons">visibility_off</i>
-                                                    </a>
-
-                                                {% else %}
-                                                    <a href="{{ path('module_module_quizz',{isAll: ((isAll=='yes')?'no':'yes'), isEnabled: 1 }) }}">
+                                                
+                                                    <a href="{{ path('module_module_quizz') }}">
                                                         <i class="material-icons">account_circle</i>
                                                     </a>
 
-                                                {% endif %}
+                                                
                                             </div>
-                                            
-                                            <a class="iconHerarchy" href="{{ path('module_createQuestion')}}">
+                                            <a class="iconHerarchy" href="{{ path('module_module_quizz') }}">
                                                 <i class="material-icons">share</i>
                                             </a>
                                             <div class="iconExporter">
                                                 <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
                                             </div>
-	                                          
-	
-
                                         </div>
                                     </div>
                                     <div class="table-responsive uk-overflow-containe">
@@ -129,9 +120,8 @@
                                                 </th>
                                                 <th scope="col" class="left-align">Type</th>
                                                 <th scope="col">ID</th>
-                                                <th scope="col">intitule de la question</th>
-                                                <th scope="col" >Cree le </th>
-                                                <th scope="col" >Modifier le </th>
+                                                <th scope="col">intitule de la Proposition </th>
+                                                
                                               
                                                 <th scope="col" ></th>
                                                 
@@ -141,8 +131,11 @@
                                             </thead>
                                             <tbody id="contentTable">
                                                 
-                                                {% for v in all %}
-                                                {% if v.id_module_id == moduleId %}
+                                                {% for v in proposition %}
+                                                  {% if v.id_question_id == questionId %}
+                                                 
+
+
                                                 
                                                                <tr dataID="{{v.id}}" dataName="{{v.libelle}}"  class="lineEffectif">
                                                                 <td class="checkBoxNomad">
@@ -155,26 +148,20 @@
                                                                 </td>
                                                                 <td>{{v.id}}</td>
                                                                 <td>{{v.libelle}}</td>
-                                                                <td>{{v.created_at}}</td>
-                                                                 <td>{{v.modify_at}}</td>
                                                                  
                                                             <td></td>
                                                                 <td class="blackIcon">
                                                                     <span>
-                                                                       <a href="{{ path('module_edit',{categoryId: v.id}) }}">
+                                                                       <a href="{{ path('module_editProposition',{PropositionId: v.id}) }}">
                                                                             <i class="material-icons">edit</i>
                                                                         </a>
                                                                     </span>
                                                                     <span >
-                                                                    <a href="{{ path('module_delete',{categoryId: v.id}) }}">
+                                                                    <a href="{{ path('module_deleteProposition',{PropositionId: v.id}) }}">
                                                                         <i class="material-icons">delete</i>
                                                                         
                                                                     </span>
-                                                                     <span>
-                                                                     	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
-                                                                     		<i class="material-icons">Les proposition</i>
-                                                                     	</a>
-                                                                     </span>
+                                                                     
 
                                                                 </td>
                                                             </tr>
@@ -203,7 +190,7 @@
                             </h3>
                         </div>
                         {# Filters #}
-                        {# {% include rootTemplate ~ '/component/contextual_filters.html.twig' %} #}
+                        {% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
                         </div>
                     </div>
                 </div>
