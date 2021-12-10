@@ -31,6 +31,7 @@ use App\Entity\Type;
 use App\Entity\Proposition;
 use App\Entity\Video;
 use App\Repository\ModuleRepository;
+use App\Repository\NmdProductRepository;
 use App\Repository\PallierRepository;
 use App\Repository\PropositionRepository;
 use phpDocumentor\Reflection\Types\Null_;
@@ -41,7 +42,15 @@ use Symfony\Component\Validator\Constraints\Json;
  * @Route("/module", name="module_")
  */
 class ModuleQuizzController extends AbstractController
+
 {
+private $nmdNproductRepository;
+
+public function __construct(
+  NmdProductRepository $nmdNproductRepository
+  ) {
+  $this->nmdNproductRepository = $nmdNproductRepository;
+}
   /**
    * @Route("/module_quizz", name="module_quizz")
    */
@@ -132,7 +141,7 @@ class ModuleQuizzController extends AbstractController
   {
 
     
-    $palliers = ["0" => ["id" => 1, "timecode" => 2.3]];
+   
     if ($request->isXmlHttpRequest()) {
       $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
       $palliers = $repositoryPallier->pallierByVideo($request->request->get("idVideo"));
@@ -196,17 +205,14 @@ class ModuleQuizzController extends AbstractController
 
         if ($palier["timecode"] == $_POST['pallier'] ) {
           $pallier_id = $palier["id"];
-         //print_r(2);
+        
 
         }
         
        }
        
       $question->setIdPallier($repositoryPalier->find($pallier_id));
-      // var_dump($_POST);
       
-      // var_dump( $palierTime);
-       //var_dump($_POST['pallier']);
       
 
        $entityManager->persist($question);
@@ -226,11 +232,10 @@ class ModuleQuizzController extends AbstractController
           $proposition = new Proposition();
         
           $id_question = $question->getId();
-          var_dump($id_question);
-   
+          
           $proposition ->setLibelle($_POST['libelleProps' . $i]);
           $proposition->setIdQuestion($repositoryQuestion->find($id_question));
-          // var_dump($id_question);
+         
     
         }
       }
@@ -520,11 +525,40 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/edit/{categoryId}", name="edit")
    */
-  public function edit(Request $request, userinterface $user, $categoryId, PropositionRepository $propositionRepository , QuestionRepository $questionRepository): Response
+  public function edit(Request $request, userinterface $user, $categoryId, PropositionRepository $propositionRepository , PallierRepository $RepositoryPallier,QuestionRepository $RepositoryQuestion ): Response
   {
 
-    var_dump($_POST);
-    $palliers = ["0" => ["id" => 1, "timecode" => 2.3]];
+    //dd($request->request->get('libelle'));  // POST PUT UPDATE
+    //dd($request->queryy->get('libelle')); // GET DELETE 
+
+    $categoryInfos = $RepositoryQuestion->find($categoryId);
+    $laQuestion = $RepositoryQuestion->find($categoryId);
+    $Id_palier_question = $laQuestion->getIdPallier();
+    if (isset($Id_palier_question)) {
+      $timecode = $Id_palier_question->getTimecode();
+      $Id_video = $laQuestion->getIdVideo();
+      $urlVideo = $Id_video->getUrl();
+      $IdlVideo = $Id_video->getId();
+    }else {
+      $timecode = null;
+      $urlVideo = null;
+      $IdlVideo = null;
+      
+    }
+    
+
+    
+    
+
+
+   
+    
+    if (isset($Id_palier_question)){
+    $pallieraafficher = $RepositoryPallier->find($Id_palier_question);
+    }else {
+      $pallieraafficher =null;
+    }
+    
     if ($request->isXmlHttpRequest()) {
       $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
       $palliers = $repositoryPallier->pallierByVideo($request->request->get("idVideo"));
@@ -551,69 +585,101 @@ class ModuleQuizzController extends AbstractController
 
     if (isset($_POST['id'])) {
       $categoryId = $_POST['id'];
+    
     }
+    $palliers= null;
     $entityManager = $this->getDoctrine()->getManager();
     $PropositionAModifier = $propositionRepository->propositionParQuestion($categoryId);
     $repository_quizz = $this->getDoctrine()->getRepository(Question::class);
+    if (isset($_POST['id'])) {
+    
     $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
-    $categoryInfos = $repository_quizz->find($categoryId);
-  
+    }
+    
+    
+ 
     $entityManager = $this->getDoctrine()->getManager();
     
  
       if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
         for ($i = 0; $i < 30; $i++) 
         {
-          if (isset($_POST['libelleProps' . $i])) 
+          if (isset($_POST['libelleProps' . $i]) && isset($_POST['iscorrect' . $i])) 
           {
           if (isset($_POST['id-Prop' . $i])) 
            {
 
-
-
-
             $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop' . $i]);
             $proposition->setLibelle($_POST['libelleProps' . $i]);
+            
+            $proposition->setIsCorrect($_POST['iscorrect' . $i]);
+            
+            
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($proposition);
             $entityManager->flush();
            
            }else {
             // enregistrment des proposition
-            for ($i = 1; $i < 30; $i++) {
+            
               if (isset($_POST['libelleProps' . $i])) {
               $proposition = new Proposition();
 
               $id_question = $question->getId();
-              var_dump($id_question);
+              
 
               $proposition->setLibelle($_POST['libelleProps' . $i]);
               $proposition->setIdQuestion($repositoryQuestion->find($id_question));
-              // var_dump($id_question);
+              $proposition->setIsCorrect($_POST['iscorrect' .$i]);
+              
+                $entityManager = $this->getDoctrine()->getManager();
+                $entityManager->persist($proposition);
+                $entityManager->flush();
 
               }
-            }
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($proposition);
-            $entityManager->flush();
+            
+            
            }
           
-          }
+          } 
         }
-        
-      
-      $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
-      $entityManager = $this->getDoctrine()->getManager();
 
-    $question->setLibelle($_POST['libelle']);
-    //  $question->setCreatedAt(new \DateTime());
-     $question->setModifyAt(new \DateTime());
-    $entityManager->persist($question);
+      // creation modification pallier
+      if (isset($Id_palier_question)) {
+        $paliers = $entityManager->getRepository(Pallier::class)->find($Id_palier_question);
+        $paliers->setTimecode($_POST['pallierTimecode']);
+        $entityManager->persist($paliers);
 
-    $entityManager->flush();
+        $entityManager->flush();
+      } else {
+        $paliers = new Pallier;
+        $paliers->setTimecode($_POST['pallierTimecode']);
 
-    $entityManager = $this->getDoctrine()->getManager();
-      }  
+        $entityManager->persist($paliers);
+
+        $entityManager->flush();
+      }
+    }
+
+    // creation question 
+    if (isset($_POST['libelle'])) {
+        $question = $entityManager->getRepository(Question::class)->find($categoryId);
+        $question->setLibelle($_POST['libelle']);
+        $question->setModifyAt(new \DateTime());
+        $pallier_id = 0;
+         $pallier_id = $paliers->getId();
+         
+     
+
+
+
+      $question->setIdVideo($repositoryVideo->find($_POST['video']));
+      $question->setIdPallier($repositoryPalier->find($pallier_id));
+      $entityManager->persist($question);
+      $entityManager->flush();
+    }
+
+  
   
 
     if (isset($_POST['annuler'])) {
@@ -637,7 +703,12 @@ class ModuleQuizzController extends AbstractController
       'levels' => $levels,
       'videos' => $videos,
       'palliers' => $palliers,
-      'modules' => $modules
+      'timecode' => $timecode,
+      'pallieraafficher' =>  $pallieraafficher,
+      'urlVideo' => $urlVideo,
+      'modules' => $modules,
+      'IdlVideo' => $IdlVideo,
+
 
     ]);
   }
@@ -680,4 +751,33 @@ class ModuleQuizzController extends AbstractController
         'formations'=>$formations
     ]);
   }
+
+  /**
+   * @Route("/delete/{categoryId}", name="delete")
+   */
+  public function delete(Request $request, userinterface $user, $categoryId): Response
+  {
+
+    $repository_category = $this->getDoctrine()->getRepository(NmdCategorieProduct::class);
+
+    $categoryInfos = $repository_category->find($categoryId);
+    // Connexion à MySQL
+
+    $connection = mysqli_connect("localhost", "root", "", "nomad");
+
+    if (!$connection) { // Contrôler la connexion
+      $MessageConnexion = die("connection impossible");
+    } else {
+
+
+      // Requête d'insertion
+      $ModifCategory = "DELETE FROM question 
+            where id='$categoryId';";
+
+      // Exécution de la reqête
+      mysqli_query($connection, $ModifCategory) or die('Erreur SQL !' . $ModifCategory . '<br>' . mysqli_error($connection));
+      return $this->redirectToRoute("module_module");
+    }
+  }
+
 }

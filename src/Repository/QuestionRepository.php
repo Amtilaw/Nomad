@@ -54,6 +54,22 @@ class QuestionRepository extends ServiceEntityRepository
 
         $stmt = $conn->prepare($sql);
         return $stmt->executeQuery()->fetchAllAssociative();
+    }
+
+    public function TimecodeQuestion($idTimecode)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql =
+
+            " SELECT timecode
+            
+          FROM `pallier`
+          where id = $idTimecode
+        ";
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllAssociative();
     } 
 
     // /**
