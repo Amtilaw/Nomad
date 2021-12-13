@@ -18,12 +18,30 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class QuizController extends AbstractController
 {
   /**
-   * @Route("/quiz/index", name="quiz")
+   * @Route("/formation", name="formation")
    */
   public function index(): Response
   {
+
+
+    return $this->render('quiz/index.html.twig', [
+      'pageTitle' => 'Quiz auto-formation',
+      'rootTemplate' => 'quiz',
+      'pageIcon' => 'group',
+      'rootPage' => 'lists',
+      'pageColor' => 'md-bg-grey-100',
+
+    ]);
+  }
+
+  /**
+   * @Route("/quiz", name="quiz")
+   */
+  public function quiz(): Response
+  {
     $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
     $questions = $repositoryQuestion->questionByVideoAndPallier(1);
+
 
 
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
@@ -54,7 +72,7 @@ class QuizController extends AbstractController
     $json = json_encode($arrayResponse);
 
 
-    return $this->render('quiz/index.html.twig', [
+    return $this->render('quiz/quizz.html.twig', [
       'pageTitle' => 'Quiz auto-formation',
       'rootTemplate' => 'quiz',
       'pageIcon' => 'group',

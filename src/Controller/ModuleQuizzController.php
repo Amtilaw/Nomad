@@ -101,11 +101,7 @@ class ModuleQuizzController extends AbstractController
   public function createQuestion(Request $request): Response
   {
     $palliers = ["0" => ["id" => 1, "timecode" => 2.3]];
-    if ($request->isXmlHttpRequest()) {
-      $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
-      $palliers = $repositoryPallier->pallierByVideo($request->request->get("idVideo"));
-      return new JsonResponse(json_encode($palliers));
-    }
+
 
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
@@ -134,6 +130,17 @@ class ModuleQuizzController extends AbstractController
       $entityManager->flush();
 
       return new Response('Saved new product with id ' . $module->getId());
+    }
+    if ($request->isXmlHttpRequest()) {
+      $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
+      $palliers = $repositoryPallier->pallierByVideo($request->request->get("idVideo"));
+
+      $response = array(
+        "palliers" => $palliers,
+        "response" => $this->render('module_quizz/creationQuestion.html.twig')->getContent()
+      );
+      dd($response);
+      return new JsonResponse($response);
     }
 
 
