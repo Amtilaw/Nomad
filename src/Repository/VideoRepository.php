@@ -19,6 +19,17 @@ class VideoRepository extends ServiceEntityRepository
         parent::__construct($registry, Video::class);
     }
 
+    public function getVideoName($id)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql =
+
+            "SELECT url FROM video WHERE id = $id";
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllAssociative();
+    }
 
     // /**
     //  * @return Video[] Returns an array of Video objects

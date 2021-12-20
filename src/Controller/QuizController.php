@@ -11,6 +11,7 @@ use App\Entity\Question;
 use App\Entity\Pallier;
 use App\Entity\Proposition;
 use App\Entity\Reponse;
+use App\Entity\Video;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
 use Symfony\Component\Security\Core\User\UserInterface;
@@ -24,6 +25,9 @@ class QuizController extends AbstractController
   {
     $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
     $questions = $repositoryQuestion->questionByVideoAndPallier($idVideo, $idModule);
+    $videoName = $this->getDoctrine()->getRepository(Video::class);
+
+    $videoName = $videoName->getVideoName($idVideo);
 
 
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
@@ -62,6 +66,7 @@ class QuizController extends AbstractController
       'pageColor' => 'md-bg-grey-100',
       'questions' => $questions,
       'json' => $json,
+      "videoName" => $videoName[0]["url"],
     ]);
   }
 
