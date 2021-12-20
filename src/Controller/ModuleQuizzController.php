@@ -291,7 +291,6 @@ class ModuleQuizzController extends AbstractController
           $id_question = $questionId;
           $idModule = $repositoryQuestion->findIdModule($id_question);
           $idModule = $idModule[0]["id_module_id"];
-          dump($_POST['libelleProps' . $i]);
           $proposition->setLibelle($_POST['libelleProps' . $i]);
           $proposition->setIdQuestion($repositoryQuestion->find($id_question));
           if (isset($_POST['correct' . $i]))

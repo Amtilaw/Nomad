@@ -1,13 +1,18 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello ModuleQuizzController!
+{% block title %}Creation formation
 {% endblock %}
+
 {% block baseStylesheets %}
 	<link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
 	<link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+
 {% endblock %}
 
 {% block body %}
+
+
+
 	<div id="page_content" class="height-700">
 
 		<div id="page_content_inner" class="height-700">
@@ -38,17 +43,34 @@
 
 				</div>
 
-				<div class="uk-flex-item-1">
+				<div
+					class="uk-flex-item-1">
 					<!-- -->
 					{# nav bar contextuel #}
 					{% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
 
-						<div
-						class="md-card-content mostly-customized-scrollbar mainScroll"> <!-- Tabs content -->
-						<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+					<div
+						class="md-card-content mostly-customized-scrollbar mainScroll">
+
+
+						<!-- Tabs content -->
+<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
 
 
 							<h1>Creation d'une formation</h1>
+<div class="message">
+			<div class="message-icon">
+				<i class="material-icons">info</i>
+			</div>
+			<div class="message-content">
+				<p>
+					Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+					                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+					                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+					                                                de contacts que vous configurez ici.
+				</p>
+			</div>
+		</div>
 							
               {{form(form)}}
               </div>
