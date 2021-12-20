@@ -18,12 +18,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class QuizController extends AbstractController
 {
   /**
-   * @Route("/quiz/index", name="quiz")
+   * @Route("/quiz/index{idVideo}{idModule}", name="quiz")
    */
-  public function index(): Response
+  public function index($idVideo, $idModule): Response
   {
     $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
-    $questions = $repositoryQuestion->questionByVideoAndPallier(1);
+    $questions = $repositoryQuestion->questionByVideoAndPallier($idVideo, $idModule);
 
 
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
@@ -70,7 +70,6 @@ class QuizController extends AbstractController
    */
   public function userRespond(Request $request, UserInterface $userI)
   {
-    dd($request->getLanguages());
     $userId = $request->get("userId");
     if ($userId == null or $userId == '') {
       $rolesI = $userI->getRoles();

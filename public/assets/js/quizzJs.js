@@ -28,6 +28,7 @@ function PlayerjsEvents(event, id, data) {
 
 // Check si la vidéo à attein un pallier
 function checkPalier() {
+seconde++;
   isUserForwardVideo();
   if (
     player.api("time") > json[countQuestion]["timecode"] &&
@@ -56,7 +57,6 @@ function renderMinuteur() {
   var minutes = Math.floor(seconde / 60);
   var seconds = seconde - minutes * 60;
   $("#minuteur").html(minutes + ":" + seconds);
-  seconde++;
 }
 
 function showModal() {
@@ -189,9 +189,15 @@ function isUserForwardVideo() {
 }
 
 function renderContextualMenue() {
-  for (let i = questionsSize - 1; i > 0; i--) {
-    let li = document.createElement("li");
-    li.innerHTML = `
+  console.log(questionsSize);
+  for (let i = questionsSize - 1; i >= 0; i--) {
+    if (
+      (i < questionsSize - 1 &&
+        json[i]["titrePallier"] != json[i + 1]["titrePallier"]) ||
+      i == questionsSize - 1
+    ) {
+      let li = document.createElement("li");
+      li.innerHTML = `
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">schedule</i>
                 </div>
@@ -200,8 +206,9 @@ function renderContextualMenue() {
                     <span class="uk-text-small uk-text-muted">${json[i]["timecode"]}</span>
                 </div>`;
 
-    let ul = document.getElementById("ulMenue");
-    ul.prepend(li);
+      let ul = document.getElementById("ulMenue");
+      ul.prepend(li);
+    }
   }
 }
 

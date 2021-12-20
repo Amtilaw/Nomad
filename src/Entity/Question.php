@@ -46,6 +46,7 @@ class Question
 
     /**
      * @ORM\ManyToOne(targetEntity=Module::class, inversedBy="questions")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $id_module;
 

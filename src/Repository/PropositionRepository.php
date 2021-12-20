@@ -19,17 +19,28 @@ class PropositionRepository extends ServiceEntityRepository
         parent::__construct($registry, Proposition::class);
     }
 
-    public function propositionParQuestion($id) {
+    public function findIdQuestion($id)
+    {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT *
+        $sql = "SELECT id_question_id
                 FROM `proposition` p
-                WHERE p.id_question_id = $id";
+                WHERE p.id = $id";
 
         $stmt = $conn->prepare($sql);
 
         return $stmt->executeQuery()->fetchAllAssociative();
+    }
 
+    public function propositionParQuestion($id)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT * FROM `proposition` p WHERE p.id_question_id = $id";
+
+        $stmt = $conn->prepare($sql);
+
+        return $stmt->executeQuery()->fetchAllAssociative();
     }
 
     public function AllProposition()

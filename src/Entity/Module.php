@@ -46,6 +46,7 @@ class Module
 
     /**
      * @ORM\ManyToOne(targetEntity=Formation::class, inversedBy="modules")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $id_formation;
 
@@ -147,5 +148,10 @@ class Module
         $this->id_formation = $id_formation;
 
         return $this;
+    }
+
+    public function getSelected()
+    {
+        if (isset($this->selected)) return "selected";
     }
 }

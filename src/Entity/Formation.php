@@ -80,4 +80,9 @@ class Formation
 
         return $this;
     }
+
+    public function getSelected()
+    {
+        if (isset($this->selected)) return "selected";
+    }
 }

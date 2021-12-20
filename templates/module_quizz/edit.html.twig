@@ -12,7 +12,6 @@
 {% block body %}
 
 
-
 	<div id="page_content" class="height-700">
 
 		<div id="page_content_inner" class="height-700">
@@ -43,241 +42,222 @@
 
 				</div>
 
-				<div
-					class="uk-flex-item-1">
+				<div class="uk-flex-item-1">
 					<!-- -->
 					{# nav bar contextuel #}
 					{% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
 
-					<div
-						class="md-card-content mostly-customized-scrollbar mainScroll">
+						<div
+						class="md-card-content mostly-customized-scrollbar mainScroll"> <!-- Tabs content -->
+						<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+							<div class="pt-15 pb-15 pl-3 borderBottom height50">
+								<h3 class="m-0 title2">
+
+									Modification de la question question
+								</h3>
+							</div>
+							<div class="pt-2 pb-2">
+
+								<div class="message">
+									<div class="message-icon">
+										<i class="material-icons">info</i>
+									</div>
+									<div class="message-content">
+										<p>
+											Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+																                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+																                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+																                                                de contacts que vous configurez ici.
+										</p>
+									</div>
+								</div>
+
+								<div class="uk-form-row">
+									<h3 class="heading_a">Formulaire</h3>
 
 
-						<!-- Tabs content -->
-<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
-	<div class="pt-15 pb-15 pl-3 borderBottom height50">
-		<h3 class="m-0 title2">
-
-			Modification de la question question
-		</h3>
-	</div>
-	<div class="pt-2 pb-2">
-
-		<div class="message">
-			<div class="message-icon">
-				<i class="material-icons">info</i>
-			</div>
-			<div class="message-content">
-				<p>
-					Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
-					                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
-					                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
-					                                                de contacts que vous configurez ici.
-				</p>
-			</div>
-		</div>
-
-		<div class="uk-form-row">
-			<h3 class="heading_a">Formulaire</h3>
-
-							
-								<form action="{{ path('module_edit',{categoryId}) }}" method="POST">
+									<form action="{{ path('module_edit',{categoryId}) }}" method="POST">
 
 
-									<div class="md-card-content">
-										<div class="uk-grid">
-											<div class="uk-width-1-1">
-												<ul class="uk-tab" data-uk-tab="{connect:'#tabs_1_content'}" id="tabs_1">
-													<li class="uk-active"><a href="#">Question</a></li>
+										<div class="md-card-content">
+											<div class="uk-grid">
+												<div class="uk-width-1-1">
+													<ul class="uk-tab" data-uk-tab="{connect:'#tabs_1_content'}" id="tabs_1">
+														<li class="uk-active">
+															<a href="#">Question</a>
+														</li>
 
-												</ul>
-												<ul id="tabs_1_content" class="uk-switcher uk-margin">
-													<li>
-													<br>
-															
+													</ul>
+													<ul id="tabs_1_content" class="uk-switcher uk-margin">
+														<li>
+															<br>
+
 															<div class="uk-width-1 md-input-filled">
 																<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
-																<input type="text" name="libelle" value="{{ categoryInfos.libelle }}" class="md-input label-fixed customizedInput" />
+																<input type="text" name="libelle" value="{{ categoryInfos.libelle }}" class="md-input label-fixed customizedInput"/>
 															</div>
-															<input type="hidden" name="id" value="{{ categoryInfos.id  }}" />
+															<input type="hidden" name="id" value="{{ categoryInfos.id }}"/>
+														</li>
+													</br>
 
-                                                            </br>
-
-                                                             <div class="uk-grid" data-uk-grid-margin>
-                                                                <div class="uk-width-medium-1-2 md-input-filled">
-                                                                    <label>Crée a la date du </label>
-                                                                    <input type="text" name="CreatedAt" value="{{ categoryInfos.CreatedAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput" />
-                                                                </div>
-                                                            
-                                                                <div class="uk-width-medium-1-2 md-input-filled">
-                                
-                                                                  <label>modifier a la date du </label>
-                                                                    <input type="text" name="modifyAt" value="{{ categoryInfos.modifyAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput" />
-                                                                </div>
-
-                                                                
-                                                                </div>
-
-                                                            </div>
-                                                             </li>
-                                                </ul>
-
-                                                </div>
-
-                                                            
-                                                       <div class="uk-grid">
-											<div class="uk-width-1-1">
-												
-												<ul id="tabs_1_content" class="uk-switcher uk-margin">
-													<li>
-													
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Le nom de la Formation</label>
-																<br>
-																<select class="md-input label-fixed customizedInput"  aria-label="Default select example" name="NomFormaton" id="NomFormaton">
-																<option selected>Nom de la formation</option>
-																{% for formatio in formation %}
-																	<option value=" {{ formatio.id }} ">{{ formatio.nom }}</option>
-																{% endfor %}
-																</select>
-															</div>
-															
-															<div class="uk-width-medium-1-2 md-input-filled">
-																	<label for="formation" class="form-label">Le nom du module</label>
-																	<br>
-																	<select class="md-input label-fixed customizedInput"  aria-label="Default select example" name="Module" id="Module">
-																	<option selected>Module</option>		
-																		{% for module in modules %}
-																				<option value=" {{ module.id }} ">{{ module.nom }}</option>
-																		{% endfor %}
-																	</select>
-															</div>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">Difficulté de la question</label>
-																<br>
-																<select class="md-input label-fixed customizedInput"  aria-label="Default select example" name="lvl">
-																<option selected>Choisisser la difficulté de la question</option>
-																{% for level in levels %}
-																	<option value="{{ level.id }}">{{ level.nom }}</option>
-																{% endfor %}
-																</select>
-															</div>
-															
-															<div class="uk-width-medium-1-2 md-input-filled">
-																	<label for="formation" class="form-label">Type de proposition</label>
-																	<br>
-																	<select class="md-input label-fixed customizedInput"  aria-label="Default select example" name="type" id="typeProps">
-																	<option selected>Selectionné le type de question</option>
-																		{% for type in types %}
-																			<option value=" {{ type.id }} ">{{ type.nom }}</option>
-																		{% endfor %}
-																	</select>
-															</div>
-
-
+													<div class="uk-grid" data-uk-grid-margin>
+														<div class="uk-width-medium-1-2 md-input-filled">
+															<label>Crée a la date du
+															</label>
+															<input type="text" name="CreatedAt" value="{{ categoryInfos.CreatedAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput"/>
 														</div>
+
+														<div class="uk-width-medium-1-2 md-input-filled">
+
+															<label>modifier a la date du
+															</label>
+															<input type="text" name="modifyAt" value="{{ categoryInfos.modifyAt|date('Y-m-d H:i:s') }}" class="md-input label-fixed customizedInput"/>
 														</div>
-														
-
-														<div  class="uk-grid" data-uk-grid-margin  >
 
 
+													</div>
 
-																	<div  class="uk-width-medium-1-2 md-input-filled" >
-																		<label for="lvl" class="form-label">video selection</label>
-																	{% if urlVideo == null %}
-																		<select class="md-input label-fixed customizedInput"  aria-label="Default select example" name="video" id="idVideoForm" >
-																		    {% for video in videos %}
-																			    <option value="{{ video.id }}">{{ video.url }}</option>
-																			{% endfor %}
-																		</select>
-																		{% else %}
-											                            <select class="md-input label-fixed customizedInput"  aria-label="Default select example" name="video" id="idVideoForm">
-                                                                            <option value="{{ IdlVideo }}" selected>video precedement selectionner : {{ urlVideo }}</option>
+												</div>
+											</li>
+										</ul>
 
-																		    {% for video in videos %}
-																				{# {% set count = count + 1 %}
-																				{% if count <= 1 %} #}
-																			    	
-																				{# {% else %} #}
-																			    	<option value="{{ video.id }}">{{ video.url }} </option>
+									</div>
 
-																				{# {% endif %} #}
-																			{% endfor %}
-																		</select>
-																		{% endif %}
-																		
-																	</div>
-																
-																	<div  class="uk-width-medium-1-2 md-input-filled" >
-																
-											                            <label for="exampleFormControlInput1" class="form-label">Modifier pallier pour cette video</label>
-																		{% if timecode == null %}
-																		<input type="text" class="md-input label-fixed customizedInput"  id="pallier" placeholder="minute.seconde" name="pallierTimecode" >
-																		{% else %}
-											                            <input type="text" class="md-input label-fixed customizedInput"  id="pallier" placeholder="minute.seconde" name="pallierTimecode" value="{{ timecode}}">
-																		{% endif %}
-										                            </div>
-																				
-														</div>
-																	
-																			
 
-														</div>
-														 <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)"  name="Bouton" type="submit" >ENREGISTRER</button>
-														 <button class="md-btn md-btn-default cancelBtn" href="javascript:void(0)"  name="annuler">ANNULER</button>
-                                            </form>
-                                            
-													</li>
-												</ul>
+									<div class="uk-grid">
+										<div class="uk-width-1-1">
+
+											<ul id="tabs_1_content" class="uk-switcher uk-margin">
+												<li>
+
+													<div class="uk-width-medium-1-2 md-input-filled">
+														<label for="formation" class="form-label">Le nom de la Formation</label>
+														<br>
+														<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
+															<option selected>Nom de la formation</option>
+															{% for formatio in formation %}
+																<option value=" {{ formatio.id }} ">{{ formatio.nom }}</option>
+															{% endfor %}
+														</select>
+													</div>
+
+													<div class="uk-width-medium-1-2 md-input-filled">
+														<label for="formation" class="form-label">Le nom du module</label>
+														<br>
+														<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="Module" id="Module">
+															<option selected>Module</option>
+															{% for module in modules %}
+																<option value=" {{ module.id }} ">{{ module.nom }}</option>
+															{% endfor %}
+														</select>
+													</div>
+
+													<div class="uk-width-medium-1-2 md-input-filled">
+														<label for="lvl" class="form-label">Difficulté de la question</label>
+														<br>
+														<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="lvl">
+															<option selected>Choisisser la difficulté de la question</option>
+															{% for level in levels %}
+																<option value="{{ level.id }}">{{ level.nom }}</option>
+															{% endfor %}
+														</select>
+													</div>
+
+													<div class="uk-width-medium-1-2 md-input-filled">
+														<label for="formation" class="form-label">Type de proposition</label>
+														<br>
+														<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="type" id="typeProps">
+															<option selected>Selectionné le type de question</option>
+															{% for type in types %}
+																<option value=" {{ type.id }} ">{{ type.nom }}</option>
+															{% endfor %}
+														</select>
+													</div>
+												</li>
 											</div>
 										</div>
+
+
+										<div class="uk-grid" data-uk-grid-margin>
+
+
+											<div class="uk-width-medium-1-2 md-input-filled">
+												<label for="lvl" class="form-label">video selection</label>
+												{% if urlVideo == null %}
+													<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="video" id="idVideoForm">
+														{% for video in videos %}
+															<option value="{{ video.id }}">{{ video.url }}</option>
+														{% endfor %}
+													</select>
+												{% else %}
+													<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="video" id="idVideoForm">
+														<option value="{{ IdlVideo }}" selected>video precedement selectionner :
+															{{ urlVideo }}</option>
+
+														{% for video in videos %}
+															{# {% set count = count + 1 %}
+																																			{% if count <= 1 %} #}
+
+															{# {% else %} #}<option value="{{ video.id }}"> {{ video.url }}
+															</option>
+
+															{# {% endif %} #}
+														{% endfor %}
+													</select>
+												{% endif %}
+
+											</div>
+
+											<div class="uk-width-medium-1-2 md-input-filled">
+
+												<label for="exampleFormControlInput1" class="form-label">Modifier pallier pour cette video</label>
+												{% if timecode == null %}
+													<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallierTimecode">
+												{% else %}
+													<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallierTimecode" value="{{ timecode}}">
+												{% endif %}
+											</div>
+
+											<div class="uk-width-medium-1-2 md-input-filled">
+
+												<label for="exampleFormControlInput1" class="form-label">Modifier le titre du groupe de palliers</label>
+												{% if titrePallier == null %}
+													<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
+												{% else %}
+													<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" value="{{ titrePallier }}" name="titrePallier">
+												{% endif %}
+											</div>
+
+										</div>
+
+
 									</div>
-                                    
-								</div>
-								
-								
-							</form>
-						</div>
+									<button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)" name="Bouton" type="submit">ENREGISTRER</button>
+									<button class="md-btn md-btn-default cancelBtn" href="javascript:void(0)" name="annuler">ANNULER</button>
+								</form>
 
-						<!-- Tabs content -->
-
+							</li>
+						</ul>
 					</div>
-
 				</div>
-
-				<div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
-
-					<div class="md-card-toolbar md-bg-grey-100">
-						<div class="md-card-toolbar-actions uk-hidden-small">
-							<a href="#" data-column-toggle>
-								<i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
-								<i class="md-icon material-icons" style="display: none" title="Expand">format_indent_decrease</i>
-							</a>
-						</div>
-						<h3 class="md-card-toolbar-heading-text js_hidden">
-							Filtres
-						</h3>
-					</div>
-
-					{# Filters #}
-					{% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
-
-					
-				</div>
-
 			</div>
+
 		</div>
-	</div>
+
+
+	</form>
 </div>
 
-
-{% endblock %}{% block baseJavascripts %}
-<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
-<script>
-
-	let countProps = 2;
+<!-- Tabs content --></div></div><div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed"><div class="md-card-toolbar md-bg-grey-100">
+<div class="md-card-toolbar-actions uk-hidden-small">
+	<a href="#" data-column-toggle>
+		<i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+		<i class="md-icon material-icons" style="display: none" title="Expand">format_indent_decrease</i>
+	</a>
+</div>
+<h3 class="md-card-toolbar-heading-text js_hidden">
+	Filtres
+</h3></div>{# Filters #}{% include rootTemplate ~ '/component/contextual_filters.html.twig' %}</div></div></div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
 let pallierJson;
 $("#videoSelection").css("display", "none");
 $("#propositionsAdd").css("display", "none");
@@ -306,7 +286,6 @@ getPalliersByVideo(this.value);
 });
 
 
-
 function getPalliersByVideo(idVideo) {
 const url = "{{ path('module_edit',{categoryId}) }}";
 
@@ -324,5 +303,4 @@ pallierJson = data;
 console.log("fail");
 });
 
-}
-</script>{% endblock %}
+}</script>{% endblock %}

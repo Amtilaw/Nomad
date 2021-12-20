@@ -19,6 +19,19 @@ class FormationRepository extends ServiceEntityRepository
         parent::__construct($registry, Formation::class);
     }
 
+    public function allVideos($idModule)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql =
+
+            " SELECT DISTINCT id_video_id, url from question, video WHERE id_module_id = $idModule AND video.id = question.id_video_id 
+        ";
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllAssociative();
+    }
+
     // /**
     //  * @return Formation[] Returns an array of Formation objects
     //  */

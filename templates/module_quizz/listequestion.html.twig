@@ -159,20 +159,23 @@
                                                                  <td>{{v.modify_at}}</td>
                                                                  
                                                             <td></td>
-                                                                <td class="blackIcon">
+                                                                <td class="blackIcon"><span>
+                                                                       <a href="{{ path('module_createQuestion', {idQuestion: v.id}) }}">
+                                                                            <i class="material-icons" title="Ajouter une question">add</i>
+                                                                        </a>
+                                                                    </span>
                                                                     <span>
                                                                        <a href="{{ path('module_edit',{categoryId: v.id}) }}">
-                                                                            <i class="material-icons">edit</i>
+                                                                            <i class="material-icons" title="Modifier la question">edit</i>
                                                                         </a>
                                                                     </span>
                                                                     <span >
-                                                                    <a href="{{ path('module_delete',{categoryId: v.id}) }}">
-                                                                        <i class="material-icons">delete</i>
+                                                                        <i class="material-icons" title="Supprimer la question" onclick="showAlertDelete({{v.id}}, '{{v.libelle}}')">delete</i>
                                                                         
                                                                     </span>
                                                                      <span>
                                                                      	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
-                                                                     		<i class="material-icons">Les proposition</i>
+                                                                     		<i class="material-icons" title="Afficher les propositions">Les proposition</i>
                                                                      	</a>
                                                                      </span>
 
@@ -265,6 +268,32 @@
             for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
         }
+       let li = document.createElement("li");
+      li.innerHTML = `<a href="{{ path('module_createQuestion') }}">
+                <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">add</i>
+                </div>
+                <div class="md-list-content">
+                    <span class="md-list-heading">Créer une question</span>
+                    <span class="uk-text-small uk-text-muted">Question</span>
+                </div></a>`;
+
+      let ul = document.getElementById("ulMenue");
+      ul.prepend(li);
+      
+    function showAlertDelete(id, nom){
+        let txt = "Confirmer la supression de la question : " + nom;
+        let url = '{{ path('module_delete', {categoryId: 'id'}) }}';
+        url = url.replace("id", id);
+        if (confirm(txt)){
+            //go to deleteFormation
+            window.location.href = url;
+
+        }
+        else {
+            //annuler
+	}
+    }
     </script>
     <!-- End Export xls -->
 {% endblock %}

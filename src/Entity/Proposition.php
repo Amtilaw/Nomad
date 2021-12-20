@@ -29,6 +29,7 @@ class Proposition
 
     /**
      * @ORM\ManyToOne(targetEntity=Question::class, inversedBy="propositions")
+     * @ORM\JoinColumn(onDelete="CASCADE")
      */
     private $id_question;
 

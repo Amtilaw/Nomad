@@ -17,7 +17,8 @@ class VideoRepository extends ServiceEntityRepository
     public function __construct(ManagerRegistry $registry)
     {
         parent::__construct($registry, Video::class);
-    } 
+    }
+
 
     // /**
     //  * @return Video[] Returns an array of Video objects
