@@ -876,102 +876,35 @@ class ModuleQuizzController extends AbstractController
     //dd($request->queryy->get('libelle')); // GET DELETE 
     //TODO Je comprend pas se qui se passe ici
 
-    $categoryInfos = $this->getDoctrine()->getRepository(Proposition::class);
-    $laQuestion = $RepositoryQuestion->find($categoryInfos->findIdQuestion($PropositionId)[0]["id_question_id"]);
-    $Id_palier_question = $laQuestion->getIdPallier();
-    if (isset($Id_palier_question)) {
-      $timecode = $Id_palier_question->getTimecode();
-      $Id_video = $laQuestion->getIdVideo();
-      $urlVideo = $Id_video->getUrl();
-      $IdlVideo = $Id_video->getId();
-    } else {
-      $timecode = null;
-      $urlVideo = null;
-      $IdlVideo = null;
-    }
+    $categoryInfos = $propositionRepository->find($PropositionId);
 
-    if (isset($Id_palier_question)) {
-      $pallieraafficher = $RepositoryPallier->find($Id_palier_question);
-    } else {
-      $pallieraafficher = null;
-    }
-
-    if ($request->isXmlHttpRequest()) {
-      $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
-      $palliers = $repositoryPallier->pallierByVideo($request->request->get("idVideo"));
-      return new JsonResponse(json_encode($palliers));
-    }
+  
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
-    $repositoryFormation =  $this->getDoctrine()->getRepository(Formation::class);
-    $repositoryModule =  $this->getDoctrine()->getRepository(Module::class);
-
-
-    $formation = $repositoryFormation->findAll();
-    $modules = $repositoryModule->findAll();
-    $repositoryLvl = $this->getDoctrine()->getRepository(Level::class);
-    $levels = $repositoryLvl->findAll();
-    $repositoryType = $this->getDoctrine()->getRepository(Type::class);
-    $repositoryVideo = $this->getDoctrine()->getRepository(Video::class);
-    $repositoryPalier = $this->getDoctrine()->getRepository(Pallier::class);
-    $videos = $repositoryVideo->findAll();
-    $palierTime = $repositoryPalier->allPallier();
-    $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
-    $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
 
     if (isset($_POST['id'])) {
       $PropositionId = $_POST['id'];
     }
+
     $palliers = null;
     $entityManager = $this->getDoctrine()->getManager();
-    $PropositionAModifier = $propositionRepository->find($PropositionId);
-    $PropositionAModifier = $propositionRepository->propositionParQuestion($PropositionAModifier->getIdQuestion()->getId());
-    $repository_quizz = $this->getDoctrine()->getRepository(Question::class);
-    if (isset($_POST['id'])) {
 
-      $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
-    }
-
-
-
-    $entityManager = $this->getDoctrine()->getManager();
 
 
     if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
-      for ($i = 0; $i < 30; $i++) {
-        if (isset($_POST['libelleProps' . $i]) && isset($_POST['iscorrect' . $i])) {
-          if (isset($_POST['id-Prop' . $i])) {
+      
+        if (isset($_POST['libelleProps']) && isset($_POST['iscorrect'])) {
+            $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop']);
+            
+            $proposition->setLibelle($_POST['libelleProps']);
 
-            $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop' . $i]);
-            dd($_POST["id-Prop" . $i]);
-            $proposition->setLibelle($_POST['libelleProps' . $i]);
-
-            $proposition->setIsCorrect($_POST['iscorrect' . $i]);
+            $proposition->setIsCorrect($_POST['iscorrect']);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($proposition);
             $entityManager->flush();
-          } else {
-            // enregistrment des proposition
-
-            if (isset($_POST['libelleProps' . $i])) {
-              $proposition = new Proposition();
-
-              $id_question = $question->getId();
-
-
-              $proposition->setLibelle($_POST['libelleProps' . $i]);
-              $proposition->setIdQuestion($repositoryQuestion->find($id_question));
-              $proposition->setIsCorrect($_POST['iscorrect' . $i]);
-
-              $entityManager = $this->getDoctrine()->getManager();
-              $entityManager->persist($proposition);
-              $entityManager->flush();
-            }
-          }
         }
-      }
     }
 
 
@@ -989,20 +922,9 @@ class ModuleQuizzController extends AbstractController
 
       'user' => $user,
       'categoryId' => $PropositionId,
-      'categoryInfos' => $categoryInfos,
-      'PropositionAModifier' => $PropositionAModifier,
+      'PropositionInfos' => $categoryInfos,
       'types' => $types,
-      'formation' => $formation,
-      'levels' => $levels,
-      'videos' => $videos,
       'palliers' => $palliers,
-      'timecode' => $timecode,
-      'pallieraafficher' =>  $pallieraafficher,
-      'urlVideo' => $urlVideo,
-      'modules' => $modules,
-      'IdlVideo' => $IdlVideo,
-
-
     ]);
   }
   /**

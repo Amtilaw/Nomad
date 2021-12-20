@@ -81,7 +81,7 @@
 			<h3 class="heading_a">Formulaire</h3>
 
 							
-								<form action="{{ path('module_editProposition',{PropositionId: categoryId}) }}" method="POST">
+								<form action="{{ path('module_edit',{categoryId}) }}" method="POST">
 
 
 									<div class="md-card-content">
@@ -94,37 +94,32 @@
 												<ul id="tabs_1_content" class="uk-switcher uk-margin">
 													<li>
                                                     <br>
-													 <div class="uk-grid" data-uk-grid-margin>
+
+	
+                                                                {% set countProps = 0 %}
+                                                                {% for Proposition in PropositionAModifier %}
+                                                                {% set countProps = countProps + 1 %}
+                                                                <div class="uk-grid" data-uk-grid-margin>
 																
-{# {{dump((PropositionAModifier))}}
-{{dump((PropositionInfos))}}  #}
-
-
-
-
-
+																
 
                                                                 <div class="uk-width-medium-1-2 md-input-filled">
                                                                     <label>Proposition </label>
-                                                                    <input type="text" name="libelleProps" value="{{ PropositionInfos.libelle }}" class="md-input label-fixed customizedInput" />
+                                                                    <input type="text" name="libelleProps{{countProps}}" value="{{ Proposition.libelle }}" class="md-input label-fixed customizedInput" />
                                                                 </div>
-
-															
 
 																<div class="uk-width-medium-1-2 md-input-filled" >
 																	<label for="exampleFormControlInput1" class="form-label">cette question est-elle corecte</label>
-																	<input type="checkbox" class="md-input label-fixed customizedInput"  id="iscorrect" name="iscorrect" data-on-text="1" data-off-text="0" data-switchery data-switchery-color="#3367d6"
-																	 {% if PropositionInfos.isCorrect == 1 %} checked {% endif %} 
-																	 value="1">							
+																	<input type="checkbox" class="md-input label-fixed customizedInput"  id="iscorrect{{countProps}}" name="iscorrect{{countProps}}" data-on-text="1" data-off-text="0" data-switchery data-switchery-color="#3367d6" {% if Proposition.is_correct == 1 %} checked {% endif %} value="1">							
 					                                            </div> 
 
-                                                                <input type="hidden" name="id-Prop" value="{{ PropositionInfos.id  }}" />
-																
+                                                                <input type="hidden" name="id-Prop{{countProps}}" value="{{ Proposition.id  }}" />
 																</div>
 
+                                                                {% endfor %}
                                                                 
                                                              </li>
-                                                </ul> 
+                                                </ul>
 
                                                
 
@@ -140,7 +135,7 @@
 														
 														 <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)"  name="Bouton" type="submit" >ENREGISTRER</button>
 														 <button class="md-btn md-btn-default cancelBtn" href="javascript:void(0)"  name="annuler">ANNULER</button>
-                                                         {# <button id="buttonAddProps" class="md-btn md-btn-default cancelBtn" onclick="addProps()" type="button">Ajouter une proposition</button> #}
+                                                         <button id="buttonAddProps" class="md-btn md-btn-default cancelBtn" onclick="addProps()" type="button">Ajouter une proposition</button>
 
                                             </form>
                                             
