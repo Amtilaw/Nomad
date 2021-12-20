@@ -53,34 +53,37 @@ class ModuleQuizzController extends AbstractController
   ) {
     $this->nmdNproductRepository = $nmdNproductRepository;
   }
+
   /**
-   * @Route("/module_quizz", name="module_quizz")
+   * @Route("/createFormation", name="createFormation")
    */
   public function index(Request $request): Response
   {
-    $formation = new Formation();
 
-    $form = $this->createForm(FormationType::class, $formation);
+    if ($request->get('submit') == 'annuler') {
+      $message = sprintf('Création de formation abandonnée');
+      $this->addFlash('', $message);
+      return $this->redirectToRoute('module_formations');
+    }
 
-
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-
+    if ($request->get('submit') == 'valider') {
       $entityManager = $this->getDoctrine()->getManager();
-      $formation = $form->getData();
+      $formation = new Formation();
+
+      $formation->setNom($_POST['formationName']);
+
       $entityManager->persist($formation);
 
       $entityManager->flush();
-      $message = sprintf('Création de formation reussi!');
-      $this->addFlash('notice', $message);
 
+      $message = sprintf('Formation créée');
+      $this->addFlash('notice', $message);
       return $this->redirectToRoute('module_formations');
     }
 
     return $this->renderForm('module_quizz/index.html.twig', [
       'controller_name' => 'ModuleQuizzController',
-      'form' => $form,
-      'pageTitle' => 'Création de Module',
+      'pageTitle' => 'Création de Formation',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -269,7 +272,7 @@ class ModuleQuizzController extends AbstractController
       'levels' => $levels,
       'videos' => $videos,
       'modules' => $modules,
-      'pageTitle' => 'Creation Question',
+      'pageTitle' => 'Creation de question',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -317,7 +320,7 @@ class ModuleQuizzController extends AbstractController
 
     return $this->render('module_quizz/creationProposition.html.twig', [
       'controller_name' => 'ModuleQuizzController',
-      'pageTitle' => 'Creation Question',
+      'pageTitle' => 'Creation de proposition',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -561,7 +564,7 @@ class ModuleQuizzController extends AbstractController
 
 
     return $this->render('module_quizz/listequestion.html.twig', [
-      'pageTitle' => 'categorys',
+      'pageTitle' => 'Liste des questions',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -734,7 +737,7 @@ class ModuleQuizzController extends AbstractController
     }
 
     return $this->render('module_quizz/edit.html.twig', [
-      'pageTitle' => 'categorie',
+      'pageTitle' => 'Modification',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'edit',
@@ -852,7 +855,7 @@ class ModuleQuizzController extends AbstractController
     $proposition = $propositionRepository->AllProposition();
 
     return $this->render('module_quizz/listeProposition.html.twig', [
-      'pageTitle' => 'liste proposition',
+      'pageTitle' => 'Liste des propositions',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -873,18 +876,11 @@ class ModuleQuizzController extends AbstractController
   public function editProposition(Request $request, userinterface $user, $PropositionId, PropositionRepository $propositionRepository, PallierRepository $RepositoryPallier, QuestionRepository $RepositoryQuestion): Response
   {
 
-
     $categoryInfos = $propositionRepository->find($PropositionId);
 
 
     $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
     $QuestionId = $QuestionId[0]['id_question_id'];
-
-    $categoryInfos = $propositionRepository->find($PropositionId);
-    $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
-    $QuestionId = $QuestionId[0]['id_question_id'];
-    dump($QuestionId);
-
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
@@ -927,7 +923,7 @@ class ModuleQuizzController extends AbstractController
 
 
     return $this->render('module_quizz/editProposition.html.twig', [
-      'pageTitle' => 'categorie',
+      'pageTitle' => 'Modification des propositions',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'edit',
@@ -953,14 +949,11 @@ class ModuleQuizzController extends AbstractController
     $categoryInfos = $repository_category->find($PropositionId);
     // suppresion de la proposition 
     $proposition = $propositionRepository->find($PropositionId);
-    $proposition = $propositionRepository->find($PropositionId);
     $entityManager->remove($proposition);
     $entityManager->flush();
     $message = sprintf('Proposition supprime');
     $this->addFlash('', $message);
 
-
-    return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
 
     return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
   }
@@ -977,7 +970,7 @@ class ModuleQuizzController extends AbstractController
     $manager = $this->getDoctrine()->getManager();
     $manager->remove($formation);
     $manager->flush();
-    $message = sprintf('formation supprime');
+    $message = sprintf('Formation supprimée !');
     $this->addFlash('', $message);
 
     return $this->redirectToRoute("module_formations");

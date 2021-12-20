@@ -93,7 +93,7 @@
 										<div class="iconExporter">
 											<i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
 										</div>
-										<a class="iconHerarchy" href="{{ path('module_module_quizz') }}">
+										<a class="iconHerarchy" href="{{ path('module_createFormation') }}">
 											<i class="material-icons">add</i>
 										</a>
 									</div>
@@ -231,6 +231,20 @@
 <script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
 <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
+
+
+let li = document.createElement("li");
+      li.innerHTML = `<a href="{{ path('module_createFormation') }}">
+                <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">add</i>
+                </div>
+                <div class="md-list-content">
+                    <span class="md-list-heading">Créer une formation</span>
+                    <span class="uk-text-small uk-text-muted">Question</span>
+                </div></a>`;
+
+      let ul = document.getElementById("ulMenue");
+      ul.prepend(li);
 
 	var expands = document.getElementsByClassName('expand');
 	var expandsV = document.getElementsByClassName('expandV');
