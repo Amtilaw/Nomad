@@ -34,6 +34,7 @@ use App\Repository\ModuleRepository;
 use App\Repository\NmdProductRepository;
 use App\Repository\PallierRepository;
 use App\Repository\PropositionRepository;
+use Doctrine\ORM\Mapping\Id;
 use phpDocumentor\Reflection\Types\Null_;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\Validator\Constraints\Json;
@@ -872,13 +873,14 @@ class ModuleQuizzController extends AbstractController
   public function editProposition(Request $request, userinterface $user, $PropositionId, PropositionRepository $propositionRepository, PallierRepository $RepositoryPallier, QuestionRepository $RepositoryQuestion): Response
   {
 
-    //dd($request->request->get('libelle'));  // POST PUT UPDATE
-    //dd($request->queryy->get('libelle')); // GET DELETE 
-    //TODO Je comprend pas se qui se passe ici
+   
 
     $categoryInfos = $propositionRepository->find($PropositionId);
-
-  
+    $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
+    $QuestionId = $QuestionId[0]['id_question_id']
+    ;
+    dump($QuestionId);
+      
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
@@ -905,7 +907,10 @@ class ModuleQuizzController extends AbstractController
             $entityManager->persist($proposition);
             $entityManager->flush();
         }
-    }
+
+      return $this->redirectToRoute('module_Proposition', ['questionId'=>$QuestionId]);
+
+      }
 
 
     if (isset($_POST['annuler'])) {
