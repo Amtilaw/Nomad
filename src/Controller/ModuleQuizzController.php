@@ -723,7 +723,7 @@ class ModuleQuizzController extends AbstractController
       $entityManager->persist($question);
       $entityManager->flush();
 
-      return $this->redirectToRoute('module_formations');
+      return $this->redirectToRoute('module_listequestion', ['moduleId' => $question->getIdModule()->getId()]);
     }
 
 
@@ -878,7 +878,7 @@ class ModuleQuizzController extends AbstractController
 
     $categoryInfos = $propositionRepository->find($PropositionId);
 
-  
+
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
@@ -893,18 +893,18 @@ class ModuleQuizzController extends AbstractController
 
 
     if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
-      
-        if (isset($_POST['libelleProps']) && isset($_POST['iscorrect'])) {
-            $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop']);
-            
-            $proposition->setLibelle($_POST['libelleProps']);
 
-            $proposition->setIsCorrect($_POST['iscorrect']);
+      if (isset($_POST['libelleProps']) && isset($_POST['iscorrect'])) {
+        $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop']);
 
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($proposition);
-            $entityManager->flush();
-        }
+        $proposition->setLibelle($_POST['libelleProps']);
+
+        $proposition->setIsCorrect($_POST['iscorrect']);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($proposition);
+        $entityManager->flush();
+      }
     }
 
 

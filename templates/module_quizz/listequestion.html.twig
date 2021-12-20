@@ -109,13 +109,13 @@
                                                 {% endif %}
                                             </div>
                                             
-                                            <a class="iconHerarchy" href="{{ path('module_createQuestion')}}">
-                                                <i class="material-icons">share</i>
-                                            </a>
+                                            
                                             <div class="iconExporter">
                                                 <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
                                             </div>
-	                                          
+	                                          <a class="iconHerarchy" href="{{ path('module_createQuestion') }}">
+                                                <i class="material-icons">add</i>
+                                            </a>
 	
 
                                         </div>
@@ -159,11 +159,7 @@
                                                                  <td>{{v.modify_at}}</td>
                                                                  
                                                             <td></td>
-                                                                <td class="blackIcon"><span>
-                                                                       <a href="{{ path('module_createQuestion', {idQuestion: v.id}) }}">
-                                                                            <i class="material-icons" title="Ajouter une question">add</i>
-                                                                        </a>
-                                                                    </span>
+                                                                <td class="blackIcon">
                                                                     <span>
                                                                        <a href="{{ path('module_edit',{categoryId: v.id}) }}">
                                                                             <i class="material-icons" title="Modifier la question">edit</i>
@@ -268,18 +264,6 @@
             for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
         }
-       let li = document.createElement("li");
-      li.innerHTML = `<a href="{{ path('module_createQuestion') }}">
-                <div class="md-list-addon-element">
-                    <i class="md-list-addon-icon material-icons">add</i>
-                </div>
-                <div class="md-list-content">
-                    <span class="md-list-heading">Créer une question</span>
-                    <span class="uk-text-small uk-text-muted">Question</span>
-                </div></a>`;
-
-      let ul = document.getElementById("ulMenue");
-      ul.prepend(li);
       
     function showAlertDelete(id, nom){
         let txt = "Confirmer la supression de la question : " + nom;
