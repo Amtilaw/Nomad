@@ -873,18 +873,13 @@ class ModuleQuizzController extends AbstractController
   public function editProposition(Request $request, userinterface $user, $PropositionId, PropositionRepository $propositionRepository, PallierRepository $RepositoryPallier, QuestionRepository $RepositoryQuestion): Response
   {
 
-   
+
 
     $categoryInfos = $propositionRepository->find($PropositionId);
-<<<<<<< HEAD
 
 
-=======
     $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
     $QuestionId = $QuestionId[0]['id_question_id'];
-    dump($QuestionId);
-      
->>>>>>> 6711b6cc0bdce95fdf3c73765fffe2e0413ea3d3
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
@@ -903,7 +898,6 @@ class ModuleQuizzController extends AbstractController
       if (isset($_POST['libelleProps']) && isset($_POST['iscorrect'])) {
         $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop']);
 
-<<<<<<< HEAD
         $proposition->setLibelle($_POST['libelleProps']);
 
         $proposition->setIsCorrect($_POST['iscorrect']);
@@ -911,18 +905,11 @@ class ModuleQuizzController extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $entityManager->persist($proposition);
         $entityManager->flush();
+
+        return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
       }
     }
-=======
-            $entityManager = $this->getDoctrine()->getManager();
-            $entityManager->persist($proposition);
-            $entityManager->flush();
-        }
 
-      return $this->redirectToRoute('module_Proposition', ['questionId'=>$QuestionId]);
-
-      }
->>>>>>> 6711b6cc0bdce95fdf3c73765fffe2e0413ea3d3
 
 
     if (isset($_POST['annuler'])) {
@@ -947,7 +934,7 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/deleteProposition/{PropositionId}", name="deleteProposition")
    */
-  public function deleteProposition(Request$request, PropositionRepository $propositionRepository, userinterface $user, $PropositionId): Response
+  public function deleteProposition(Request $request, PropositionRepository $propositionRepository, userinterface $user, $PropositionId): Response
   {
     $entityManager = $this->getDoctrine()->getManager();
     $repository_category = $this->getDoctrine()->getRepository(NmdCategorieProduct::class);
@@ -955,15 +942,14 @@ class ModuleQuizzController extends AbstractController
     $QuestionId = $QuestionId[0]['id_question_id'];
     $categoryInfos = $repository_category->find($PropositionId);
     // suppresion de la proposition 
-    $proposition = $propositionRepository ->find($PropositionId);
+    $proposition = $propositionRepository->find($PropositionId);
     $entityManager->remove($proposition);
     $entityManager->flush();
     $message = sprintf('Proposition supprime');
     $this->addFlash('', $message);
 
-    
-    return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
 
+    return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
   }
 
   /**
