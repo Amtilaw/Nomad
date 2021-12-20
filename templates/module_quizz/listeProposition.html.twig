@@ -103,12 +103,13 @@
 
                                                 
                                             </div>
-                                            <a class="iconHerarchy" href="{{ path('module_module_quizz') }}">
-                                                <i class="material-icons">share</i>
-                                            </a>
+                                            
                                             <div class="iconExporter">
                                                 <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
                                             </div>
+                                            <a class="iconHerarchy" href="{{ path('module_createProposition',{questionId: questionId}) }}">
+                                                <i class="material-icons">add</i>
+                                            </a>
                                         </div>
                                     </div>
                                     <div class="table-responsive uk-overflow-containe">
@@ -152,11 +153,7 @@
                                                                 <td>{{v.is_correct}}</td>
                                                                  
                                                             <td></td>
-                                                                <td class="blackIcon"><span>
-                                                                       <a href="{{ path('module_createProposition',{questionId: v.id_question_id}) }}">
-                                                                            <i class="material-icons">add</i>
-                                                                        </a>
-                                                                    </span>
+                                                                <td class="blackIcon">
                                                                     <span>
                                                                        <a href="{{ path('module_editProposition',{PropositionId: v.id}) }}">
                                                                             <i class="material-icons">edit</i>

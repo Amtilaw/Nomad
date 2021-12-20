@@ -34,6 +34,7 @@ use App\Repository\ModuleRepository;
 use App\Repository\NmdProductRepository;
 use App\Repository\PallierRepository;
 use App\Repository\PropositionRepository;
+use Doctrine\ORM\Mapping\Id;
 use phpDocumentor\Reflection\Types\Null_;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\Validator\Constraints\Json;
@@ -726,7 +727,7 @@ class ModuleQuizzController extends AbstractController
       $entityManager->persist($question);
       $entityManager->flush();
 
-      return $this->redirectToRoute('module_formations');
+      return $this->redirectToRoute('module_listequestion', ['moduleId' => $question->getIdModule()->getId()]);
     }
 
 
@@ -875,13 +876,13 @@ class ModuleQuizzController extends AbstractController
   public function editProposition(Request $request, userinterface $user, $PropositionId, PropositionRepository $propositionRepository, PallierRepository $RepositoryPallier, QuestionRepository $RepositoryQuestion): Response
   {
 
-    //dd($request->request->get('libelle'));  // POST PUT UPDATE
-    //dd($request->queryy->get('libelle')); // GET DELETE 
-    //TODO Je comprend pas se qui se passe ici
+   
 
     $categoryInfos = $propositionRepository->find($PropositionId);
-
-  
+    $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
+    $QuestionId = $QuestionId[0]['id_question_id'];
+    dump($QuestionId);
+      
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
@@ -896,23 +897,23 @@ class ModuleQuizzController extends AbstractController
 
 
     if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
-      
-        if (isset($_POST['libelleProps']) && isset($_POST['iscorrect'])) {
-            $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop']);
-            
-            $proposition->setLibelle($_POST['libelleProps']);
 
-            $proposition->setIsCorrect($_POST['iscorrect']);
+      if (isset($_POST['libelleProps']) && isset($_POST['iscorrect'])) {
+        $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop']);
 
             $entityManager = $this->getDoctrine()->getManager();
             $entityManager->persist($proposition);
             $entityManager->flush();
         }
-    }
+
+      return $this->redirectToRoute('module_Proposition', ['questionId'=>$QuestionId]);
+
+      }
+
 
 
     if (isset($_POST['annuler'])) {
-      return $this->redirectToRoute("module_formations");
+      return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
     }
 
 
@@ -933,16 +934,22 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/deleteProposition/{PropositionId}", name="deleteProposition")
    */
-  public function deleteProposition(Request $request, userinterface $user, $PropositionId): Response
+  public function deleteProposition(Request $request, PropositionRepository $propositionRepository, userinterface $user, $PropositionId): Response
   {
-
+    $entityManager = $this->getDoctrine()->getManager();
     $repository_category = $this->getDoctrine()->getRepository(NmdCategorieProduct::class);
-
+    $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
+    $QuestionId = $QuestionId[0]['id_question_id'];
     $categoryInfos = $repository_category->find($PropositionId);
-    // Connexion à MySQL
+    // suppresion de la proposition 
+    $proposition = $propositionRepository->find($PropositionId);
+    $entityManager->remove($proposition);
+    $entityManager->flush();
+    $message = sprintf('Proposition supprime');
+    $this->addFlash('', $message);
 
-    $connection = mysqli_connect("127.0.0.1", "root", "", "nomad");
-
+    
+    return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
     if (!$connection) { // Contrôler la connexion
       $MessageConnexion = die("connection impossible");
     } else {
@@ -958,6 +965,8 @@ class ModuleQuizzController extends AbstractController
       $this->addFlash('', $message);
       return $this->redirectToRoute("module_formations");
     }
+    return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
+
   }
 
   /**

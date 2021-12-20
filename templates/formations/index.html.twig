@@ -90,12 +90,12 @@
 										<div class="iconGoSearch">
 											<i class="material-icons" id="iconGoSearch">help</i>
 										</div>
-										<a class="iconHerarchy" href="">
-											<i class="material-icons">share</i>
-										</a>
 										<div class="iconExporter">
 											<i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
 										</div>
+										<a class="iconHerarchy" href="{{ path('module_module_quizz') }}">
+											<i class="material-icons">add</i>
+										</a>
 									</div>
 								</div>
 
@@ -135,11 +135,6 @@
 													<td></td>
 													<td class="blackIcon">
 														<span>
-															<a href="{{ path('module_module', {id: formation.id}) }}">
-																<i class="material-icons" title="Ajouter un module">add</i>
-															</a>
-														</span>
-														<span>
 															<i class="material-icons" onclick="showAlertDelete('{{ formation.nom }}', '{{ formation.id }}');" title="Supprimer la formation">delete</i>
 														</span>
 														<span class="expand">
@@ -160,11 +155,6 @@
 															<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.level}}</td>
 															<td></td>
                                                             <td class="blackIcon">
-														<span>
-															<a href="{{ path('module_module', {id: formation.id}) }}">
-																<i class="material-icons">add</i>
-															</a>
-														</span>
 														<span>
 															<i class="material-icons">delete</i>
 														</span>
