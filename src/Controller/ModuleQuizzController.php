@@ -877,8 +877,7 @@ class ModuleQuizzController extends AbstractController
 
     $categoryInfos = $propositionRepository->find($PropositionId);
     $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
-    $QuestionId = $QuestionId[0]['id_question_id']
-    ;
+    $QuestionId = $QuestionId[0]['id_question_id'];
     dump($QuestionId);
       
 
@@ -914,7 +913,7 @@ class ModuleQuizzController extends AbstractController
 
 
     if (isset($_POST['annuler'])) {
-      return $this->redirectToRoute("module_formations");
+      return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
     }
 
 
@@ -935,31 +934,23 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/deleteProposition/{PropositionId}", name="deleteProposition")
    */
-  public function deleteProposition(Request $request, userinterface $user, $PropositionId): Response
+  public function deleteProposition(Request$request, PropositionRepository $propositionRepository, userinterface $user, $PropositionId): Response
   {
-
+    $entityManager = $this->getDoctrine()->getManager();
     $repository_category = $this->getDoctrine()->getRepository(NmdCategorieProduct::class);
-
+    $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
+    $QuestionId = $QuestionId[0]['id_question_id'];
     $categoryInfos = $repository_category->find($PropositionId);
-    // Connexion à MySQL
+    // suppresion de la proposition 
+    $proposition = $propositionRepository ->find($PropositionId);
+    $entityManager->remove($proposition);
+    $entityManager->flush();
+    $message = sprintf('Proposition supprime');
+    $this->addFlash('', $message);
 
-    $connection = mysqli_connect("127.0.0.1", "root", "", "nomad");
+    
+    return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
 
-    if (!$connection) { // Contrôler la connexion
-      $MessageConnexion = die("connection impossible");
-    } else {
-
-
-      // Requête d'insertion
-      $ModifCategory = "DELETE FROM proposition 
-            where id='$PropositionId';";
-
-      // Exécution de la reqête
-      mysqli_query($connection, $ModifCategory) or die('Erreur SQL !' . $ModifCategory . '<br>' . mysqli_error($connection));
-      $message = sprintf('proposition supprime');
-      $this->addFlash('', $message);
-      return $this->redirectToRoute("module_formations");
-    }
   }
 
   /**
