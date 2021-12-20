@@ -53,34 +53,37 @@ class ModuleQuizzController extends AbstractController
   ) {
     $this->nmdNproductRepository = $nmdNproductRepository;
   }
+
   /**
-   * @Route("/module_quizz", name="module_quizz")
+   * @Route("/createFormation", name="createFormation")
    */
   public function index(Request $request): Response
   {
-    $formation = new Formation();
 
-    $form = $this->createForm(FormationType::class, $formation);
+    if ($request->get('submit') == 'annuler') {
+      $message = sprintf('Création de formation abandonnée');
+      $this->addFlash('', $message);
+      return $this->redirectToRoute('module_formations');
+    }
 
-
-    $form->handleRequest($request);
-    if ($form->isSubmitted() && $form->isValid()) {
-
+    if ($request->get('submit') == 'valider') {
       $entityManager = $this->getDoctrine()->getManager();
-      $formation = $form->getData();
+      $formation = new Formation();
+
+      $formation->setNom($_POST['formationName']);
+
       $entityManager->persist($formation);
 
       $entityManager->flush();
-      $message = sprintf('Création de formation reussi!');
-      $this->addFlash('notice', $message);
 
+      $message = sprintf('Formation créée');
+      $this->addFlash('notice', $message);
       return $this->redirectToRoute('module_formations');
     }
 
     return $this->renderForm('module_quizz/index.html.twig', [
       'controller_name' => 'ModuleQuizzController',
-      'form' => $form,
-      'pageTitle' => 'Création de Module',
+      'pageTitle' => 'Création de Formation',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -878,7 +881,6 @@ class ModuleQuizzController extends AbstractController
     dump($QuestionId);
       
 
-
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
 
@@ -932,7 +934,7 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/deleteProposition/{PropositionId}", name="deleteProposition")
    */
-  public function deleteProposition(Request$request, PropositionRepository $propositionRepository, userinterface $user, $PropositionId): Response
+  public function deleteProposition(Request $request, PropositionRepository $propositionRepository, userinterface $user, $PropositionId): Response
   {
     $entityManager = $this->getDoctrine()->getManager();
     $repository_category = $this->getDoctrine()->getRepository(NmdCategorieProduct::class);
@@ -948,6 +950,7 @@ class ModuleQuizzController extends AbstractController
 
     
     return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
+  
 
   }
 
@@ -963,7 +966,7 @@ class ModuleQuizzController extends AbstractController
     $manager = $this->getDoctrine()->getManager();
     $manager->remove($formation);
     $manager->flush();
-    $message = sprintf('formation supprime');
+    $message = sprintf('Formation supprimée !');
     $this->addFlash('', $message);
 
     return $this->redirectToRoute("module_formations");
