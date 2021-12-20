@@ -265,7 +265,7 @@ class ModuleQuizzController extends AbstractController
       'levels' => $levels,
       'videos' => $videos,
       'modules' => $modules,
-      'pageTitle' => 'Creation Question',
+      'pageTitle' => 'Creation de question',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -311,7 +311,7 @@ class ModuleQuizzController extends AbstractController
 
     return $this->render('module_quizz/creationProposition.html.twig', [
       'controller_name' => 'ModuleQuizzController',
-      'pageTitle' => 'Creation Question',
+      'pageTitle' => 'Creation de proposition',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -555,7 +555,7 @@ class ModuleQuizzController extends AbstractController
 
 
     return $this->render('module_quizz/listequestion.html.twig', [
-      'pageTitle' => 'categorys',
+      'pageTitle' => 'Liste des questions',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -737,7 +737,7 @@ class ModuleQuizzController extends AbstractController
 
 
     return $this->render('module_quizz/edit.html.twig', [
-      'pageTitle' => 'categorie',
+      'pageTitle' => 'Modification',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'edit',
@@ -855,7 +855,7 @@ class ModuleQuizzController extends AbstractController
     $proposition = $propositionRepository->AllProposition();
 
     return $this->render('module_quizz/listeProposition.html.twig', [
-      'pageTitle' => 'liste proposition',
+      'pageTitle' => 'Liste des propositions',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
@@ -918,7 +918,7 @@ class ModuleQuizzController extends AbstractController
 
 
     return $this->render('module_quizz/editProposition.html.twig', [
-      'pageTitle' => 'categorie',
+      'pageTitle' => 'Modification des propositions',
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'edit',
