@@ -152,7 +152,6 @@ class ModuleQuizzController extends AbstractController
    */
   public function createQuestion(Request $request, $idModule = null): Response
   {
-
     $selected = "";
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
@@ -166,24 +165,9 @@ class ModuleQuizzController extends AbstractController
     $levels = $repositoryLvl->findAll();
     $repositoryType = $this->getDoctrine()->getRepository(Type::class);
     $repositoryVideo = $this->getDoctrine()->getRepository(Video::class);
+    $repositoryPalier = $this->getDoctrine()->getRepository(Pallier::class);
     $videos = $repositoryVideo->findAll();
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
-
-
-
-    $question = new Question();
-
-    //La selection par default si une question est ajoute dans un module
-
-   
-      $idFormation = $repositoryQuestion->findByIdFormation($idQuestion);
-      $formatio = $repositoryFormation->find($idFormation[0]["id_formation_id"]);
-      $formatio->selected = "selected";
-
-      $question = $repositoryQuestion->find($idQuestion)->getIdModule();
-      $repositoryModule->find($question)->selected = "selected";
-
-      $repositoryLvl->find($question->getIdLvl())->selected = "selected";
     $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
     if (isset($_GET["moduleId"])) {
       $palliers = $this->getDoctrine()->getRepository(Pallier::class)->allPallier();
@@ -262,7 +246,6 @@ class ModuleQuizzController extends AbstractController
         return $this->redirectToRoute('module_createProposition', ['questionId' => $question->getId()]);
       }
     }
-  
     // return new Response('Saved new product with id ' . $question->getId());
 
 
