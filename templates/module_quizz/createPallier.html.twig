@@ -50,7 +50,7 @@
 
 							<h1>Création d'un pallier</h1>
 							<div style="margin:30px">
-								<form action="{{ path('module_createQuestion') }}" method="POST">
+								<form action="{{ path('module_createPallier', {idModule : idModule}) }}" method="POST">
 
 
 									<div class="md-card-content">
@@ -90,6 +90,7 @@
 											</div>
 
 										</div>
+                                        <br>
 										<div class="col-12">
 											<button class="btn btn-primary" type="submit">Créer le pallier</button>
 											<button class="md-btn md-btn-default cancelBtn" name="submit" value="annuler" href="javascript:void(0)">ANNULER</button>
@@ -101,7 +102,6 @@
 						</div>
 					</div>
 				</div>
-			
 		<br>
 
 
@@ -120,4 +120,32 @@
 				</h3>
 			</div>{# Filters #}{% include rootTemplate ~ '/component/contextual_filters.html.twig' %}</div>
 	</div>
-</div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script></script>{% endblock %}
+</div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>
+
+      let ul = document.getElementById("ulMenue");
+    let li = document.createElement("li");
+     li.innerHTML = `<a href="{{ path('module_formations') }}">
+                <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">ii</i>
+                </div>
+                <div class="md-list-content">
+                    <span class="md-list-heading">Liste des formations</span>
+                    <span class="uk-text-small uk-text-muted">Formation</span>
+                </div></a>
+                
+                `;
+
+      ul.prepend(li);
+      li = document.createElement("li");
+     li.innerHTML = `<a href="{{ path('module_listequestion', {moduleId: idModule}) }}">
+                <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">ii</i>
+                </div>
+                <div class="md-list-content">
+                    <span class="md-list-heading">Liste des questions</span>
+                    <span class="uk-text-small uk-text-muted">Formation</span>
+                </div></a>
+                
+                `;
+
+      ul.prepend(li);</script>{% endblock %}

@@ -208,25 +208,16 @@
 
 											</div>
 
-											<div class="uk-width-medium-1-2 md-input-filled">
+										<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="lvl" class="form-label">Pallier selection</label>
 
-												<label for="exampleFormControlInput1" class="form-label">Modifier pallier pour cette video</label>
-												{% if timecode == null %}
-													<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallierTimecode">
-												{% else %}
-													<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallierTimecode" value="{{ timecode}}">
-												{% endif %}
-											</div>
-
-											<div class="uk-width-medium-1-2 md-input-filled">
-
-												<label for="exampleFormControlInput1" class="form-label">Modifier le titre du groupe de palliers</label>
-												{% if titrePallier == null %}
-													<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
-												{% else %}
-													<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" value="{{ titrePallier }}" name="titrePallier">
-												{% endif %}
-											</div>
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
+																<option value="{{ idPallier }}" selected>Vidéo précédemment sélectionnée:
+															{{ titrePallier }} - {{ timecode }}</option>
+																	{% for pallier in palliers %}
+																		<option value="{{ pallier.id }}"> {{pallier.titre_groupe_question}} - {{ pallier.timecode }}</option>
+																	{% endfor %}
+																</select>
 
 										</div>
 

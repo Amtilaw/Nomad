@@ -34,7 +34,7 @@ class PallierRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT * FROM `pallier`;";
+        $sql = "SELECT DISTINCT p.timecode, p.titre_groupe_question, p.id, p.description FROM `pallier` p GROUP BY p.titre_groupe_question;";
 
         $stmt = $conn->prepare($sql);
 
