@@ -131,17 +131,33 @@
 																	{% endfor %}
 																</select>
 															</div>
-
 															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="lvl" class="form-label">Pallier selection</label>
 
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
+																<option value="0">Nouveau pallier</option>
+																	{% for pallier in palliers %}
+																		<option value="{{ pallier.id }}" selected>{{pallier.titre_groupe_question}} - {{ pallier.timecode }}</option>
+																	{% endfor %}
+																</select>
+															</div>
+
+															<div id="newPallier" class="uk-width-1 md-input-filled">
+
+															<div class="uk-width-1 md-input-filled">
+
+<br>
 																<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
 																<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallier">
 															</div>
-															<div class="uk-width-medium-1-2 md-input-filled">
+															<div class="uk-width-1 md-input-filled">
 
+<br>
 																<label for="exampleFormControlInput1" class="form-label">titre du pallier</label>
 																<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
 															</div>
+
+														</div>
 														</div>
 													</li>
 												</div>
@@ -188,17 +204,13 @@
 	</div>
 </div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
 let pallierJson;
-$("#videoSelection").css("display", "none");
-$("#propositionsAdd").css("display", "none");
-
-
-$("#haveAVideo").change(function () {
-if (this.checked) {
-$("#videoSelection").css("display", "block");
-let vr = $("#idVideoForm").val();
-getPalliersByVideo(vr);
+$('#newPallier').css('display', 'none');
+$("#idPallier").change(function () {
+if ($("#idPallier :selected").val() == 0) {
+	console.log("yes");
+$("#newPallier").css("display", "block");
 } else {
-$("#videoSelection").css("display", "none");
+$("#newPallier").css("display", "none");
 }
 });
 

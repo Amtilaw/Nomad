@@ -113,7 +113,7 @@
                                             <div class="iconExporter">
                                                 <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
                                             </div>
-	                                          <a class="iconHerarchy" href="{{ path('module_createQuestion') }}">
+	                                          <a class="iconHerarchy" href="{{ path('module_createQuestion', {moduleId, moduleId}) }}">
                                                 <i class="material-icons">add</i>
                                             </a>
 	
@@ -278,6 +278,34 @@
             //annuler
 	}
     }
+
+let li = document.createElement("li");
+     
+                li.innerHTML = `<a href="{{ path('module_listePalliers', {moduleId, moduleId}) }}">
+                <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">ii</i>
+                </div>
+                <div class="md-list-content">
+                    <span class="md-list-heading">Liste des palliers</span>
+                    <span class="uk-text-small uk-text-muted">Palliers</span>
+                </div></a>
+                `;
+
+      let ul = document.getElementById("ulMenue");
+      ul.prepend(li);
+    li = document.createElement("li");
+     li.innerHTML = `<a href="{{ path('module_formations') }}">
+                <div class="md-list-addon-element">
+                    <i class="md-list-addon-icon material-icons">ii</i>
+                </div>
+                <div class="md-list-content">
+                    <span class="md-list-heading">Liste des formations</span>
+                    <span class="uk-text-small uk-text-muted">Formation</span>
+                </div></a>
+                
+                `;
+
+      ul.prepend(li);
     </script>
     <!-- End Export xls -->
 {% endblock %}
