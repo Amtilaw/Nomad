@@ -80,7 +80,7 @@
                                     <h3 class="heading_a">Modification du pallier {{ pallier.id }}</h3>
 
 
-                                    <form action="{{ path('module_editPallier') }}" method="POST">
+                                    <form action="{{ path('module_editPallier', {pallierId: pallier.id}) }}" method="POST">
                                         <div class="md-card-content">
                                             <div class="uk-grid">
                                                 <div class="uk-width-1-1">
@@ -97,15 +97,20 @@
                                                                 </div>
 
                                                                 <div class="uk-width-medium-1-2 md-input-filled">
+                                                                    <label>Nom du pallier</label>
+                                                                    <input type="text" name="pallierTitreGroupeQuestion" value="{{ pallier.titregroupequestion }}" class="md-input label-fixed customizedInput" />
+                                                                </div>
+
+                                                                <div class="uk-width-medium-1-2 md-input-filled">
                                                                     <label for="exampleFormControlInput1" class="form-label">Description du pallier</label>
-                                                                    <input type="textarea" name="pallierDescription" value="{{ pallier.description }}" class="md-input label-fixed customizedInput" />
+                                                                    <input type="text" name="pallierDescription" value="{{ pallier.description }}" class="md-input label-fixed customizedInput" />
                                                                 </div>
                                                             </div>
                                                         </li>
                                                     </ul>
                                                     <br>
 
-                                                    <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)" name="Bouton" type="submit">ENREGISTRER</button>
+                                                    <button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)" name="valider">ENREGISTRER</button>
                                                     <button class="md-btn md-btn-default cancelBtn" href="javascript:void(0)" name="annuler">ANNULER</button>
                                                 </div>
                                             </div>
