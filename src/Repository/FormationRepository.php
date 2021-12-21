@@ -19,13 +19,14 @@ class FormationRepository extends ServiceEntityRepository
         parent::__construct($registry, Formation::class);
     }
 
-    public function allVideos($idModule)
+    public function delete($id)
     {
         $conn = $this->getEntityManager()->getConnection();
 
         $sql =
 
-            " SELECT DISTINCT id_video_id, url from question, video WHERE id_module_id = $idModule AND video.id = question.id_video_id 
+            "  DELETE FROM proposition 
+            where
         ";
 
         $stmt = $conn->prepare($sql);
