@@ -962,6 +962,49 @@ class ModuleQuizzController extends AbstractController
   }
 
   /**
+   * @Route("/editPallier/{pallierId}", name="editPallier")
+   */
+  public function editPallier(Request $request, userinterface $user, $pallierId): Response
+  {
+
+    $entityManager = $this->getDoctrine()->getManager();
+    $palliers = $this->getDoctrine()->getRepository(Pallier::class);
+    $pallier = $palliers->find($pallierId);
+
+    $moduleId = $this->getDoctrine()->getRepository(Question::class)->findOneBy(['id_pallier' => $pallierId])->getIdModule()->getId();
+
+    if (isset($_POST['valider'])) {
+
+        $pallier->setTimecode($_POST['pallierTimecode']);
+        $pallier->setTitreGroupeQuestion($_POST['pallierTitreGroupeQuestion']);
+        $pallier->setDescription($_POST['pallierDescription']);
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($pallier);
+        $entityManager->flush();
+
+        return $this->redirectToRoute('module_listePalliers', ['moduleId' => $moduleId]);
+      }
+
+
+    if (isset($_POST['annuler'])) {
+      return $this->redirectToRoute('module_listePalliers', ['moduleId' => $moduleId]);
+    }
+
+    return $this->render('module_quizz/editPallier.html.twig', [
+      'pageTitle' => 'modification des palliers',
+      'rootTemplate' => 'module_quizz',
+      'pageIcon' => 'group',
+      'rootPage' => 'edit',
+      'pageColor' => 'md-bg-grey-100',
+
+      'user' => $user,
+      'pallier' => $pallier,
+
+    ]);
+  }
+
+  /**
    * @Route("/createPallier/{idModule}", name="createPallier")
    */
   public function createPallier(Request $request, userinterface $user, $idModule): Response
