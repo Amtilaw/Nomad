@@ -72,7 +72,7 @@ class upload extends AbstractController
             $entityManager->persist($Video);
             $entityManager->flush();
 
-            return $this->redirectToRoute('module_listeVideos');
+           
         }
         dump($_POST);
         dump($_FILES['fileToUpload']);
@@ -116,12 +116,13 @@ if ($uploadOk == 0) {
             if (move_uploaded_file($_FILES["fileToUpload"]["tmp_name"], $target_file)) {
                 $message = sprintf("The file " . htmlspecialchars(basename($_FILES["fileToUpload"]["name"])) . " has been uploaded.");
                 $this->addFlash('', $message);
-            } else {
-                $message = sprintf("Sorry, there was an error uploading your file.");
-                $this->addFlash('', $message);
                 $Video->setUrl($videoname);
                 $entityManager->persist($Video);
                 $entityManager->flush();
+            } else {
+                $message = sprintf("Sorry, there was an error uploading your file.");
+                $this->addFlash('', $message);
+                
             }
 
             $message = sprintf("The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.");
