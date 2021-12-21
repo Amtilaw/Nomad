@@ -838,7 +838,6 @@ class ModuleQuizzController extends AbstractController
    */
   public function editProposition(Request $request, userinterface $user, $PropositionId, PropositionRepository $propositionRepository, PallierRepository $RepositoryPallier, QuestionRepository $RepositoryQuestion): Response
   {
-
     $categoryInfos = $propositionRepository->find($PropositionId);
 
 
@@ -912,7 +911,7 @@ class ModuleQuizzController extends AbstractController
     $QuestionId = $QuestionId[0]['id_question_id'];
     $categoryInfos = $repository_category->find($PropositionId);
     // suppresion de la proposition 
-    $proposition = $propositionRepository->find($PropositionId);
+    $proposition = $propositionRepository ->find($PropositionId);
     $entityManager->remove($proposition);
     $entityManager->flush();
     $message = sprintf('Proposition supprime');
