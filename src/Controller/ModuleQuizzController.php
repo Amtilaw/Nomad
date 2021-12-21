@@ -589,11 +589,13 @@ class ModuleQuizzController extends AbstractController
       $urlVideo = $Id_video->getUrl();
       $IdlVideo = $Id_video->getId();
       $titrePallier = $Id_palier_question->getTitreGroupeQuestion();
+    $idPallier = $Id_palier_question->getId();
     } else {
       $timecode = null;
       $urlVideo = null;
       $IdlVideo = null;
       $titrePallier = null;
+      $idPallier = 1;
     }
 
     if (isset($Id_palier_question)) {
@@ -720,7 +722,7 @@ class ModuleQuizzController extends AbstractController
       'modules' => $modules,
       'IdlVideo' => $IdlVideo,
       'titrePallier' => $titrePallier,
-      'idPallier' => $Id_palier_question->getId(),
+      'idPallier' => $idPallier,
     ]);
   }
 
@@ -1001,13 +1003,15 @@ class ModuleQuizzController extends AbstractController
   public function deletePallier(Request $request, userinterface $user, $idPallier): Response
   {
 
-    $repository_formation = $this->getDoctrine()->getRepository(formation::class);
-    $formation = $repository_formation->find($formationId);
+    $this->getDoctrine()->getRepository(Question::class)->updatePallier($idPallier);
+
+    $repository_pallier = $this->getDoctrine()->getRepository(Pallier::class);
+    $pallier = $repository_pallier->find($idPallier);
 
     $manager = $this->getDoctrine()->getManager();
-    $manager->remove($formation);
+    $manager->remove($pallier);
     $manager->flush();
-    $message = sprintf('Formation supprimée !');
+    $message = sprintf('Pallier supprimé !');
     $this->addFlash('', $message);
 
     return $this->redirectToRoute("module_formations");

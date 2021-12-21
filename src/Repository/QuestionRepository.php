@@ -118,6 +118,20 @@ class QuestionRepository extends ServiceEntityRepository
         return $stmt->executeQuery()->fetchAllAssociative();
     }
 
+    public function updatePallier($idPallier)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql =
+
+            " UPDATE question SET id_pallier_id = null WHERE id_pallier_id = 7 ";
+
+
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery();
+    }
+
 
     // /**
     //  * @return Question[] Returns an array of Question objects
