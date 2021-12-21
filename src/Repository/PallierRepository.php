@@ -45,7 +45,7 @@ class PallierRepository extends ServiceEntityRepository
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT DISTINCT p.timecode, p.titre_groupe_question, p.id  FROM `pallier` p, `question` q WHERE q.id_module_id = $idModule AND q.id_pallier_id = p.id";
+        $sql = "SELECT DISTINCT p.timecode, p.titre_groupe_question, p.id, p.description  FROM `pallier` p, `question` q WHERE q.id_module_id = $idModule AND q.id_pallier_id = p.id";
         $stmt = $conn->prepare($sql);
 
         return $stmt->executeQuery()->fetchAllAssociative();

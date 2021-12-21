@@ -133,8 +133,6 @@ class ModuleQuizzController extends AbstractController
       return $this->redirectToRoute('module_formations');
     }
 
-
-
     return $this->render('module_quizz/creationModule.html.twig', [
       'controller_name' => 'ModuleQuizzController',
       'id_formation' => $id_formation,
@@ -157,6 +155,9 @@ class ModuleQuizzController extends AbstractController
     $selected = "";
 
 
+
+
+
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
     $repositoryFormation =  $this->getDoctrine()->getRepository(Formation::class);
@@ -172,34 +173,22 @@ class ModuleQuizzController extends AbstractController
     $videos = $repositoryVideo->findAll();
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
     $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
-    if (isset($_GET["moduleId"]))
+    if (isset($_GET["moduleId"])) {
       $palliers = $this->getDoctrine()->getRepository(Pallier::class)->findAllByModule($_GET['moduleId']);
-
-
-    $question = new Question();
-
-    //La selection par default si une question est ajoute dans un module
-
-    if (isset($idQuestion)) {
-      $idFormation = $repositoryQuestion->findByIdFormation($idQuestion);
-      $formatio = $repositoryFormation->find($idFormation[0]["id_formation_id"]);
-      $formatio->selected = "selected";
-
-      $question = $repositoryQuestion->find($idQuestion)->getIdModule();
-      $repositoryModule->find($question)->selected = "selected";
-
-      $repositoryLvl->find($question->getIdLvl())->selected = "selected";
+      if (isset($_POST['annuler'])) {
+        return $this->redirectToRoute('module_listequestion', ['moduleId' => $idModule]);
+      }
     }
 
 
-
-    // ce que j'enredistre dans la bdd 
+    $question = new Question();
 
     // enregistrement de la question 
 
     if (isset($_POST['questionLibelle']) && isset($_POST['lvl'])) {
 
       if (isset($_POST['submit'])) {
+        dd(isset($_POST['annuler']));
         $message = sprintf('Création de question abandonnée');
         $this->addFlash('', $message);
         return $this->redirectToRoute('module_formations');
@@ -224,7 +213,6 @@ class ModuleQuizzController extends AbstractController
       $pallier_id = 0;
       //conversion du timecode user en datetime
       if (!empty($_POST["pallier"])) {
-        dd("e");
         $UserTimecode = explode(".", $_POST["pallier"]);
         $UserTimecode = $UserTimecode[0] * 60 + $UserTimecode[1];
         foreach ($palierTime as $palier) {
@@ -328,9 +316,6 @@ class ModuleQuizzController extends AbstractController
       'questionId' => $questionId,
     ]);
   }
-
-
-
 
   /**
    * @Route("/listequestion/{moduleId}", name="listequestion")
@@ -558,10 +543,6 @@ class ModuleQuizzController extends AbstractController
     }
 
     $proposition = $propositionRepository->findAll();
-
-
-
-
 
     return $this->render('module_quizz/listequestion.html.twig', [
       'pageTitle' => 'Liste des questions',
@@ -852,6 +833,7 @@ class ModuleQuizzController extends AbstractController
 
     $questionId = $questionId;
     $question = $questionRepository->find($questionId);
+    $idModule = $questionRepository->findIdModule($questionId);
     $proposition = $propositionRepository->AllProposition();
 
     return $this->render('module_quizz/listeProposition.html.twig', [
@@ -866,6 +848,7 @@ class ModuleQuizzController extends AbstractController
       'proposition' => $proposition,
       'questionId' => $questionId,
       'question' => $question,
+      'idModule' => $idModule[0]['id_module_id'],
 
     ]);
   }
@@ -908,14 +891,15 @@ class ModuleQuizzController extends AbstractController
         $entityManager->flush();
 
         return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
+
+
+        $entityManager = $this->getDoctrine()->getManager();
+        $entityManager->persist($proposition);
+        $entityManager->flush();
+        return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
       }
     }
-    $entityManager = $this->getDoctrine()->getManager();
-    $entityManager->persist($proposition);
-    $entityManager->flush();
 
-
-    return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
 
     if (isset($_POST['annuler'])) {
       return $this->redirectToRoute('module_Proposition', ['questionId' => $QuestionId]);
@@ -962,6 +946,61 @@ class ModuleQuizzController extends AbstractController
    * @Route("/deleteFormation/{formationId}", name="deleteFormation")
    */
   public function deleteFormation(Request $request, userinterface $user, $formationId): Response
+  {
+
+    $repository_formation = $this->getDoctrine()->getRepository(formation::class);
+    $formation = $repository_formation->find($formationId);
+
+    $manager = $this->getDoctrine()->getManager();
+    $manager->remove($formation);
+    $manager->flush();
+    $message = sprintf('Formation supprimée !');
+    $this->addFlash('', $message);
+
+    return $this->redirectToRoute("module_formations");
+  }
+  /**
+   * @Route("/listePalliers/{moduleId}", name="listePalliers")
+   */
+  public function listePalliers(Request $request, userinterface $user, $moduleId): Response
+  {
+    $pallierRepository = $this->getDoctrine()->getRepository(Pallier::class);
+    $palliers = $pallierRepository->findAllByModule($moduleId);
+
+    return $this->render('module_quizz/listePalliers.html.twig', [
+      'pageTitle' => 'liste des palliers',
+      'rootTemplate' => 'module_quizz',
+      'pageIcon' => 'group',
+      'rootPage' => 'edit',
+      'pageColor' => 'md-bg-grey-100',
+
+      'user' => $user,
+      'palliers' => $palliers,
+      'moduleId' => $moduleId,
+
+    ]);
+  }
+
+/**
+   * @Route("/createPallier/{idModule}", name="createPallier")
+   */
+  public function createPallier(Request $request, userinterface $user, $idModule): Response
+  {
+
+ return $this->render('module_quizz/createPallier.html.twig', [
+      'controller_name' => 'CreatePallier',
+      'pageTitle' => 'Creation du pallier',
+      'rootTemplate' => 'module_quizz',
+      'pageIcon' => 'group',
+      'rootPage' => 'lists',
+      'pageColor' => 'md-bg-grey-100',
+    ]);
+  }
+
+/**
+   * @Route("/deletePallier/{idPallier}", name="deletePallier")
+   */
+  public function deletePallier(Request $request, userinterface $user, $idPallier): Response
   {
 
     $repository_formation = $this->getDoctrine()->getRepository(formation::class);

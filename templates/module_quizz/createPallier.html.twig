@@ -1,0 +1,123 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Creation pallier
+{% endblock %}
+{% block baseStylesheets %}
+	<link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+{% endblock %}
+
+{% block body %}
+	<div id="page_content" class="height-700">
+
+		<div id="page_content_inner" class="height-700">
+
+			<div class="md-card height-700">
+				<div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
+
+					<div class="uk-width-large-1-6 uk-width-medium-1-3 js_collapsible_column height-700">
+
+						<div class="md-card-toolbar {{pageColor}}">
+							<div
+								class="md-card-toolbar-actions uk-hidden-small">
+								{# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
+								<a href="#" data-column-toggle>
+									<i class="md-icon material-icons" title="Collapse">format_indent_decrease</i>
+									<i class="md-icon material-icons" style="display: none" title="Expand">format_indent_increase</i>
+								</a>
+							</div>
+							<h1 class="md-card-toolbar-heading-text js_hidden uk-text-overflow pageTitle">
+								<i class="material-icons">{{pageIcon}}</i>
+							</span>
+							<span>{{pageTitle}}</span>
+						</h1>
+					</div>
+
+					{# menu contextuel #}
+					{% include rootTemplate ~ '/component/contextual_menu.html.twig' %}
+
+				</div>
+
+				<div class="uk-flex-item-1">
+					<!-- -->
+					{# nav bar contextuel #}
+					{% include rootTemplate ~ '/component/contextual_secondary_nav.html.twig' %}
+
+						<div
+						class="md-card-content mostly-customized-scrollbar mainScroll"> <!-- Tabs content -->
+						<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
+
+
+							<h1>Création d'un pallier</h1>
+							<div style="margin:30px">
+								<form action="{{ path('module_createQuestion') }}" method="POST">
+
+
+									<div class="md-card-content">
+										<div class="uk-grid">
+											<div class="uk-width-1-1">
+												<ul class="uk-tab" data-uk-tab="{connect:'#tabs_1_content'}" id="tabs_1">
+													<li class="uk-active">
+														<a href="#">Pallier</a>
+													</li>
+
+												</ul>
+												<ul id="tabs_1_content" class="uk-switcher uk-margin">
+													<li>
+
+														<div class="uk-grid" data-uk-grid-margin>
+
+															<div class="uk-width-1 md-input-filled">
+																<br>
+																<label for="exampleFormControlInput1" class="form-label">Timecode</label>
+																<input type="text" class="md-input label-fixed customizedInput" id="timecode" placeholder="min.seconde" name="timecode">
+															</div>
+
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="formation" class="form-label">Titre du pallier</label>
+
+																<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="Introduction" name="titrePallier">
+
+															</select>
+														</div>
+
+														<div class="uk-width-medium-1-2 md-input-filled">
+															<label for="formation" class="form-label">Description</label>
+
+															<input type="text" class="md-input label-fixed customizedInput" id="description" placeholder="Je suis une description" name="description"></select>
+													</li>
+												</ul>
+											</div>
+
+										</div>
+										<div class="col-12">
+											<button class="btn btn-primary" type="submit">Créer le pallier</button>
+											<button class="md-btn md-btn-default cancelBtn" name="submit" value="annuler" href="javascript:void(0)">ANNULER</button>
+										</div>
+
+									</div>
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			
+		<br>
+
+
+		<!-- Tabs content -->
+
+		<div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
+			<div class="md-card-toolbar md-bg-grey-100">
+				<div class="md-card-toolbar-actions uk-hidden-small">
+					<a href="#" data-column-toggle>
+						<i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+						<i class="md-icon material-icons" style="display: none" title="Expand">format_indent_decrease</i>
+					</a>
+				</div>
+				<h3 class="md-card-toolbar-heading-text js_hidden">
+					Filtres
+				</h3>
+			</div>{# Filters #}{% include rootTemplate ~ '/component/contextual_filters.html.twig' %}</div>
+	</div>
+</div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script></script>{% endblock %}
