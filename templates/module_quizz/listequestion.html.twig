@@ -96,17 +96,12 @@
                                         </div>
                                         <div class="floatLeftIcon">
                                             <div class="iconGoSearch">
-                                                {% if(isEnabled=='1') %}
-                                                    <a href="{{ path('module_module_quizz',{isAll: ((isAll=='yes')?'no':'yes'), isEnabled: 0 }) }}">
-                                                        <i class="material-icons">visibility_off</i>
-                                                    </a>
-
-                                                {% else %}
-                                                    <a href="{{ path('module_module_quizz',{isAll: ((isAll=='yes')?'no':'yes'), isEnabled: 1 }) }}">
+            
+                                                    <a >
                                                         <i class="material-icons">account_circle</i>
                                                     </a>
 
-                                                {% endif %}
+                                               
                                             </div>
                                             
                                             

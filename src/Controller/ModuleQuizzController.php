@@ -34,6 +34,7 @@ use App\Repository\ModuleRepository;
 use App\Repository\NmdProductRepository;
 use App\Repository\PallierRepository;
 use App\Repository\PropositionRepository;
+use App\Repository\VideoRepository;
 use Doctrine\ORM\Mapping\Id;
 use phpDocumentor\Reflection\Types\Null_;
 use PhpParser\Node\Expr\Cast\Object_;
@@ -151,7 +152,7 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/createQuestion{idQuestion}", name="createQuestion")
    */
-  public function createQuestion(Request $request, $idQuestion = null): Response
+  public function createQuestion(Request $request, $idQuestion =null, QuestionRepository $repositoryQuestion,PallierRepository $repositoryPalier): Response
   {
 
     $selected = "";
@@ -168,10 +169,8 @@ class ModuleQuizzController extends AbstractController
     $levels = $repositoryLvl->findAll();
     $repositoryType = $this->getDoctrine()->getRepository(Type::class);
     $repositoryVideo = $this->getDoctrine()->getRepository(Video::class);
-    $repositoryPalier = $this->getDoctrine()->getRepository(Pallier::class);
     $videos = $repositoryVideo->findAll();
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
-    $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
 
 
 
@@ -276,7 +275,7 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/createProposition/{questionId}", name="createProposition")
    */
-  public function createProposition(Request $request, $questionId): Response
+  public function createProposition(Request $request, $questionId ,QuestionRepository $repositoryQuestion): Response
   {
 
     // enregistrement des proposition
@@ -290,7 +289,6 @@ class ModuleQuizzController extends AbstractController
 
         if (isset($_POST['libelleProps' . $i])) {
           $proposition = new Proposition();
-          $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
 
           $id_question = $questionId;
           $idModule = $repositoryQuestion->findIdModule($id_question);
@@ -329,227 +327,11 @@ class ModuleQuizzController extends AbstractController
   public function listequestion(Request $request, UserInterface $userI, QuestionRepository $questionRepository, PropositionRepository $propositionRepository, $moduleId, ModuleRepository $moduleRepository): Response
   {
 
-    $all = $questionRepository->isall();
+     $all = $questionRepository->isall();
     $module = $moduleRepository->find($moduleId);
-
-    $isEnabled = $request->get('isEnabled');
-    if ($isEnabled == null or $isEnabled == '') {
-      $isEnabled = '1';
-    }
-    $sqlIsEnabled = "";
-    $repository_user = $this->getDoctrine()->getRepository(User::class);
-    $userId = $request->get('userId');
-    $categoryID = $request->get('categoryId');
-    if ($userId == null or $userId == '') {
-      $rolesI = $userI->getRoles();
-      foreach ($rolesI as $rI) {
-        $roleI = $rI;
-      }
-      if ($roleI == 'ROLE_FINANCIAL') {
-        $userId = $userI->getParent();
-      }
-      if ($roleI == 'ROLE_COMPANY' or $roleI == 'ROLE_USER') {
-        $userId = $userI->getId();
-      }
-    }
-    $user = $this->getDoctrine()->getRepository(User::class)->find($userId);
-    $cpv = $user->getCpvCourtierExploitant();
-
-    $now = new DateTime();
-    $month = $now->format('m');
-    $year = $now->format('Y');
-
-    $roles = $user->getRoles();
-    foreach ($roles as $r) {
-      $role = $r;
-    }
-
-    $isAll = $request->get('isAll');
-    if ($isEnabled == '1') {
-      $sqlIsEnabled = " AND is_enabled='1' ";
-    } else {
-      $sqlIsEnabled = " AND (is_enabled='0' OR is_enabled IS NULL) ";
-    }
-    if ($role == 'ROLE_COMPANY' or $role == 'ROLE_USER') {
-      $roleP = 'COMPANY';
-      if ($isAll != null and $isAll == 'yes') {
-        $users = [];
-        $allDirectors = $repository_user->DirecteursForPartner($cpv, $sqlIsEnabled);
-        foreach ($allDirectors as $itemDirector) {
-          $managers = [];
-          $director_id = $itemDirector['id'];
-          $allManagers = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
-          foreach ($allManagers as $itemManager) {
-            $manager_id = $itemManager['id'];
-            $sellers = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
-            $managers[] = [
-              'id' => $itemManager['id'],
-              'is_enabled' => $itemManager['is_enabled'],
-              'lastname' => $itemManager['lastname'],
-              'firstname' => $itemManager['firstname'],
-              'email' => $itemManager['email'],
-              'phone' => $itemManager['phone'],
-              'role' => 'ROLE_MANAGER',
-              'sellers' => $sellers
-            ];
-          }
-
-          $users[] = [
-            'id' => $itemDirector['id'],
-            'is_enabled' => $itemDirector['is_enabled'],
-            'lastname' => $itemDirector['lastname'],
-            'firstname' => $itemDirector['firstname'],
-            'email' => $itemDirector['email'],
-            'phone' => $itemDirector['phone'],
-            'role' => 'ROLE_DIRECTOR',
-            'managers' => $managers
-          ];
-        }
-      } else {
-        $users = [];
-        $usersLists = $repository_user->DirecteursForPartner($cpv, $sqlIsEnabled);
-        foreach ($usersLists as $itemList) {
-          $users[] = [
-            'id' => $itemList['id'],
-            'is_enabled' => $itemList['is_enabled'],
-            'lastname' => $itemList['lastname'],
-            'firstname' => $itemList['firstname'],
-            'email' => $itemList['email'],
-            'phone' => $itemList['phone'],
-            'role' => 'ROLE_DIRECTOR'
-          ];
-        }
-      }
-
-      if ($request->get('director_id') and $request->get('director_id') != '') {
-        $roleP = 'DIRECTOR';
-        $director_id = $request->get('director_id');
-        $user = $repository_user->find($director_id);
-        $users = [];
-
-        if ($isAll != null and $isAll == 'yes') {
-          $allManagers = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
-          foreach ($allManagers as $itemManager) {
-            $manager_id = $itemManager['id'];
-            $sellers = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
-            $users[] = [
-              'id' => $itemManager['id'],
-              'is_enabled' => $itemManager['is_enabled'],
-              'lastname' => $itemManager['lastname'],
-              'firstname' => $itemManager['firstname'],
-              'email' => $itemManager['email'],
-              'phone' => $itemManager['phone'],
-              'role' => 'ROLE_MANAGER',
-              'sellers' => $sellers
-            ];
-          }
-        } else {
-          $users = [];
-          $usersLists = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
-          foreach ($usersLists as $itemList) {
-            $users[] = [
-              'id' => $itemList['id'],
-              'is_enabled' => $itemList['is_enabled'],
-              'lastname' => $itemList['lastname'],
-              'firstname' => $itemList['firstname'],
-              'email' => $itemList['email'],
-              'phone' => $itemList['phone'],
-              'role' => 'ROLE_MANAGER'
-            ];
-          }
-        }
-      }
-      if ($request->get('manager_id') and $request->get('manager_id') != '') {
-        $users = [];
-        $roleP = 'MANAGER';
-        $manager_id = $request->get('manager_id');
-        $user = $repository_user->find($manager_id);
-        $usersLists = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
-        foreach ($usersLists as $itemList) {
-          $users[] = [
-            'id' => $itemList['id'],
-            'is_enabled' => $itemList['is_enabled'],
-            'lastname' => $itemList['lastname'],
-            'firstname' => $itemList['firstname'],
-            'email' => $itemList['email'],
-            'phone' => $itemList['phone'],
-            'role' => 'ROLE_SELLER'
-          ];
-        }
-      }
-    }
-    if ($role == 'ROLE_DIRECTOR') {
-      $roleP = 'DIRECTOR';
-      $director_id = $userId;
-
-      if ($isAll != null and $isAll == 'yes') {
-        $allManagers = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
-        foreach ($allManagers as $itemManager) {
-          $manager_id = $itemManager['id'];
-          $sellers = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
-          $users[] = [
-            'id' => $itemManager['id'],
-            'is_enabled' => $itemManager['is_enabled'],
-            'lastname' => $itemManager['lastname'],
-            'firstname' => $itemManager['firstname'],
-            'email' => $itemManager['email'],
-            'phone' => $itemManager['phone'],
-            'role' => 'ROLE_MANAGER',
-            'sellers' => $sellers
-          ];
-        }
-      } else {
-        $usersLists = $repository_user->allManagersForDirecteur($director_id, $sqlIsEnabled);
-        foreach ($usersLists as $itemList) {
-          $users[] = [
-            'id' => $itemList['id'],
-            'is_enabled' => $itemList['is_enabled'],
-            'lastname' => $itemList['lastname'],
-            'firstname' => $itemList['firstname'],
-            'email' => $itemList['email'],
-            'phone' => $itemList['phone'],
-            'role' => 'ROLE_MANAGER'
-          ];
-        }
-      }
-
-      if ($request->get('manager_id') and $request->get('manager_id') != '') {
-        $roleP = 'MANAGER';
-        $manager_id = $request->get('manager_id');
-        $user = $repository_user->find($manager_id);
-        $usersLists = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
-        foreach ($usersLists as $itemList) {
-          $users[] = [
-            'id' => $itemList['id'],
-            'is_enabled' => $itemList['is_enabled'],
-            'lastname' => $itemList['lastname'],
-            'firstname' => $itemList['firstname'],
-            'email' => $itemList['email'],
-            'phone' => $itemList['phone'],
-            'role' => 'ROLE_SELLER'
-          ];
-        }
-      }
-    }
-    if ($role == 'ROLE_MANAGER') {
-      $roleP = 'MANAGER';
-      $manager_id = $userId;
-      $usersLists = $repository_user->allVendeursForManager($manager_id, $sqlIsEnabled);
-      foreach ($usersLists as $itemList) {
-        $users[] = [
-          'id' => $itemList['id'],
-          'is_enabled' => $itemList['is_enabled'],
-          'lastname' => $itemList['lastname'],
-          'firstname' => $itemList['firstname'],
-          'email' => $itemList['email'],
-          'phone' => $itemList['phone'],
-          'role' => 'ROLE_SELLER'
-        ];
-      }
-    }
-
     $proposition = $propositionRepository->findAll();
 
+    $isAll = $request->get('isAll');
 
 
 
@@ -562,19 +344,14 @@ class ModuleQuizzController extends AbstractController
       'pageColor' => 'md-bg-grey-100',
 
       //data
-      'users' => $users,
-      'm' => $month,
-      'yearChoise' => $year,
-      'userId' => $userId,
+     
       'isAll' => $isAll,
-      'user' => $user,
-      'role' => $roleP,
-      'isEnabled' => $isEnabled,
+    
       'all' => $all,
       'proposition' => $proposition,
       'moduleId' => $moduleId,
       'module' => $module,
-      'categoryId' => $categoryID
+      
 
     ]);
   }
@@ -616,11 +393,7 @@ class ModuleQuizzController extends AbstractController
       $pallieraafficher = null;
     }
 
-    if ($request->isXmlHttpRequest()) {
-      $repositoryPallier = $this->getDoctrine()->getRepository(Pallier::class);
-      $palliers = $repositoryPallier->pallierByVideo($request->request->get("idVideo"));
-      return new JsonResponse(json_encode($palliers));
-    }
+    
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
     $types = $repository->findAll();
@@ -636,7 +409,7 @@ class ModuleQuizzController extends AbstractController
     $repositoryVideo = $this->getDoctrine()->getRepository(Video::class);
     $repositoryPalier = $this->getDoctrine()->getRepository(Pallier::class);
     $videos = $repositoryVideo->findAll();
-    $palierTime = $repositoryPalier->allPallier();
+    $palierTime = $RepositoryPallier->allPallier();
     $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
     $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
 
@@ -766,7 +539,7 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/formations", name="formations")
    */
-  public function displayFormations(Request $request): Response
+  public function displayFormations(Request $request,ModuleRepository $ModuleRepository): Response
   {
     $repository = $this->getDoctrine()->getRepository(Formation::class);
     $allFormations = $repository->findBy(array(), array('id' => 'ASC'));
@@ -777,7 +550,7 @@ class ModuleQuizzController extends AbstractController
       $modules = [];
       foreach ($allModules as $module) {
         $level = $this->getDoctrine()->getRepository(Level::class)->find($module->getIdLvl());
-        $allVideo = $this->getDoctrine()->getRepository(Module::class)->allVideos($module->getId());
+        $allVideo = $ModuleRepository->allVideos($module->getId());
         $videos = [];
         foreach ($allVideo as $video) {
           $videos[] = [
@@ -813,13 +586,10 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/delete/{categoryId}", name="delete")
    */
-  public function delete(Request $request, userinterface $user, $categoryId): Response
+  public function delete(Request $request, userinterface $user, $categoryId, QuestionRepository $questionRepository): Response
   {
 
-    $repository_category = $this->getDoctrine()->getRepository(Question::class);
-
-    $categoryInfos = $repository_category->find($categoryId);
-    $moduleId = $repository_category->findIdModule($categoryId);
+    $moduleId = $questionRepository->findIdModule($categoryId);
     $moduleId = $moduleId[0]["id_module_id"];
     // Connexion à MySQL
 
@@ -878,7 +648,7 @@ class ModuleQuizzController extends AbstractController
     $categoryInfos = $propositionRepository->find($PropositionId);
     $QuestionId = $propositionRepository->findIdQuestion($PropositionId);
     $QuestionId = $QuestionId[0]['id_question_id'];
-    dump($QuestionId);
+   
       
 
     $repository = $this->getDoctrine()->getRepository(Type::class);
@@ -970,5 +740,116 @@ class ModuleQuizzController extends AbstractController
     $this->addFlash('', $message);
 
     return $this->redirectToRoute("module_formations");
+  }
+
+  /**
+   * @Route("/AddVideo", name="AddVideo")
+   */
+  public function AddVideo(Request $request, $idQuestion = null, QuestionRepository $repositoryQuestion, PallierRepository $repositoryPalier): Response
+  {
+    
+    $repository = $this->getDoctrine()->getRepository(Type::class);
+    $types = $repository->findAll();
+    $repositoryFormation =  $this->getDoctrine()->getRepository(Formation::class);
+    $repositoryModule =  $this->getDoctrine()->getRepository(Module::class);
+
+    $formation = $repositoryFormation->findAll();
+    $modules = $repositoryModule->findAll();
+    $repositoryLvl = $this->getDoctrine()->getRepository(Level::class);
+    $levels = $repositoryLvl->findAll();
+    $repositoryType = $this->getDoctrine()->getRepository(Type::class);
+    $repositoryVideo = $this->getDoctrine()->getRepository(Video::class);
+    $videos = $repositoryVideo->findAll();
+    $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
+    dump($_POST);
+    dump($_FILES);
+    
+  // return $this->redirectToRoute("module_listeVideos");
+      
+        
+    
+     return $this->render('module_quizz/AddVideo.html.twig', [
+      'controller_name' => 'ModuleQuizzController',
+      'types' => $types,
+      'formation' => $formation,
+      'levels' => $levels,
+      'videos' => $videos,
+      'modules' => $modules,
+
+      'pageTitle' => 'Creation Question',
+      'rootTemplate' => 'module_quizz',
+      'pageIcon' => 'group',
+      'rootPage' => 'lists',
+      'pageColor' => 'md-bg-grey-100',
+    ]);
+  }
+  /**
+   * @Route("/listeVideo/{questionId}", name="listeVideo")
+   */
+  public function listeVideo(Request $request,VideoRepository $videoRepository, UserInterface $userI, QuestionRepository $questionRepository, PropositionRepository $propositionRepository, $questionId, ModuleRepository $moduleRepository): Response
+  {
+
+    $all = $videoRepository->isall();
+    $question = $questionRepository->find($questionId);
+    $listevideo = $videoRepository->getVideoByQuestion($questionId);
+    $proposition = $propositionRepository->findAll();
+
+    $isAll = $request->get('isAll');
+
+
+
+
+    return $this->render('module_quizz/listeVideo.html.twig', [
+      'pageTitle' => 'categorys',
+      'rootTemplate' => 'module_quizz',
+      'pageIcon' => 'group',
+      'rootPage' => 'lists',
+      'pageColor' => 'md-bg-grey-100',
+
+      //data
+
+      'isAll' => $isAll,
+
+      'all' => $all,
+      'proposition' => $proposition,
+      'questionId' => $questionId,
+      'question' => $question,
+      'listevideo' => $listevideo,
+
+
+    ]);
+}
+  /**
+   * @Route("/listeVideos", name="listeVideos")
+   */
+  public function listeVideos(Request $request, VideoRepository $videoRepository, UserInterface $userI, QuestionRepository $questionRepository, PropositionRepository $propositionRepository,  ModuleRepository $moduleRepository): Response
+  {
+
+    $all = $videoRepository->isall();
+    $listevideo = $videoRepository->isAll();
+    $proposition = $propositionRepository->findAll();
+
+    $isAll = $request->get('isAll');
+
+
+
+
+    return $this->render('module_quizz/listeVideo.html.twig', [
+      'pageTitle' => 'categorys',
+      'rootTemplate' => 'module_quizz',
+      'pageIcon' => 'group',
+      'rootPage' => 'lists',
+      'pageColor' => 'md-bg-grey-100',
+
+      //data
+
+      'isAll' => $isAll,
+
+      'all' => $all,
+      'proposition' => $proposition,
+      'listevideo' => $listevideo,
+
+
+    ]);
   }
 }
