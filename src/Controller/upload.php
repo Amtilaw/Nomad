@@ -78,9 +78,7 @@ class upload extends AbstractController
         dump($_FILES['fileToUpload']);
         $videoname = $_FILES['fileToUpload']["name"];
 
-                    $Video->setUrl($videoname);
-            $entityManager->persist($Video);
-                    $entityManager->flush();
+                   
         
 $target_dir = "C:/Users/nolan/Nomad-2/public/assets/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
@@ -121,6 +119,9 @@ if ($uploadOk == 0) {
             } else {
                 $message = sprintf("Sorry, there was an error uploading your file.");
                 $this->addFlash('', $message);
+                $Video->setUrl($videoname);
+                $entityManager->persist($Video);
+                $entityManager->flush();
             }
 
             $message = sprintf("The file ". htmlspecialchars( basename( $_FILES["fileToUpload"]["name"])). " has been uploaded.");
