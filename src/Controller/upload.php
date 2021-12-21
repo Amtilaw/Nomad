@@ -66,7 +66,7 @@ class upload extends AbstractController
         $entityManager = $this->getDoctrine()->getManager();
         $Video = new Video();
         
-        if (empty($_POST['URL']) && $_POST['URL'] != "") {
+        if (isset($_POST['URL']) && $_POST['URL'] != "") {
             $Video->setUrl($_POST['URL']);
 
             $entityManager->persist($Video);
