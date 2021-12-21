@@ -50,7 +50,7 @@
 
 							<h1>Création d'une question</h1>
 							<div style="margin:30px">
-								<form action="{{ path('module_createQuestion') }}" method="POST">
+								<form action="{{ path('module_createQuestion', {idModule}) }}" method="POST">
 
 
 									<div class="md-card-content">
@@ -73,27 +73,6 @@
 																<input type="text" class="md-input label-fixed customizedInput" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
 															</div>
 
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Le nom de la Formation</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
-																	<option selected>Nom de la formation</option>
-																	{% for formatio in formation %}
-																		<option value=" {{ formatio.id }} " {{ formatio.selected }}>{{ formatio.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Le nom du module</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="Module" id="Module">
-																	<option selected>Module</option>
-																	{% for module in modules %}
-																		<option value=" {{ module.id }}" {{ module.selected }}>{{ module.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
 
 															<div class="uk-width-medium-1-2 md-input-filled">
 																<label for="lvl" class="form-label">Difficulté de la question</label>
@@ -142,22 +121,6 @@
 																</select>
 															</div>
 
-															<div id="newPallier" class="uk-width-1 md-input-filled">
-
-															<div class="uk-width-1 md-input-filled">
-
-<br>
-																<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
-																<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallier">
-															</div>
-															<div class="uk-width-1 md-input-filled">
-
-<br>
-																<label for="exampleFormControlInput1" class="form-label">titre du pallier</label>
-																<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
-															</div>
-
-														</div>
 														</div>
 													</li>
 												</div>
@@ -204,16 +167,6 @@
 	</div>
 </div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
 let pallierJson;
-$('#newPallier').css('display', 'none');
-$("#idPallier").change(function () {
-if ($("#idPallier :selected").val() == 0) {
-	console.log("yes");
-$("#newPallier").css("display", "block");
-} else {
-$("#newPallier").css("display", "none");
-}
-});
-
 $("#typeProps").change(function () {
 if (this.value == 1) {
 $("#propositionsAdd").css("display", "block");

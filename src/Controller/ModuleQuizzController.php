@@ -190,11 +190,9 @@ class ModuleQuizzController extends AbstractController
         return $this->redirectToRoute('module_formations');
       }
       $entityManager = $this->getDoctrine()->getManager();
-      $idModule = $repositoryModule->find($_POST['Module']);
-      $idModule = str_replace('', '', $_POST["Module"]);
 
       $question->setLibelle($_POST['questionLibelle']);
-      $question->setIdModule($repositoryModule->find($_POST['Module']));
+      $question->setIdModule($repositoryModule->find($idModule)->getId());
       $question->setCreatedAt(new \DateTime());
       $question->setModifyAt(new \DateTime());
       $question->setIdLvl($repositoryLvl->find($_POST['lvl']));
@@ -248,7 +246,6 @@ class ModuleQuizzController extends AbstractController
     }
     // return new Response('Saved new product with id ' . $question->getId());
 
-
     return $this->render('module_quizz/creationQuestion.html.twig', [
       'controller_name' => 'ModuleQuizzController',
       'types' => $types,
@@ -262,6 +259,7 @@ class ModuleQuizzController extends AbstractController
       'rootPage' => 'lists',
       'pageColor' => 'md-bg-grey-100',
       'palliers' => $palliers,
+      'idModule' => $idModule,
     ]);
   }
 
