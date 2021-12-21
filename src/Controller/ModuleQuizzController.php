@@ -148,9 +148,9 @@ class ModuleQuizzController extends AbstractController
   }
 
   /**
-   * @Route("/createQuestion{idModule}", name="createQuestion")
+   * @Route("/createQuestion/{idModule}", name="createQuestion")
    */
-  public function createQuestion(Request $request, $idModule = null): Response
+  public function createQuestion(Request $request, $idModule = null,PallierRepository $pallierRepository): Response
   {
     $selected = "";
 
@@ -175,6 +175,7 @@ class ModuleQuizzController extends AbstractController
         return $this->redirectToRoute('module_listequestion', ['moduleId' => $idModule]);
       }
     }
+    $palliers = $pallierRepository->allPallier(); 
 
 
 
@@ -192,6 +193,7 @@ class ModuleQuizzController extends AbstractController
       $entityManager = $this->getDoctrine()->getManager();
       $idModule = $repositoryModule->find($_POST['Module']);
       $idModule = str_replace('', '', $_POST["Module"]);
+      
 
       $question->setLibelle($_POST['questionLibelle']);
       $question->setIdModule($repositoryModule->find($_POST['Module']));
@@ -204,7 +206,7 @@ class ModuleQuizzController extends AbstractController
       // $pallier_id = 1;
 
       // enregistrement du palier
-
+      
       $palierTime = $repositoryPalier->pallierByVideo($question->getIdVideo());
       $pallier_id = 0;
       //conversion du timecode user en datetime
@@ -332,8 +334,7 @@ class ModuleQuizzController extends AbstractController
 
       //data
      
-      'isAll' => $isAll,
-    
+   
       'all' => $all,
       'proposition' => $proposition,
       'moduleId' => $moduleId,

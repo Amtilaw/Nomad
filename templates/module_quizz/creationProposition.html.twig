@@ -48,9 +48,9 @@
 						<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
 
 
-							<h1>Création des propositions</h1>
+							<h1>Création d'une question</h1>
 							<div style="margin:30px">
-								<form action="{{ path('module_createProposition', {questionId: questionId}) }}" method="POST">
+								<form action="{{ path('module_createQuestion') }}" method="POST">
 
 
 									<div class="md-card-content">
@@ -67,30 +67,100 @@
 
 														<div class="uk-grid" data-uk-grid-margin>
 
-															<div id="propositionsAdd" class="uk-width-1 md-input-filled">
-																<div>
-																	<br>
-																	<label for="exampleFormControlInput1" class="form-label">Libelle de la proposition n°1</label>
-																	<input type="text" class="md-input label-fixed customizedInput" id="libelleProps1" placeholder="Paris" name="libelleProps1">
-																	<input type="checkbox" data-switchery data-switchery-color="#3367d6" id="correct1" name="correct1">
-																	<label for="correct1">Is correct</label>
-																</div>
+															<div class="uk-width-1 md-input-filled">
 																<br>
-																<div>
-																	<br>
-																	<label for="exampleFormControlInput1" class="form-label">Libelle de la proposition n°1</label>
-																	<input type="text" class="md-input label-fixed customizedInput" id="libelleProps1" placeholder="Paris" name="libelleProps1">
-																	<input type="checkbox" data-switchery data-switchery-color="#3367d6" id="correct1" name="correct1">
-																	<label for="correct1">Is correct</label>
-																</div>
-																<div id="newPropsAdd"></div>
-																<button id="buttonAddProps" class="btn btn-primary" onclick="addProps()" type="button">Ajouter une proposition</button>
+																<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
+																<input type="text" class="md-input label-fixed customizedInput" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
 															</div>
 
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="formation" class="form-label">Le nom de la Formation</label>
+
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
+																	<option selected>Nom de la formation</option>
+																	{% for formatio in formation %}
+																		<option value=" {{ formatio.id }} " {{ formatio.selected }}>{{ formatio.nom }}</option>
+																	{% endfor %}
+																</select>
+															</div>
+
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="formation" class="form-label">Le nom du module</label>
+
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="Module" id="Module">
+																	<option selected>Module</option>
+																	{% for module in modules %}
+																		<option value=" {{ module.id }}" {{ module.selected }}>{{ module.nom }}</option>
+																	{% endfor %}
+																</select>
+															</div>
+
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="lvl" class="form-label">Difficulté de la question</label>
+
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="lvl">
+																	<option selected>Choisisser la difficulté de la question</option>
+																	{% for level in levels %}
+																		<option value="{{ level.id }}" {{ level.selected }}>{{ level.nom }}</option>
+																	{% endfor %}
+																</select>
+															</div>
+
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="formation" class="form-label">Type de proposition</label>
+
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="type" id="typeProps">
+																	<option selected>Selectionné le type de question</option>
+																	{% for type in types %}
+																		<option value=" {{ type.id }} ">{{ type.nom }}</option>
+																	{% endfor %}
+																</select>
+															</div>
 
 														</div>
 
 
+														<div class="uk-grid" data-uk-grid-margin>
+
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="lvl" class="form-label">video selection</label>
+
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="video" id="idVideoForm">
+																	{% for video in videos %}
+																		<option value="{{ video.id }}">{{ video.url }}</option>
+																	{% endfor %}
+																</select>
+															</div>
+															<div class="uk-width-medium-1-2 md-input-filled">
+																<label for="lvl" class="form-label">Pallier selection</label>
+
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
+																	<option value="0">Nouveau pallier</option>
+																	{% for pallier in palliers %}
+																		<option value="{{ pallier.id }}" selected>{{pallier.titre_groupe_question}}
+																			-
+																			{{ pallier.timecode }}</option>
+																	{% endfor %}
+																</select>
+															</div>
+
+															<div id="newPallier" class="uk-width-1 md-input-filled">
+
+																<div class="uk-width-1 md-input-filled">
+
+																	<br>
+																	<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
+																	<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallier">
+																</div>
+																<div class="uk-width-1 md-input-filled">
+
+																	<br>
+																	<label for="exampleFormControlInput1" class="form-label">titre du pallier</label>
+																	<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
+																</div>
+
+															</div>
+														</div>
 													</li>
 												</div>
 											</li>
@@ -135,12 +205,55 @@
 
 	</div>
 </div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
+let pallierJson;
+$('#newPallier').css('display', 'none');
+$("#idPallier").change(function () {
+if ($("#idPallier :selected").val() == 0) {
+console.log("yes");
+$("#newPallier").css("display", "block");
+} else {
+$("#newPallier").css("display", "none");
+}
+});
 
+$("#typeProps").change(function () {
+if (this.value == 1) {
+$("#propositionsAdd").css("display", "block");
+} else {
+$("#propositionsAdd").css("display", "none");
+}
+});
+
+$("#videoSelection").change(function () {
+getPalliersByVideo(this.value);
+});
+
+
+function getPalliersByVideo(idVideo) {
+const url = "{{ path('module_createQuestion') }}";
+
+console.log(idVideo);
+
+$.ajax({
+type: "post",
+url: url,
+data: {
+idVideo: parseInt(idVideo)
+}
+}).done(function (data) {
+pallierJson = data;
+}).fail(function () {
+console.log("fail");
+});
+
+
+}
 function addProps() {
 countProps++;
 let newProps = document.createElement("div");
 newProps.innerHTML = ` <label for="exampleFormControlInput1" class="form-label"> Libelle de la proposition n°${countProps} </label>
 											<input type="text" class="md-input label-fixed customizedInput" id="libelleProps${countProps}" placeholder="Paris" name="libelleProps${countProps}">
-											<input type="checkbox" data-switchery="true" data-switchery-color="#3367d6" id="correct${countProps}" name="correct${countProps}" > <label for="correct">Is correct</label> `
+											<input type="checkbox" data-switchery data-switchery-color="#3367d6" id="correct${countProps}" name="correct${countProps}" > <label for="correct">Is correct</label> `
 $("#newPropsAdd").append(newProps);
 }</script>{% endblock %}
+
