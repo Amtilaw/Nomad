@@ -1,6 +1,6 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Question{% endblock %}
+{% block title %}Palliers{% endblock %}
 
 {% block baseStylesheets %}
     <link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
@@ -41,7 +41,7 @@
                     <div class="uk-flex-item-1">
                         
                         {# nav bar contextuel #}
-                        {% include rootTemplate ~ '/component/partials/contextual_secondary_nav_'~ rootPage ~'_Proposition.html.twig' %}
+                        {% include rootTemplate ~ '/component/partials/contextual_secondary_nav.html.twig' %}
 
 
                         <div class="md-card-content mostly-customized-scrollbar mainScroll">
@@ -55,14 +55,10 @@
                                     role="tabpanel"
                                     aria-labelledby="ex1-tab-1"
                             >
-                                <div class="pt-15 pb-15 borderBottom height50">
-                                    <h3 class="m-0 fz18 grisFonce title2">
-                                         {{question.libelle}}
-                                    </h3>
-                                </div>
+                                
                                 <div class="pt-2 pb-2">
                                     <div class="pt-15 pb-15 borderBottom">
-                                        <p class="textContent">Affichage des propositions pour cette question </p>
+                                        <p class="textContent">Affiche des palliers pour se module</p>
                                     </div>
 
                                     <div class="message">
@@ -107,8 +103,8 @@
                                             <div class="iconExporter">
                                                 <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
                                             </div>
-                                            <a class="iconHerarchy" href="{{ path('module_createProposition',{questionId: questionId}) }}">
-                                                <i class="material-icons">add</i>
+                                            <a class="iconHerarchy" href="{{ path('module_createPallier', {idModule : moduleId}) }}" >
+                                                <i class="material-icons" >add</i>
                                             </a>
                                         </div>
                                     </div>
@@ -121,8 +117,9 @@
                                                 </th>
                                                 <th scope="col" class="left-align">Type</th>
                                                 <th scope="col">ID</th>
-                                                <th scope="col">Intitulé de la proposition </th>
-                                                <th scope="col">Est correcte</th>
+                                                <th scope="col">Timecode</th>
+                                                <th scope="col">Titre pallier</th>
+                                                <th scope="col">Description</th>
                                                 
                                               
                                                 <th scope="col" ></th>
@@ -133,13 +130,10 @@
                                             </thead>
                                             <tbody id="contentTable">
                                                 
-                                                {% for v in proposition %}
-                                                  {% if v.id_question_id == questionId %}
-                                                 
-
+                                                {% for p in palliers %}
 
                                                 
-                                                               <tr dataID="{{v.id}}" dataName="{{v.libelle}}"  class="lineEffectif">
+                                                               <tr class="lineEffectif">
                                                                 <td class="checkBoxNomad">
                                                                     <input type="checkbox" class="ts_checkbox" data-md-icheck />
                                                     </td>
@@ -148,19 +142,20 @@
                                                                         <i class="material-icons" data-uk-tooltip title="Categorie">person</i>
                                                                     
                                                                 </td>
-                                                                <td>{{v.id}}</td>
-                                                                <td>{{v.libelle}}</td>
-                                                                <td>{{v.is_correct}}</td>
+                                                                <td>{{p.id}}</td>
+                                                                <td>{{p.timecode}}</td>
+                                                                <td>{{p.titre_groupe_question}}</td>
+                                                                <td>{{p.description}}</td>
                                                                  
                                                             <td></td>
                                                                 <td class="blackIcon">
                                                                     <span>
-                                                                       <a href="{{ path('module_editProposition',{PropositionId: v.id}) }}">
+                                                                       <a href="{{ path('module_editPallier',{pallierId: p.id}) }}">
                                                                             <i class="material-icons">edit</i>
                                                                         </a>
                                                                     </span>
                                                                     <span >
-                                                                    <a href="{{ path('module_deleteProposition',{PropositionId: v.id}) }}">
+                                                                    <a href="{{ path('module_deletePallier', {idPallier: p.id}) }}">
                                                                         <i class="material-icons">delete</i>
                                                                         
                                                                     </span>
@@ -168,7 +163,6 @@
 
                                                                 </td>
                                                             </tr>
-                                                            {% endif %}
                                                     {% endfor %}
 
                                                     </tbody>
@@ -255,21 +249,9 @@
             for (var i=0; i<s.length; i++) view[i] = s.charCodeAt(i) & 0xFF; //convert to octet
             return buf;
         }
-       let li = document.createElement("li");
-     
-                li.innerHTML = `<a href="{{ path('module_formations') }}">
-                <div class="md-list-addon-element">
-                    <i class="md-list-addon-icon material-icons">ii</i>
-                </div>
-                <div class="md-list-content">
-                    <span class="md-list-heading">Liste des palliers</span>
-                    <span class="uk-text-small uk-text-muted">Palliers</span>
-                </div></a>
-                `;
-
+       
       let ul = document.getElementById("ulMenue");
-      ul.prepend(li);
-    li = document.createElement("li");
+    let li = document.createElement("li");
      li.innerHTML = `<a href="{{ path('module_formations') }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
@@ -283,7 +265,7 @@
 
       ul.prepend(li);
       li = document.createElement("li");
-     li.innerHTML = `<a href="{{ path('module_listequestion', {moduleId: idModule}) }}">
+     li.innerHTML = `<a href="{{ path('module_listequestion', {moduleId: moduleId}) }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>
