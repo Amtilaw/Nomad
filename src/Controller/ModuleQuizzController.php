@@ -378,12 +378,13 @@ class ModuleQuizzController extends AbstractController
     $la_question = $RepositoryQuestion->find($categoryId);
     $id_du_module = $la_question->getIdModule();
     $id_du_palier_question = $la_question->getIdPallier()->getId();
-    $id_du_level_question = $la_question->getIdPallier();
+    $id_du_level_question = $la_question->getIdLvl();
     $id_du_type_question = $la_question->getIdType();
     $id_de_la_video = $la_question->getIdVideo();
     $video_actuel = $videoRepository->find($id_de_la_video);
     $palier_actuel = $pallierRepository->find($id_du_palier_question);
     $level_actuel = $levelRepository->find($id_du_level_question);
+    
     $type_actuel = $typeRepository->find($id_du_type_question);
      foreach ($listepalier as $lpalier) {
        $idlpalier = $lpalier['id'];
