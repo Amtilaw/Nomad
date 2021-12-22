@@ -50,7 +50,9 @@
 
 							<h1>Création d'une question</h1>
 							<div style="margin:30px">
-								<form action="{{ path('module_createQuestion') }}" method="POST">
+<form action="{{ path('module_createQuestion', {idModule : idModule}) }}" method="POST">
+
+
 
 
 									<div class="md-card-content">
@@ -73,31 +75,12 @@
 																<input type="text" class="md-input label-fixed customizedInput" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
 															</div>
 
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Le nom de la Formation</label>
+															
 
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
-																	<option selected>Nom de la formation</option>
-																	{% for formatio in formation %}
-																		<option value=" {{ formatio.id }} " {{ formatio.selected }}>{{ formatio.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Le nom du module</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="Module" id="Module">
-																	<option selected>Module</option>
-																	{% for module in modules %}
-																		<option value=" {{ module.id }}" {{ module.selected }}>{{ module.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
+															
 
 															<div class="uk-width-medium-1-2 md-input-filled">
 																<label for="lvl" class="form-label">Difficulté de la question</label>
-
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="lvl">
 																	<option selected>Choisisser la difficulté de la question</option>
 																	{% for level in levels %}
@@ -105,17 +88,17 @@
 																	{% endfor %}
 																</select>
 															</div>
-
 															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Type de proposition</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="type" id="typeProps">
-																	<option selected>Selectionné le type de question</option>
+																<label for="lvl" class="form-label">type de question</label>
+																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="type">
+																	<option selected>choix du type de question </option>
 																	{% for type in types %}
-																		<option value=" {{ type.id }} ">{{ type.nom }}</option>
+																		<option value="{{ type.id }}">{{ type.nom }}</option>
 																	{% endfor %}
 																</select>
 															</div>
+
+															
 
 														</div>
 
@@ -136,23 +119,19 @@
 
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
 																<option value="0">Nouveau pallier</option>
-																	{% for pallier in palliers %}
+																	{% for pallier in listePallier %}
 																		<option value="{{ pallier.id }}" selected>{{pallier.titre_groupe_question}} - {{ pallier.timecode }}</option>
 																	{% endfor %}
 																</select>
 															</div>
-
 															<div id="newPallier" class="uk-width-1 md-input-filled">
-
 															<div class="uk-width-1 md-input-filled">
-
-<br>
+                                                                <br>
 																<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
 																<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallier">
 															</div>
 															<div class="uk-width-1 md-input-filled">
-
-<br>
+                                                                <br>
 																<label for="exampleFormControlInput1" class="form-label">titre du pallier</label>
 																<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
 															</div>
@@ -166,6 +145,9 @@
 									</div>
 								</div>
 							</div>
+<input type="hidden" class="md-input label-fixed customizedInput" id="idModule" value="{{idModule}}" name="idModule">
+
+
 
 						</div>
 						<br>
@@ -228,7 +210,9 @@ getPalliersByVideo(this.value);
 
 
 function getPalliersByVideo(idVideo) {
-const url = "{{ path('module_createQuestion') }}";
+const url = "{{ path('module_createQuestion', {idModule : idModule}) }}";
+
+
 
 console.log(idVideo);
 

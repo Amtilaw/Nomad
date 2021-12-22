@@ -11,6 +11,7 @@
 
 {% block body %}
 
+
 	<div id="page_content" class="height-700">
 
 		<div id="page_content_inner" class="height-700">
@@ -165,11 +166,14 @@
 																	<i class="material-icons" title="Supprimer la question" onclick="showAlertDelete({{v.id}}, '{{v.libelle}}')">delete</i>
 
 																</span>
+																{% if v.id_type_id == 1 %}
 																<span>
 																	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
 																		<i class="material-icons" title="Afficher les propositions">Les proposition</i>
 																	</a>
 																</span>
+																{% endif %}
+																
 
 															</td>
 														</tr>

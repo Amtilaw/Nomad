@@ -211,7 +211,6 @@ class ModuleQuizzController extends AbstractController
       $question->setCreatedAt(new \DateTime());
       $question->setModifyAt(new \DateTime());
       $question->setIdLvl($levelRepository->find($_POST['lvl']));
-      $question->setIdType($typeRepository->find($_POST['type']));
       $question->setIdVideo($videoRepository->find($_POST['video']));
 
       //creation des order pour la question
@@ -225,7 +224,6 @@ class ModuleQuizzController extends AbstractController
           $order = $order + 1;
         }
       }
-      $question->setOrdering($order);
       
 
       //on soccupe du palier 
@@ -239,40 +237,69 @@ class ModuleQuizzController extends AbstractController
       //conversion du timecode user en datetime
 
       // verifie si l'utilisateur a rentrer un palier dans le menue deroulent
-      if (isset($_POST["palliers"]) && $_POST["palliers"] != 0) {
-        
-        $question->setIdPallier($pallierRepository->find($_POST["palliers"]));
-        
+      if (isset($_POST["palliers"])) {
+        $question->setIdPallier($_POST["palliers"]);
       }elseif (isset($_POST["pallier"])) {
-        
         //nouveau pallier 
         $palier = new Pallier;
-        $palier->setTimecode($_POST['pallier']);
-        $palier->setTitreGroupeQuestion($_POST['titrePallier']);
+        $palier->setTimecode();
+        $palier->setTitreGroupeQuestion();
+
+        //set l'id question pallier avec l'id du nouveau pallier 
+        $id_pallier = $palier->getId();
+        $question->setIdPallier($id_pallier);
 
         //enregistrement du nouveau pallier
         $entityManager->persist($palier);
         $entityManager->flush();
-
-        //set l'id question pallier avec l'id du nouveau pallier 
-        $id_pallier = $palier->getId();
-        $question->setIdPallier($pallierRepository->find($id_pallier));
-
-       
       }
 
       //enregistement nouvelle question
       $entityManager->persist($question);
       $entityManager->flush();
+
       
-      //si le type de question est choix multiple on redirige ver new prop
-      if (($_POST['type']) == 1) {
-        return $this->redirectToRoute('module_createProposition', ['questionId' => $question->getId()]); 
-      }else {
-        return $this->redirectToRoute('module_listequestion', ['moduleId' => $id_module]);
+      if (!empty($_POST["pallier"])) {
+        $UserTimecode = explode(".", $_POST["pallier"]);
+        $UserTimecode = $UserTimecode[0] * 60 + $UserTimecode[1];
+       
+        // foreach ($palierTime as $palier) {
+        //   if ($palier["timecode"] == $UserTimecode) {
+        //     $pallier_id = $palier["id_pallier"];
+        //     $ordering = $repositoryQuestion->getOrderingByPallier($pallier_id);
+        //     $ordering = $ordering[0]["ordering"];
+        //     break;
+        //   }
+        // }
+        if ($pallier_id == 0) {
+          $palliers = new Pallier();
+          $palliers->setTimecode($UserTimecode);
+          $palliers->setTitreGroupeQuestion($_POST['titrePallier']);
+          $entityManager->persist($palliers);
+          $entityManager->flush();
+          $question->setIdPallier($palliers);
+          $question->setOrdering($order);
+        }
+      } else {
+        $palliers = $this->getDoctrine()->getRepository(Pallier::class)->allPallier();
+        $question->setIdPallier($repositoryPalier->find($_POST["palliers"]));
+        foreach ($palierTime as $palier) {
+          if ($palier["timecode"] == $palliers[0]["timecode"]) {
+            $pallier_id = $palier["id_pallier"];
+            $ordering = $repositoryQuestion->getOrderingByPallier($pallier_id);
+            $ordering = $ordering[0]["ordering"];
+            break;
+          }
+        }
+        $question->setOrdering($order);
+        $entityManager->persist($question);
+
+        $entityManager->flush();
+        return $this->redirectToRoute('module_createProposition', ['questionId' => $question->getId()]);
       }
-        
     }
+    // return new Response('Saved new product with id ' . $question->getId());
+
 
     return $this->render('module_quizz/creationQuestion.html.twig', [
       'controller_name' => 'ModuleQuizzController',
@@ -286,6 +313,7 @@ class ModuleQuizzController extends AbstractController
       'pageIcon' => 'group',
       'rootPage' => 'lists',
       'pageColor' => 'md-bg-grey-100',
+      'palliers' => $palliers,
       'listePallier' => $listepalier,
       'idModule' => $idModule,
     ]);
@@ -367,31 +395,12 @@ class ModuleQuizzController extends AbstractController
   /**
    * @Route("/edit/{categoryId}", name="edit")
    */
-  public function edit(Request $request, userinterface $user, $categoryId, PropositionRepository $propositionRepository,
-   PallierRepository $pallierRepository, QuestionRepository $RepositoryQuestion,
-   LevelRepository $levelRepository,TypeRepository $typeRepository,FormationRepository $formationRepository
-   ,ModuleRepository $moduleRepository, QuestionRepository $questionRepository,VideoRepository $videoRepository): Response
+  public function edit(Request $request, userinterface $user, $categoryId, PropositionRepository $propositionRepository, PallierRepository $RepositoryPallier, QuestionRepository $RepositoryQuestion): Response
   {
-    $listepalier = $pallierRepository->allPallier();
+
     //dd($request->request->get('libelle'));  // POST PUT UPDATE
     //dd($request->queryy->get('libelle')); // GET DELETE 
-    $la_question = $RepositoryQuestion->find($categoryId);
-    $id_du_module = $la_question->getIdModule();
-    $id_du_palier_question = $la_question->getIdPallier()->getId();
-    $id_du_level_question = $la_question->getIdPallier();
-    $id_du_type_question = $la_question->getIdType();
-    $id_de_la_video = $la_question->getIdVideo();
-    $video_actuel = $videoRepository->find($id_de_la_video);
-    $palier_actuel = $pallierRepository->find($id_du_palier_question);
-    $level_actuel = $levelRepository->find($id_du_level_question);
-    $type_actuel = $typeRepository->find($id_du_type_question);
-     foreach ($listepalier as $lpalier) {
-       $idlpalier = $lpalier['id'];
-        if($idlpalier == $id_du_palier_question){
-         $palier_actuel = $lpalier;
-     }
-     }
-    
+
     if (isset($_POST['annuler'])) {
       $message = sprintf('modification question abandonnée');
       $this->addFlash('', $message);
@@ -399,110 +408,120 @@ class ModuleQuizzController extends AbstractController
     }
 
     $categoryInfos = $RepositoryQuestion->find($categoryId);
-    //recuperation des palier
-    $listepalier = $pallierRepository->allPallier();
+    $laQuestion = $categoryInfos;
+    $Id_palier_question = $laQuestion->getIdPallier();
+    if (isset($Id_palier_question)) {
+      $timecode = $Id_palier_question->getTimecode();
+      $Id_video = $laQuestion->getIdVideo();
+      $urlVideo = $Id_video->getUrl();
+      $IdlVideo = $Id_video->getId();
+      $titrePallier = $Id_palier_question->getTitreGroupeQuestion();
+    $idPallier = $Id_palier_question->getId();
+    } else {
+      $timecode = null;
+      $urlVideo = null;
+      $IdlVideo = null;
+      $titrePallier = null;
+      $idPallier = 1;
+    }
 
-    //recuperation des type de question 
-    $types = $typeRepository->findAll();
+    if (isset($Id_palier_question)) {
+      $pallieraafficher = $RepositoryPallier->find($Id_palier_question);
+    } else {
+      $pallieraafficher = null;
+    }
 
-    //recuperation des formation
-    $formation = $formationRepository->findAll();
+    
 
-    //recuperation des module
-    $modules = $moduleRepository->findAll();
-
-    //recuperation des level
-    $levels = $levelRepository->findAll();
-
-    //recuperation des question
-    $questions = $questionRepository->findAll();
-
-    //recuperation des video
-    $videos = $videoRepository->findAll();
+    $repository = $this->getDoctrine()->getRepository(Type::class);
+    $types = $repository->findAll();
+    $repositoryFormation =  $this->getDoctrine()->getRepository(Formation::class);
+    $repositoryModule =  $this->getDoctrine()->getRepository(Module::class);
 
 
+    $formation = $repositoryFormation->findAll();
+    $modules = $repositoryModule->findAll();
+    $repositoryLvl = $this->getDoctrine()->getRepository(Level::class);
+    $levels = $repositoryLvl->findAll();
+    $repositoryType = $this->getDoctrine()->getRepository(Type::class);
+    $repositoryVideo = $this->getDoctrine()->getRepository(Video::class);
+    $repositoryPalier = $this->getDoctrine()->getRepository(Pallier::class);
+    $videos = $repositoryVideo->findAll();
+    $palierTime = $RepositoryPallier->allPallier();
+    $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
+    $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
 
-    //on soccupe de la question   
-    // set entitymanager pour pouvoir modifier les entity 
     if (isset($_POST['id'])) {
-      $entityManager = $this->getDoctrine()->getManager();
+      $categoryId = $_POST['id'];
+    }
+    $palliers = $repositoryPalier->allPallier();
+    $entityManager = $this->getDoctrine()->getManager();
+    $PropositionAModifier = $propositionRepository->propositionParQuestion($categoryId);
+    $repository_quizz = $this->getDoctrine()->getRepository(Question::class);
+    if (isset($_POST['id'])) {
+
       $question = $entityManager->getRepository(Question::class)->find($_POST['id']);
     }
-    
-    // enregistrement de la question 
-
-    // on verifie que le formulaire n'est pas vide
-    if (isset($_POST['questionLibelle']) && isset($_POST['lvl'])) {
-
-      if (isset($_POST['submit'])) {
-        $message = sprintf('Création de question abandonnée');
-        $this->addFlash('', $message);
-        return $this->redirectToRoute('module_formations');
-      }
 
 
 
-      //on set les info de la nouvelle question 
-      $question->setLibelle($_POST['questionLibelle']);
-      $question->setCreatedAt(new \DateTime());
-      $question->setModifyAt(new \DateTime());
-      $question->setIdLvl($levelRepository->find($_POST['lvl']));
-      $question->setIdType($typeRepository->find($_POST['type']));
-      $question->setIdVideo($videoRepository->find($_POST['video']));
+    $entityManager = $this->getDoctrine()->getManager();
 
-      //creation des order pour la question
-      $order = 0;
-      $id_N_question = $question->getId();
-      foreach ($questions as $laquestion) {
 
-        $id_question = $laquestion->getIdPallier();
-        $id_question = $id_question->getId();
+    if (isset($_POST['Bouton'])) { // Autre contrôle pour vérifier si la variable $_POST['Bouton'] est bien définie
+      for ($i = 0; $i < 30; $i++) {
+        if (isset($_POST['libelleProps' . $i]) && isset($_POST['iscorrect' . $i])) {
+          if (isset($_POST['id-Prop' . $i])) {
 
-        if ($id_question == $id_N_question) {
-          $order = $order + 1;
+            $proposition = $entityManager->getRepository(Proposition::class)->find($_POST['id-Prop' . $i]);
+            $proposition->setLibelle($_POST['libelleProps' . $i]);
+
+            $proposition->setIsCorrect($_POST['iscorrect' . $i]);
+
+
+            $entityManager = $this->getDoctrine()->getManager();
+            $entityManager->persist($proposition);
+            $entityManager->flush();
+          } else {
+            // enregistrment des proposition
+
+            if (isset($_POST['libelleProps' . $i])) {
+              $proposition = new Proposition();
+
+              $id_question = $question->getId();
+
+
+              $proposition->setLibelle($_POST['libelleProps' . $i]);
+              $proposition->setIdQuestion($repositoryQuestion->find($id_question));
+              $proposition->setIsCorrect($_POST['iscorrect' . $i]);
+
+              $entityManager = $this->getDoctrine()->getManager();
+              $entityManager->persist($proposition);
+              $entityManager->flush();
+            }
+          }
         }
       }
-      $question->setOrdering($order);
 
+      // creation modification pallier
 
-      //on soccupe du palier 
-      // $pallier_id = 1;
+    }
 
-      // enregistrement du palier
-
-      $palierTime = $pallierRepository->pallierByVideo($question->getIdVideo());
+    // creation question 
+    if (isset($_POST['libelle'])) {
+      $question = $entityManager->getRepository(Question::class)->find($categoryId);
+      $question->setLibelle($_POST['libelle']);
+      $question->setModifyAt(new \DateTime());
       $pallier_id = 0;
 
-      //conversion du timecode user en datetime
 
-      // verifie si l'utilisateur a rentrer un palier dans le menue deroulent
-      if (isset($_POST["palliers"]) && $_POST["palliers"] != 0) {
-
-        $question->setIdPallier($pallierRepository->find($_POST["palliers"]));
-      } elseif (isset($_POST["pallier"])) {
-
-        //nouveau pallier 
-        $palier = new Pallier;
-        $palier->setTimecode($_POST['pallier']);
-        $palier->setTitreGroupeQuestion($_POST['titrePallier']);
-
-        //enregistrement du nouveau pallier
-        $entityManager->persist($palier);
-        $entityManager->flush();
-
-        //set l'id question pallier avec l'id du nouveau pallier 
-        $id_pallier = $palier->getId();
-        $question->setIdPallier($pallierRepository->find($id_pallier));
-      }
-
-      //enregistement nouvelle question
+      $question->setIdVideo($repositoryVideo->find($_POST['video']));
+      $question->setIdPallier($this->getDoctrine()->getRepository(Pallier::class)->find($_POST["palliers"]));
       $entityManager->persist($question);
       $entityManager->flush();
 
-  
-        return $this->redirectToRoute('module_listequestion', ['moduleId' => $id_du_module->getId()]);
-      }
-    
+      return $this->redirectToRoute('module_listequestion', ['moduleId' => $question->getIdModule()->getId()]);
+    }
 
     return $this->render('module_quizz/edit.html.twig', [
       'pageTitle' => 'Modification',
@@ -514,18 +533,19 @@ class ModuleQuizzController extends AbstractController
       'user' => $user,
       'categoryId' => $categoryId,
       'categoryInfos' => $categoryInfos,
+      'PropositionAModifier' => $PropositionAModifier,
       'types' => $types,
       'formation' => $formation,
       'levels' => $levels,
       'videos' => $videos,
-      'palliers' => $listepalier,
+      'palliers' => $palliers,
+      'timecode' => $timecode,
+      'pallieraafficher' =>  $pallieraafficher,
+      'urlVideo' => $urlVideo,
       'modules' => $modules,
-      'listePallier' => $listepalier,
-      'palier_actuel'=> $palier_actuel,
-      'level'=> $level_actuel,
-      'type' => $type_actuel,
-      'video' => $video_actuel,
-
+      'IdlVideo' => $IdlVideo,
+      'titrePallier' => $titrePallier,
+      'idPallier' => $idPallier,
     ]);
   }
 

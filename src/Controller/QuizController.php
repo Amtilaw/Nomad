@@ -14,6 +14,9 @@ use App\Entity\Reponse;
 use App\Entity\Video;
 use Doctrine\ORM\EntityManagerInterface;
 use App\Entity\User;
+use App\Repository\PropositionRepository;
+use App\Repository\QuestionRepository;
+use App\Repository\VideoRepository;
 use Symfony\Component\Security\Core\User\UserInterface;
 
 class QuizController extends AbstractController
@@ -21,21 +24,16 @@ class QuizController extends AbstractController
   /**
    * @Route("/quiz/index{idVideo}{idModule}", name="quiz")
    */
-  public function index($idVideo, $idModule): Response
+  public function index($idVideo, $idModule,QuestionRepository $questionRepository,VideoRepository $videoRepository,
+  PropositionRepository $propositionRepository): Response
   {
-    $repositoryQuestion = $this->getDoctrine()->getRepository(Question::class);
-    $questions = $repositoryQuestion->questionByVideoAndPallier($idVideo, $idModule);
-    $videoName = $this->getDoctrine()->getRepository(Video::class);
-
-    $videoName = $videoName->getVideoName($idVideo);
-
-
-    $repositoryProposition = $this->getDoctrine()->getRepository(Proposition::class);
+    $questions = $questionRepository->questionByVideoAndPallier($idVideo, $idModule);
+    $videoName = $videoRepository->getVideoName($idVideo);
     $arrayResponse = [];
 
     for ($i = 0; $i < count($questions); $i++) {
       $arrayResponseProposition = [];
-      $proposition = $repositoryProposition->propositionParQuestion($questions[$i]["id"]);
+      $proposition = $propositionRepository->propositionParQuestion($questions[$i]["id"]);
       for ($j = 0; $j < count($proposition); $j++) {
         $arrayResponseProposition[$j] = [
           "id" => $proposition[$j]["id"],

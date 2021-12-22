@@ -41,6 +41,8 @@ class PallierRepository extends ServiceEntityRepository
         return $stmt->executeQuery()->fetchAllAssociative();
     }
 
+  
+
     public function findAllByModule($idModule)
     {
         $conn = $this->getEntityManager()->getConnection();

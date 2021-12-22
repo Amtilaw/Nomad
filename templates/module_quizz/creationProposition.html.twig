@@ -48,133 +48,64 @@
 						<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1">
 
 
-							<h1>Création d'une question</h1>
+							<h1>Création proposition</h1>
 							<div style="margin:30px">
-								<form action="{{ path('module_createQuestion') }}" method="POST">
+								<form action="{{ path('module_createProposition',{questionId:questionId}) }}" method="POST">
+<div class="md-card-content">
+	<div class="uk-grid">
+		<div class="uk-width-1-1">
+			<ul class="uk-tab" data-uk-tab="{connect:'#tabs_1_content'}" id="tabs_1">
+				<li class="uk-active">
+					<a href="#">Proposition</a>
+				</li>
+
+			</ul>
+			<ul id="tabs_1_content" class="uk-switcher uk-margin">
+				<li>
+					<br>
+					<div
+						class="uk-grid" data-uk-grid-margin>
 
 
-									<div class="md-card-content">
-										<div class="uk-grid">
-											<div class="uk-width-1-1">
-												<ul class="uk-tab" data-uk-tab="{connect:'#tabs_1_content'}" id="tabs_1">
-													<li class="uk-active">
-														<a href="#">Question</a>
-													</li>
 
-												</ul>
-												<ul id="tabs_1_content" class="uk-switcher uk-margin">
-													<li>
-
-														<div class="uk-grid" data-uk-grid-margin>
-
-															<div class="uk-width-1 md-input-filled">
-																<br>
-																<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
-																<input type="text" class="md-input label-fixed customizedInput" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
-															</div>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Le nom de la Formation</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="NomFormaton" id="NomFormaton">
-																	<option selected>Nom de la formation</option>
-																	{% for formatio in formation %}
-																		<option value=" {{ formatio.id }} " {{ formatio.selected }}>{{ formatio.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Le nom du module</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="Module" id="Module">
-																	<option selected>Module</option>
-																	{% for module in modules %}
-																		<option value=" {{ module.id }}" {{ module.selected }}>{{ module.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">Difficulté de la question</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="lvl">
-																	<option selected>Choisisser la difficulté de la question</option>
-																	{% for level in levels %}
-																		<option value="{{ level.id }}" {{ level.selected }}>{{ level.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="formation" class="form-label">Type de proposition</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="type" id="typeProps">
-																	<option selected>Selectionné le type de question</option>
-																	{% for type in types %}
-																		<option value=" {{ type.id }} ">{{ type.nom }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-
-														</div>
-
-
-														<div class="uk-grid" data-uk-grid-margin>
-
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">video selection</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="video" id="idVideoForm">
-																	{% for video in videos %}
-																		<option value="{{ video.id }}">{{ video.url }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">Pallier selection</label>
-
-																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
-																	<option value="0">Nouveau pallier</option>
-																	{% for pallier in palliers %}
-																		<option value="{{ pallier.id }}" selected>{{pallier.titre_groupe_question}}
-																			-
-																			{{ pallier.timecode }}</option>
-																	{% endfor %}
-																</select>
-															</div>
-
-															<div id="newPallier" class="uk-width-1 md-input-filled">
-
-																<div class="uk-width-1 md-input-filled">
-
-																	<br>
-																	<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
-																	<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallier">
-																</div>
-																<div class="uk-width-1 md-input-filled">
-
-																	<br>
-																	<label for="exampleFormControlInput1" class="form-label">titre du pallier</label>
-																	<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
-																</div>
-
-															</div>
-														</div>
-													</li>
-												</div>
-											</li>
-										</ul>
-									</div>
-								</div>
-							</div>
-
+						<div class="uk-width-medium-1-2 md-input-filled">
+							<label>Proposition
+							</label>
+							<input type="text" name="libelleProps"  class="md-input label-fixed customizedInput"/>
 						</div>
-						<br>
-						<div class="col-12">
-							<button class="btn btn-primary" type="submit">Créer la question</button>
-							<button class="md-btn md-btn-default cancelBtn" name="submit" value="annuler" href="javascript:void(0)">ANNULER</button>
+
+
+						<div class="uk-width-medium-1-2 md-input-filled">
+							<label for="exampleFormControlInput1" class="form-label">Cette question est-elle correcte ?</label>
+							<input type="checkbox" class="md-input label-fixed customizedInput" id="iscorrect" name="iscorrect" data-on-text="1" data-off-text="0" data-switchery data-switchery-color="#3367d6"  value="1">
 						</div>
+
+
+					</div>
+
+
+				</li>
+			</ul>
+
+
+	
+
+			<br>
+
+
+			<button class="md-btn md-btn-primary submitbTN" href="javascript:void(0)" name="Bouton" type="submit">ENREGISTRER</button>
+			<button class="md-btn md-btn-default cancelBtn" href="javascript:void(0)" name="annuler">ANNULER</button>
+			{# <button id="buttonAddProps" class="md-btn md-btn-default cancelBtn" onclick="addProps()" type="button">Ajouter une proposition</button> #}
+
+		</form>
+
+	</li>
+</ul>
+</div>
+</div>
+</div>
+</div>
+
 					</form>
 				</div>
 
@@ -204,7 +135,13 @@
 		</div>
 
 	</div>
-</div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
+</div>
+</div>
+</div>
+{% endblock %}
+{% block baseJavascripts %}
+{# <script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
+
 let pallierJson;
 $('#newPallier').css('display', 'none');
 $("#idPallier").change(function () {
@@ -255,5 +192,8 @@ newProps.innerHTML = ` <label for="exampleFormControlInput1" class="form-label">
 											<input type="text" class="md-input label-fixed customizedInput" id="libelleProps${countProps}" placeholder="Paris" name="libelleProps${countProps}">
 											<input type="checkbox" data-switchery data-switchery-color="#3367d6" id="correct${countProps}" name="correct${countProps}" > <label for="correct">Is correct</label> `
 $("#newPropsAdd").append(newProps);
-}</script>{% endblock %}
+}</script>#}
+
+
+{% endblock %}
 
