@@ -186,16 +186,6 @@
 	</div>
 </div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
 let pallierJson;
-$('#newPallier').css('display', 'none');
-$("#idPallier").change(function () {
-if ($("#idPallier :selected").val() == 0) {
-	console.log("yes");
-$("#newPallier").css("display", "block");
-} else {
-$("#newPallier").css("display", "none");
-}
-});
-
 $("#typeProps").change(function () {
 if (this.value == 1) {
 $("#propositionsAdd").css("display", "block");
