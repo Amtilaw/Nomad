@@ -267,7 +267,7 @@ class ModuleQuizzController extends AbstractController
       $entityManager->flush();
       
       //si le type de question est choix multiple on redirige ver new prop
-      if (($_POST['type']) == 1) {
+      if (($_POST['type']) == 1 || ($_POST['type']) == 3 ) {
         return $this->redirectToRoute('module_createProposition', ['questionId' => $question->getId()]); 
       }else {
         return $this->redirectToRoute('module_listequestion', ['moduleId' => $id_module]);
@@ -451,8 +451,8 @@ class ModuleQuizzController extends AbstractController
       $question->setCreatedAt(new \DateTime());
       $question->setModifyAt(new \DateTime());
       $question->setIdLvl($levelRepository->find($_POST['lvl']));
-      if ($type_actuel != $_POST['type'] && $_POST['type'] == 2)  {
-       
+      if ($type_actuel != $_POST['type'] )  {
+        if ($_POST['type'] == 3 || $_POST['type'] == 2) {
         $prop = $propositionRepository->propositionParQuestion($categoryId);
         
        foreach ($prop as $props) {
@@ -462,7 +462,7 @@ class ModuleQuizzController extends AbstractController
           $entityManager->flush();
        }
         
-
+      }
       }
       $question->setIdType($typeRepository->find($_POST['type']));
       $question->setIdVideo($videoRepository->find($_POST['video']));

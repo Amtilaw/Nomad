@@ -176,6 +176,13 @@
 																	</a>
 																</span>
 																{% endif %}
+																{% if v.id_type_id == 3 %}
+																<span>
+																	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
+																		<i class="material-icons" title="Afficher les propositions">Les proposition</i>
+																	</a>
+																</span>
+																{% endif %}
 																
 
 															</td>

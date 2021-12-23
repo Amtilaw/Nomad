@@ -30,6 +30,7 @@ let questionValidate = true;
 let temp = player.api("time");
 let seconde = 0;
 let typeProposition;
+console.log(typeProposition);
 let questionsSize = Object.keys(json).length;
 
 for (let i = 0; i < questionsSize; i++) {
@@ -138,13 +139,14 @@ function renderQuizz() {
   $("#titrePallier").html(json[countQuestion]["titrePallier"]);
   $("#titreQuestion").html(json[countQuestion]["libelle"]);
   //type == 1 == qcm
-  if (getTypeQuestion() == "qcm") {
-    if (Object.keys(json[countQuestion]["propositions"]).length == 2) {
+  
+  if (getTypeQuestion() == "chek") {
+     if (Object.keys(json[countQuestion]["propositions"]).length == 2) {
       typeProposition = "radio";
     } else {
       typeProposition = "checkbox";
     }
-
+     typeProposition = "checkbox"
     let jsonLibelle;
     for (
       let i = 0;
@@ -163,14 +165,38 @@ function renderQuizz() {
     <span class="subject" id="propositionInput${i}"> ${jsonLibelle} </label>`;
     }
   }
+
   if (getTypeQuestion() == "text") {
     document.getElementById(
       "boardProps"
-    ).innerHTML += `<input type="textarea" name="box" id="proposition1" >
-    <label for="proposition1" class="box label1">
-    <div class="course">
-    <span class="circle"> </span> `;
+    ).innerHTML += `<input type="textarea" name="box" id="proposition1" >`;
   }
+
+  if (getTypeQuestion() == "qcm") {
+    if (Object.keys(json[countQuestion]["propositions"]).length == 2) {
+      typeProposition = "radio";
+    } else {
+      typeProposition = "checkbox";
+    }
+      typeProposition = "radio";
+    let jsonLibelle;
+    for (
+      let i = 0;
+      i < Object.keys(json[countQuestion]["propositions"]).length;
+      i++
+    ) {
+      jsonLibelle =
+        json[countQuestion]["propositions"][i]["libelle"] + "</span> </div>";
+
+      document.getElementById(
+        "boardProps"
+      ).innerHTML += `<input type="${typeProposition}" name="box" id="proposition${i}" >
+    <label for="proposition${i}" class="box label${i}">
+    <div class="course">
+    <span class="circle"> </span> 
+    <span class="subject" id="propositionInput${i}"> ${jsonLibelle} </label>`;
+    }
+  } 
 }
 
 function validateQuestion() {
@@ -236,4 +262,5 @@ function renderContextualMenue() {
 function getTypeQuestion() {
   if (json[countQuestion]["type"] == 1) return "qcm";
   if (json[countQuestion]["type"] == 2) return "text";
+  if (json[countQuestion]["type"] == 3) return "chek";
 }
