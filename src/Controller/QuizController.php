@@ -33,6 +33,7 @@ class QuizController extends AbstractController
     $arrayResponse = [];
 
     for ($i = 0; $i < count($questions); $i++) {
+      
       $arrayResponseProposition = [];
       $proposition = $propositionRepository->propositionParQuestion($questions[$i]["id"]);
       for ($j = 0; $j < count($proposition); $j++) {
@@ -51,9 +52,49 @@ class QuizController extends AbstractController
           "type" => $questions[$i]["tipe"],
           "propositions" => $arrayResponseProposition,
         ];
+      }else {
+        $arrayResponse[count($arrayResponse)] = [
+          "id" => $questions[$i]["id"],
+          "libelle" => $questions[$i]["questionLibelle"],
+          "timecode" => $questions[$i]["timecode"],
+          "titrePallier" => $questions[$i]["titre_groupe_question"],
+          "type" => $questions[$i]["tipe"],
+        ];
       }
     }
 
+    // foreach ($questions as $question) {
+      
+    //   // pour chaque question retournée => on vérifie si il y a des propositions liées
+    //   $questionId = $question['id'];
+    //   $propositions = $propositionRepository->propositionParQuestion($questionId);
+
+    //   // SWITCH CASE TYPE 
+
+    //   // vérification si type = 1 AND not empty
+    //   if (!empty($propositions)) {
+
+    //     $arrayResponseProposition = [];
+        
+    //     foreach ($propositions as $proposition) {
+
+    //       array_push($arrayResponseProposition, $proposition);
+    //       $arrayResponse[$questionId] = [
+          
+    //         "questionId" => $question["id"],
+    //         "libelle" => $question["questionLibelle"],
+    //         "timecode" => $question["timecode"],
+    //         "titrePallier" => $question["titre_groupe_question"],
+    //         "type" => $question["tipe"],
+    //         "propositions" => $arrayResponseProposition
+
+    //       ];
+          
+    //     }
+
+    //   }
+
+    // }
     $json = json_encode($arrayResponse);
 
 
@@ -88,23 +129,36 @@ class QuizController extends AbstractController
       }
     }
     $entityManager = $this->getDoctrine()->getManager();
-    for ($i = 0; $i < count($request->request->get("answerId")); $i++) {
+    $answerIds = $request->request->get("answerId");
+   
+    foreach ($answerIds as $answerId) {
+    
       $reponse = new Reponse();
       $reponse->setQuestionId($request->request->get("question_id"));
-      $reponse->setPropositionId($request->request->get("answerId")[$i]);
-      $reponse->setPropositionValue($request->request->get("answer")[$i]);
+      $reponse->setPropositionId($request->request->get("answerId"));
+      $reponse->setPropositionValue($request->request->get("answer"));
       
-      $reponse->setAnswer($request->request->get("realAnswer")[$i]["isCorrect"]);
+      $reponse->setAnswer($request->request->get("realAnswer")["isCorrect"]);
       $reponse->setUserId($userId);
       $dateTime = new \DateTime();
       $dateTime->format('Y-m-d H:i:s');
       $reponse->setCreatedAt($dateTime);
-      if ($request->request->get("answer")[$i] == $request->request->get("realAnswer")[$i]["isCorrect"])
+      if ($request->request->get("answer") == $request->request->get("realAnswer")["isCorrect"])
+      {
         $reponse->setResultIntermediaire(1);
+      }
       else
+      {
         $reponse->setResultIntermediaire(0);
+      }
+      $reponseDonne = $request->request->get("reponseDonne");
+      if(isset($reponseDonne)){
+        $reponse->setAnswer($reponseDonne);
+
+      } 
       $entityManager->persist($reponse);
       $entityManager->flush();
+
     }
     return new JsonResponse(['sucess' => 'yes']);
   }

@@ -38,7 +38,7 @@ class Reponse
     private $proposition_value;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="varchar")
      */
     private $answer;
 

@@ -86,6 +86,7 @@ function showModal() {
 }
 
 function sendUserRespond(userRes) {
+  decodeURI()
   const url = controllerUserRespondPath;
   let answerId = [];
   for (
@@ -93,7 +94,7 @@ function sendUserRespond(userRes) {
     i < Object.keys(json[countQuestion]["propositions"]).length;
     i++
   ) {
-    answerId.push(json[countQuestion]["propositions"][i]["id"]);
+    answerId.push(json[countQuestion]["propositions"][i]["libelle"]);
   }
   $.ajax({
     type: "post",
@@ -104,6 +105,29 @@ function sendUserRespond(userRes) {
       answer: userRes,
       answerId: answerId,
       realAnswer: json[countQuestion]["propositions"],
+    },
+  })
+    .done(function (data) {
+      console.log(data);
+    })
+    .fail(function () {
+      console.log("fail");
+    });
+}
+
+function enregistreRespond(input) {
+  decodeURI()
+  const url = controllerUserRespondPath;
+  let answerId = [];
+
+  $.ajax({
+    type: "post",
+    url: url,
+    data: {
+      question_id: json[countQuestion]["id"],
+      user: "Jeanjean",
+      reponseDonne: input,
+      answerId: answerId,
     },
   })
     .done(function (data) {
@@ -138,14 +162,17 @@ function renderQuizz() {
   document.getElementById("boardProps").innerHTML = "";
   $("#titrePallier").html(json[countQuestion]["titrePallier"]);
   $("#titreQuestion").html(json[countQuestion]["libelle"]);
+
+
+    if (getTypeQuestion() == "text") {
+    document.getElementById(
+      "boardProps"
+    ).innerHTML += `<input type="textArea" name="box" id="proposition1" >`;
+  }
   //type == 1 == qcm
   
   if (getTypeQuestion() == "chek") {
-     if (Object.keys(json[countQuestion]["propositions"]).length == 2) {
-      typeProposition = "radio";
-    } else {
-      typeProposition = "checkbox";
-    }
+
      typeProposition = "checkbox"
     let jsonLibelle;
     for (
@@ -166,18 +193,9 @@ function renderQuizz() {
     }
   }
 
-  if (getTypeQuestion() == "text") {
-    document.getElementById(
-      "boardProps"
-    ).innerHTML += `<input type="textarea" name="box" id="proposition1" >`;
-  }
+
 
   if (getTypeQuestion() == "qcm") {
-    if (Object.keys(json[countQuestion]["propositions"]).length == 2) {
-      typeProposition = "radio";
-    } else {
-      typeProposition = "checkbox";
-    }
       typeProposition = "radio";
     let jsonLibelle;
     for (
@@ -206,6 +224,7 @@ function validateQuestion() {
     for (var i = 0, len = radios.length; i < len; i++) {
       if (radios[i].checked) {
         userRes.push(1);
+       console.log(userRes);
         questionValidate = true;
       }
       userRes.push(0);
@@ -214,12 +233,14 @@ function validateQuestion() {
     sendUserRespond(userRes);
 
     if (questionValidate == true) return true;
-  } else {
-    let textAreaRespond = document.getElementById("proposition1").value;
-    sendUserRespond(textAreaRespond);
-    return true;
+  } 
+  if (getTypeQuestion() == "text") {
+    let input = document.getElementById("proposition1").value;
+    enregistreRespond(input);
+    questionValidate = true;
+    if (questionValidate == true) return true;
   }
-  return false;
+  return true;
 }
 
 // verifie si l'utilisateur a avancé dans la vidéo return true si oui
