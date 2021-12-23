@@ -134,11 +134,11 @@ class QuizController extends AbstractController
     foreach ($answerIds as $answerId) {
     
       $reponse = new Reponse();
-      $reponse->setQuestionId($request->request->get("question_id"));
-      $reponse->setPropositionId($request->request->get("answerId"));
-      $reponse->setPropositionValue($request->request->get("answer"));
+      $reponse->setQuestionId($request->request->get("question_id")[$i]);
+      $reponse->setPropositionId($request->request->get("answerId")[$i]);
+      $reponse->setPropositionValue($request->request->get("answer")[$i]);
       
-      $reponse->setAnswer($request->request->get("realAnswer")["isCorrect"]);
+      $reponse->setAnswer($request->request->get("realAnswer")[$i]["isCorrect"]);
       $reponse->setUserId($userId);
       $dateTime = new \DateTime();
       $dateTime->format('Y-m-d H:i:s');
