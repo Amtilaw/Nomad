@@ -18,126 +18,125 @@ class Reponse
     private $id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="smallint")
      */
-    private $reponse;
+    private $result_intermediaire;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $question_1;
+    private $question_id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="integer")
      */
-    private $question_2;
+    private $proposition_id;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="smallint")
      */
-    private $question_3;
+    private $proposition_value;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="smallint")
      */
-    private $question_4;
+    private $answer;
 
     /**
-     * @ORM\ManyToOne(targetEntity=Question::class, inversedBy="reponses")
-     * @ORM\JoinColumn(nullable=false)
+     * @ORM\Column(type="integer")
      */
-    private $id_question;
+    private $user_id;
 
     /**
-     * @ORM\OneToOne(targetEntity=User::class, cascade={"persist", "remove"})
+     * @ORM\Column(type="datetime", nullable=true)
      */
-    private $id_user;
+    private $created_at;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getReponse(): ?string
+    public function getResultIntermediaire(): ?int
     {
-        return $this->reponse;
+        return $this->result_intermediaire;
     }
 
-    public function setReponse(string $reponse): self
+    public function setResultIntermediaire(int $result_intermediaire): self
     {
-        $this->reponse = $reponse;
+        $this->result_intermediaire = $result_intermediaire;
 
         return $this;
     }
 
-    public function getQuestion1(): ?string
+    public function getQuestionId(): ?int
     {
-        return $this->question_1;
+        return $this->question_id;
     }
 
-    public function setQuestion1(string $question_1): self
+    public function setQuestionId(int $question_id): self
     {
-        $this->question_1 = $question_1;
+        $this->question_id = $question_id;
 
         return $this;
     }
 
-    public function getQuestion2(): ?string
+    public function getPropositionId(): ?int
     {
-        return $this->question_2;
+        return $this->proposition_id;
     }
 
-    public function setQuestion2(string $question_2): self
+    public function setPropositionId(int $proposition_id): self
     {
-        $this->question_2 = $question_2;
+        $this->proposition_id = $proposition_id;
 
         return $this;
     }
 
-    public function getQuestion3(): ?string
+    public function getPropositionValue(): ?int
     {
-        return $this->question_3;
+        return $this->proposition_value;
     }
 
-    public function setQuestion3(string $question_3): self
+    public function setPropositionValue(int $proposition_value): self
     {
-        $this->question_3 = $question_3;
+        $this->proposition_value = $proposition_value;
 
         return $this;
     }
 
-    public function getQuestion4(): ?string
+    public function getAnswer(): ?int
     {
-        return $this->question_4;
+        return $this->answer;
     }
 
-    public function setQuestion4(string $question_4): self
+    public function setAnswer(int $answer): self
     {
-        $this->question_4 = $question_4;
+        $this->answer = $answer;
 
         return $this;
     }
 
-    public function getIdQuestion(): ?Question
+    public function getUserId(): ?int
     {
-        return $this->id_question;
+        return $this->user_id;
     }
 
-    public function setIdQuestion(?Question $id_question): self
+    public function setUserId(int $user_id): self
     {
-        $this->id_question = $id_question;
+        $this->user_id = $user_id;
 
         return $this;
     }
 
-    public function getIdUser(): ?User
+    public function getCreatedAt(): ?\DateTime
     {
-        return $this->id_user;
+        return $this->created_at;
     }
 
-    public function setIdUser(?User $id_user): self
+    public function setCreatedAt(?\DateTime $created_at): self
     {
-        $this->id_user = $id_user;
+        $this->created_at = $created_at;
 
         return $this;
     }

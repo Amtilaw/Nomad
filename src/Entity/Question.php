@@ -22,27 +22,70 @@ class Question
     /**
      * @ORM\Column(type="string", length=255)
      */
-    private $question;
+    private $libelle;
 
     /**
-     * @ORM\Column(type="string", length=255)
+     * @ORM\Column(type="datetime")
      */
-    private $reponse_exact;
+    private $CreatedAt;
 
     /**
-     * @ORM\OneToMany(targetEntity=Reponse::class, mappedBy="id_question")
+     * @ORM\Column(type="datetime")
      */
-    private $reponses;
+    private $modifyAt;
 
     /**
-     * @ORM\ManyToMany(targetEntity=Chapitre::class, inversedBy="questions")
+     * @ORM\ManyToOne(targetEntity=Pallier::class, inversedBy="questions")
      */
-    private $id_chapitre;
+    private $id_pallier;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Level::class, inversedBy="questions")
+     */
+    private $id_lvl;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Module::class, inversedBy="questions")
+     * @ORM\JoinColumn(onDelete="CASCADE")
+     */
+    private $id_module;
+
+    /**
+     * @ORM\Column(type="integer")
+     */
+    private $ordering;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Video::class, inversedBy="questions")
+     */
+    private $id_video;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Pdf::class, inversedBy="questions")
+     */
+    private $id_pdf;
+
+    /**
+     * @ORM\OneToMany(targetEntity=ReponseText::class, mappedBy="id_question")
+     */
+    private $reponseTexts;
+
+    /**
+     * @ORM\OneToMany(targetEntity=Proposition::class, mappedBy="id_question")
+     */
+    private $propositions;
+
+    /**
+     * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="questions")
+     */
+    private $id_type;
 
     public function __construct()
     {
         $this->reponses = new ArrayCollection();
         $this->id_chapitre = new ArrayCollection();
+        $this->reponseTexts = new ArrayCollection();
+        $this->propositions = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -50,80 +93,135 @@ class Question
         return $this->id;
     }
 
-    public function getQuestion(): ?string
+
+    public function getLibelle(): ?string
     {
-        return $this->question;
+        return $this->libelle;
     }
 
-    public function setQuestion(string $question): self
+    public function setLibelle(string $libelle): self
     {
-        $this->question = $question;
+        $this->libelle = $libelle;
 
         return $this;
     }
 
-    public function getReponseExact(): ?string
+    public function getCreatedAt(): ?\DateTimeInterface
     {
-        return $this->reponse_exact;
+        return $this->CreatedAt;
     }
 
-    public function setReponseExact(string $reponse_exact): self
+    public function setCreatedAt(\DateTimeInterface $CreatedAt): self
     {
-        $this->reponse_exact = $reponse_exact;
+        $this->CreatedAt = $CreatedAt;
 
         return $this;
     }
 
-    /**
-     * @return Collection|Reponse[]
-     */
-    public function getReponses(): Collection
+    public function getModifyAt(): ?\DateTimeInterface
     {
-        return $this->reponses;
+        return $this->modifyAt;
     }
 
-    public function addReponse(Reponse $reponse): self
+    public function setModifyAt(\DateTimeInterface $modifyAt): self
     {
-        if (!$this->reponses->contains($reponse)) {
-            $this->reponses[] = $reponse;
-            $reponse->setIdQuestion($this);
-        }
+        $this->modifyAt = $modifyAt;
 
         return $this;
     }
 
-    public function removeReponse(Reponse $reponse): self
+    public function getIdPallier(): ?Pallier
     {
-        if ($this->reponses->removeElement($reponse)) {
+        return $this->id_pallier;
+    }
+
+    public function setIdPallier(?Pallier $id_pallier): self
+    {
+        $this->id_pallier = $id_pallier;
+
+        return $this;
+    }
+
+    public function getIdLvl(): ?Level
+    {
+        return $this->id_lvl;
+    }
+
+    public function setIdLvl(?Level $id_lvl): self
+    {
+        $this->id_lvl = $id_lvl;
+
+        return $this;
+    }
+
+    public function getIdModule(): ?Module
+    {
+        return $this->id_module;
+    }
+
+    public function setIdModule(?Module $id_module): self
+    {
+        $this->id_module = $id_module;
+
+        return $this;
+    }
+
+    public function getOrdering(): ?int
+    {
+        return $this->ordering;
+    }
+
+    public function setOrdering(int $ordering): self
+    {
+        $this->ordering = $ordering;
+
+        return $this;
+    }
+
+    public function getIdVideo(): ?Video
+    {
+        return $this->id_video;
+    }
+
+    public function setIdVideo(?Video $id_video): self
+    {
+        $this->id_video = $id_video;
+
+        return $this;
+    }
+
+    public function getIdPdf(): ?Pdf
+    {
+        return $this->id_pdf;
+    }
+
+    public function setIdPdf(?Pdf $id_pdf): self
+    {
+        $this->id_pdf = $id_pdf;
+
+        return $this;
+    }
+
+    public function removeProposition(Proposition $proposition): self
+    {
+        if ($this->propositions->removeElement($proposition)) {
             // set the owning side to null (unless already changed)
-            if ($reponse->getIdQuestion() === $this) {
-                $reponse->setIdQuestion(null);
+            if ($proposition->getIdQuestion() === $this) {
+                $proposition->setIdQuestion(null);
             }
         }
 
         return $this;
     }
 
-    /**
-     * @return Collection|Chapitre[]
-     */
-    public function getIdChapitre(): Collection
+    public function getIdType(): ?Type
     {
-        return $this->id_chapitre;
+        return $this->id_type;
     }
 
-    public function addIdChapitre(Chapitre $idChapitre): self
+    public function setIdType(?Type $id_type): self
     {
-        if (!$this->id_chapitre->contains($idChapitre)) {
-            $this->id_chapitre[] = $idChapitre;
-        }
-
-        return $this;
-    }
-
-    public function removeIdChapitre(Chapitre $idChapitre): self
-    {
-        $this->id_chapitre->removeElement($idChapitre);
+        $this->id_type = $id_type;
 
         return $this;
     }
