@@ -957,7 +957,7 @@ class ModuleQuizzController extends AbstractController
   public function deletePallier(Request $request, userinterface $user, $idPallier): Response
   {
 
-    $this->getDoctrine()->getRepository(Question::class)->updatePallier($idPallier);
+    $this->getDoctrine()->getRepository(Pallier::class)->updatePallier($idPallier);
 
     $repository_pallier = $this->getDoctrine()->getRepository(Pallier::class);
     $pallier = $repository_pallier->find($idPallier);
@@ -966,6 +966,24 @@ class ModuleQuizzController extends AbstractController
     $manager->remove($pallier);
     $manager->flush();
     $message = sprintf('Pallier supprimé !');
+    $this->addFlash('', $message);
+
+    return $this->redirectToRoute("module_formations");
+  }
+
+  /**
+   * @Route("/deleteQuestion/{questionId} ", name="deleteQuestion")
+   */
+  public function deleteQuestion(Request $request, userinterface $user, $questionId): Response
+  {
+
+    $repository_question = $this->getDoctrine()->getRepository(Question::class);
+    $question = $repository_question->find($questionId);
+
+    $manager = $this->getDoctrine()->getManager();
+    $manager->remove($question);
+    $manager->flush();
+    $message = sprintf('Question supprimé !');
     $this->addFlash('', $message);
 
     return $this->redirectToRoute("module_formations");
