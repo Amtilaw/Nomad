@@ -118,13 +118,13 @@
 																<label for="lvl" class="form-label">Pallier selection</label>
 
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
-																<option value="0">Nouveau pallier</option>
+																<option value="0" onclick="addPalier()">Nouveau pallier</option>
 																	{% for pallier in listePallier %}
 																		<option value="{{ pallier.id }}" selected>{{pallier.titre_groupe_question}} - {{ pallier.timecode }}</option>
 																	{% endfor %}
 																</select>
 															</div>
-
+                                                            <div id="newPalierAdd"> </div>
 															<div id="newPallier" class="uk-width-1 md-input-filled">
 
 															<div class="uk-width-1 md-input-filled">
@@ -196,6 +196,25 @@
 <script>
 let countProps = 2;
 let pallierJson;
+$("#newPallier").css("display", "none");
+
+
+$("#haveAVideo").change(function () {
+if (this.checked) {
+$("#newPallier").css("display", "block");
+let vr = $("#idVideoForm").val();
+getPalliersByVideo(vr);
+} else {
+$("#newPallier").css("display", "none");
+}
+});
+
+function add(){
+console.log("#newPallier")
+
+
+$("#newPallier").css("display", "block");
+}
 $("#typeProps").change(function () {
 if (this.value == 1) {
 $("#propositionsAdd").css("display", "block");
@@ -238,5 +257,12 @@ newProps.innerHTML = ` <label for="exampleFormControlInput1" class="form-label">
 											<input type="checkbox" data-switchery data-switchery-color="#3367d6" id="correct${countProps}" name="correct${countProps}" > <label for="correct">Is correct</label> `
 $("#newPropsAdd").append(newProps);
 }
+
+function addPalier() {
+$("#newPallier").css("display", "block");
+
+
+}
+
 </script>
 {% endblock %}

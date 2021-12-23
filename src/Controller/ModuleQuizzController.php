@@ -43,6 +43,7 @@ use phpDocumentor\Reflection\Types\Null_;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\Validator\Constraints\Json;
 
+use function PHPSTORM_META\type;
 
 /**
  * @Route("/module", name="module_")
@@ -386,6 +387,8 @@ class ModuleQuizzController extends AbstractController
     $level_actuel = $levelRepository->find($id_du_level_question);
     
     $type_actuel = $typeRepository->find($id_du_type_question);
+  
+
      foreach ($listepalier as $lpalier) {
        $idlpalier = $lpalier['id'];
         if($idlpalier == $id_du_palier_question){
@@ -448,6 +451,19 @@ class ModuleQuizzController extends AbstractController
       $question->setCreatedAt(new \DateTime());
       $question->setModifyAt(new \DateTime());
       $question->setIdLvl($levelRepository->find($_POST['lvl']));
+      if ($type_actuel != $_POST['type'] && $_POST['type'] == 2)  {
+       
+        $prop = $propositionRepository->propositionParQuestion($categoryId);
+        
+       foreach ($prop as $props) {
+          $idprops = $props['id'];
+          $props = $entityManager->getRepository(Proposition::class)->find($idprops);
+          $entityManager->remove($props);
+          $entityManager->flush();
+       }
+        
+
+      }
       $question->setIdType($typeRepository->find($_POST['type']));
       $question->setIdVideo($videoRepository->find($_POST['video']));
 

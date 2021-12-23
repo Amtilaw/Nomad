@@ -36,11 +36,13 @@ class Question
 
     /**
      * @ORM\ManyToOne(targetEntity=Pallier::class, inversedBy="questions")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $id_pallier;
 
     /**
      * @ORM\ManyToOne(targetEntity=Level::class, inversedBy="questions")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $id_lvl;
 
@@ -52,31 +54,37 @@ class Question
 
     /**
      * @ORM\Column(type="integer")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $ordering;
 
     /**
      * @ORM\ManyToOne(targetEntity=Video::class, inversedBy="questions")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $id_video;
 
     /**
      * @ORM\ManyToOne(targetEntity=Pdf::class, inversedBy="questions")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $id_pdf;
 
     /**
      * @ORM\OneToMany(targetEntity=ReponseText::class, mappedBy="id_question")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $reponseTexts;
 
     /**
      * @ORM\OneToMany(targetEntity=Proposition::class, mappedBy="id_question")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $propositions;
 
     /**
      * @ORM\ManyToOne(targetEntity=Type::class, inversedBy="questions")
+     * @ORM\JoinColumn(onDelete="CASCADE") 
      */
     private $id_type;
 
