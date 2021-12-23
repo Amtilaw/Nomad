@@ -28,6 +28,7 @@ class QuizController extends AbstractController
   PropositionRepository $propositionRepository): Response
   {
     $questions = $questionRepository->questionByVideoAndPallier($idVideo, $idModule);
+    dump($questions);
     $videoName = $videoRepository->getVideoName($idVideo);
     $arrayResponse = [];
 

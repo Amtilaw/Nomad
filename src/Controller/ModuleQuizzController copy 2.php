@@ -53,9 +53,11 @@ class ModuleQuizzController extends AbstractController
   private $nmdNproductRepository;
 
   public function __construct(
-    NmdProductRepository $nmdNproductRepository
+    NmdProductRepository $nmdNproductRepository,
+    PallierRepository $pallierRepository
   ) {
     $this->nmdNproductRepository = $nmdNproductRepository;
+    $this->pallierRepository = $pallierRepository;
   }
 
   /**
@@ -756,6 +758,24 @@ class ModuleQuizzController extends AbstractController
     $manager->remove($formation);
     $manager->flush();
     $message = sprintf('Formation supprimée !');
+    $this->addFlash('', $message);
+
+    return $this->redirectToRoute("module_formations");
+  }
+
+  /**
+   * @Route("/deleteFormation/{questionId}", name="deleteFormation")
+   */
+  public function deletequestion(Request $request, userinterface $user, $questionId): Response
+  {
+
+    $repository_formation = $this->getDoctrine()->getRepository(Question::class);
+    $question = $repository_formation->find($questionId);
+
+    $manager = $this->getDoctrine()->getManager();
+    $manager->remove($question);
+    $manager->flush();
+    $message = sprintf('question supprimée !');
     $this->addFlash('', $message);
 
     return $this->redirectToRoute("module_formations");

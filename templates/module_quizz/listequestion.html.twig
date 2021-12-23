@@ -163,7 +163,10 @@
 																	</a>
 																</span>
 																<span>
+																<a href="{{ path('module_deleteFormation/{questionId}   ',{PropositionId: v.id}) }}">
 																	<i class="material-icons" title="Supprimer la question" onclick="showAlertDelete({{v.id}}, '{{v.libelle}}')">delete</i>
+/deleteFormation/{questionId}                                   </a>
+
 
 																</span>
 																{% if v.id_type_id == 1 %}
