@@ -19,6 +19,42 @@ class ReponseRepository extends ServiceEntityRepository
         parent::__construct($registry, Reponse::class);
     }
 
+    public function reponseParModuleUtilisateurQuestion($id_module,$id_user)
+    {
+        $conn = $this->getEntityManager()->getConnection();
+        
+
+        $sql= "SELECT `module`.`id` as `moduleid`,question.libelle as `libelle`, `module`.`nom`,`reponse`.`answer`,`reponse`.`created_at`,
+`proposition`.`libelle` as `proposition`,`question`.`id` as `idquestion`,`module`.`nom`,`user`.`username`,`user`.`firstname` ,`user`.`id` ,proposition.is_correct,
+type.nom as type
+FROM `question` 
+join `reponse`ON `question`.`id`=`reponse`.`question_id`
+join `module`ON `question`.`id_module_id`=`module`.`id`
+join`user`ON `reponse`.`user_id`=`user`.`id`
+left join `proposition`ON `proposition`.`id_question_id`=`question`.`id`
+join type on type.id = question.id_type_id
+where module.id = $id_module AND user.id=$id_user";
+
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllAssociative();
+        
+    }
+    public function listedesreponse()
+    {
+        $conn = $this->getEntityManager()->getConnection();
+
+        $sql = "SELECT `module`.`id` as `moduleid`, `id_module_id`,`reponse`.`answer`,`reponse`.`created_at`,
+        `proposition`.`libelle`,`module`.`nom`,`user`.`firstname`,`user`.`lastname`,`user`.`id` as `iduser`,``.`id` as `iduser`  FROM `question`
+        join `reponse` ON `question`.`id`=`reponse`.`question_id`
+        join `module` ON `question`.`id_module_id`=`module`.`id`
+        join `user` ON `reponse`.`user_id`=`user`.`id`
+        left join `proposition` ON `proposition`.`id_question_id`=`question`.`id`
+        GROUP by user.firstname, module.nom";
+
+        $stmt = $conn->prepare($sql);
+        return $stmt->executeQuery()->fetchAllAssociative();
+    }
     // /**
     //  * @return Reponse[] Returns an array of Reponse objects
     //  */

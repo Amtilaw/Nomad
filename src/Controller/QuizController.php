@@ -113,6 +113,7 @@ class QuizController extends AbstractController
   /**
    * @Route("/userRespond", name="userRespond")
    */
+ 
   public function userRespond(Request $request, UserInterface $userI)
   {
     $userId = $request->get("userId");
@@ -129,37 +130,66 @@ class QuizController extends AbstractController
       }
     }
     $entityManager = $this->getDoctrine()->getManager();
-    $answerIds = $request->request->get("answerId");
-   
-    foreach ($answerIds as $answerId) {
-    
+    for ($i = 0; $i < count($request->request->get("answerId")); $i++) {
       $reponse = new Reponse();
-      $reponse->setQuestionId($request->request->get("question_id")[$i]);
-      $reponse->setPropositionId($request->request->get("answerId")[$i]);
+      $reponse->setQuestionId($request->request->get("question_id"));
+      $idprop = $request->request->get("answerId")[$i];
+      $reponse->setPropositionId($idprop);
       $reponse->setPropositionValue($request->request->get("answer")[$i]);
-      
-      $reponse->setAnswer($request->request->get("realAnswer")[$i]["isCorrect"]);
+      // log($request->request->get("realAnswer")[$i]);
+      $answer = $request->request->get("answer")[$i];
+      dump(array('$answer'));
+      $reponse->setAnswer($request->request->get("answer")[$i]);
       $reponse->setUserId($userId);
       $dateTime = new \DateTime();
       $dateTime->format('Y-m-d H:i:s');
       $reponse->setCreatedAt($dateTime);
-      if ($request->request->get("answer") == $request->request->get("realAnswer")["isCorrect"])
-      {
-        $reponse->setResultIntermediaire(1);
-      }
+      if ($request->request->get("answer")[$i] == $request->request->get("realAnswer")[$i]["isCorrect"])
+      $reponse->setResultIntermediaire(1);
       else
-      {
         $reponse->setResultIntermediaire(0);
-      }
-      $reponseDonne = $request->request->get("reponseDonne");
-      if(isset($reponseDonne)){
-        $reponse->setAnswer($reponseDonne);
+      $entityManager->persist($reponse);
+      $entityManager->flush();
+    }
+    return new JsonResponse(['sucess' => 'yes']);
+  }
+  
 
-      } 
+
+
+/**
+ * @Route("/enregistreRespond", name="enregistreRespond")
+ */
+  public function enregistreRespond(Request $request, UserInterface $userI)
+  {
+    $userId = $request->get("userId");
+    if ($userId == null or $userId == '') {
+      $rolesI = $userI->getRoles();
+      foreach ($rolesI as $rI) {
+        $roleI = $rI;
+      }
+      if ($roleI == 'ROLE_FINANCIAL') {
+        $userId = $userI->getParent();
+      }
+      if ($roleI == 'ROLE_COMPANY' or $roleI == 'ROLE_USER') {
+        $userId = $userI->getId();
+      }
+    }
+    $entityManager = $this->getDoctrine()->getManager();
+  
+    
+      $reponse = new Reponse();
+      $reponse->setQuestionId($request->request->get("question_id"));
+      $reponse->setUserId($userId);
+      $dateTime = new \DateTime();
+      $dateTime->format('Y-m-d H:i:s');
+      $reponse->setCreatedAt($dateTime);
+      $reponseDonne = $request->request->get("reponseDonne");
+        $reponse->setAnswer($reponseDonne);
       $entityManager->persist($reponse);
       $entityManager->flush();
 
-    }
+    
     return new JsonResponse(['sucess' => 'yes']);
   }
 }

@@ -51,14 +51,6 @@ use function PHPSTORM_META\type;
 class ModuleQuizzController extends AbstractController
 
 {
-  private $nmdNproductRepository;
-
-  public function __construct(
-    NmdProductRepository $nmdNproductRepository
-  ) {
-    $this->nmdNproductRepository = $nmdNproductRepository;
-  }
-
   /**
    * @Route("/createFormation", name="createFormation")
    */

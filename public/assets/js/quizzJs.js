@@ -86,15 +86,15 @@ function showModal() {
 }
 
 function sendUserRespond(userRes) {
-  decodeURI()
   const url = controllerUserRespondPath;
+  console.log(userRes);
   let answerId = [];
   for (
     let i = 0;
     i < Object.keys(json[countQuestion]["propositions"]).length;
     i++
   ) {
-    answerId.push(json[countQuestion]["propositions"][i]["libelle"]);
+    answerId.push(json[countQuestion]["propositions"][i]["id"]);
   }
   $.ajax({
     type: "post",
@@ -116,8 +116,7 @@ function sendUserRespond(userRes) {
 }
 
 function enregistreRespond(input) {
-  decodeURI()
-  const url = controllerUserRespondPath;
+  const url = controllerenregistreRespondPath;
   let answerId = [];
 
   $.ajax({
