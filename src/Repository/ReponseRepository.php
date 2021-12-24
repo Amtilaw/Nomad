@@ -44,8 +44,9 @@ where module.id = $id_module AND user.id=$id_user";
     {
         $conn = $this->getEntityManager()->getConnection();
 
-        $sql = "SELECT `module`.`id` as `moduleid`, `id_module_id`,`reponse`.`answer`,`reponse`.`created_at`,
-        `proposition`.`libelle`,`module`.`nom`,`user`.`firstname`,`user`.`lastname`,`user`.`id` as `iduser`,``.`id` as `iduser`  FROM `question`
+        $sql = "SELECT `module`.`id` as `moduleid`,`reponse`.`answer`,`reponse`.`created_at`,
+        `proposition`.`libelle`,`module`.`nom`,`user`.`firstname`,`user`.`lastname`,`user`.`id` as `iduser`
+         FROM `question`
         join `reponse` ON `question`.`id`=`reponse`.`question_id`
         join `module` ON `question`.`id_module_id`=`module`.`id`
         join `user` ON `reponse`.`user_id`=`user`.`id`
