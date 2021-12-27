@@ -43,6 +43,7 @@ use phpDocumentor\Reflection\Types\Null_;
 use PhpParser\Node\Expr\Cast\Object_;
 use Symfony\Component\Validator\Constraints\Json;
 
+use function PHPSTORM_META\type;
 
 /**
  * @Route("/module", name="module_")
@@ -50,14 +51,6 @@ use Symfony\Component\Validator\Constraints\Json;
 class ModuleQuizzController extends AbstractController
 
 {
-  private $nmdNproductRepository;
-
-  public function __construct(
-    NmdProductRepository $nmdNproductRepository
-  ) {
-    $this->nmdNproductRepository = $nmdNproductRepository;
-  }
-
   /**
    * @Route("/createFormation", name="createFormation")
    */
@@ -266,7 +259,7 @@ class ModuleQuizzController extends AbstractController
       $entityManager->flush();
       
       //si le type de question est choix multiple on redirige ver new prop
-      if (($_POST['type']) == 1) {
+      if (($_POST['type']) == 1 || ($_POST['type']) == 3 ) {
         return $this->redirectToRoute('module_createProposition', ['questionId' => $question->getId()]); 
       }else {
         return $this->redirectToRoute('module_listequestion', ['moduleId' => $id_module]);
@@ -386,6 +379,8 @@ class ModuleQuizzController extends AbstractController
     $level_actuel = $levelRepository->find($id_du_level_question);
     
     $type_actuel = $typeRepository->find($id_du_type_question);
+  
+
      foreach ($listepalier as $lpalier) {
        $idlpalier = $lpalier['id'];
         if($idlpalier == $id_du_palier_question){
@@ -448,6 +443,19 @@ class ModuleQuizzController extends AbstractController
       $question->setCreatedAt(new \DateTime());
       $question->setModifyAt(new \DateTime());
       $question->setIdLvl($levelRepository->find($_POST['lvl']));
+      if ($type_actuel != $_POST['type'] )  {
+        if ($_POST['type'] == 3 || $_POST['type'] == 2) {
+        $prop = $propositionRepository->propositionParQuestion($categoryId);
+        
+       foreach ($prop as $props) {
+          $idprops = $props['id'];
+          $props = $entityManager->getRepository(Proposition::class)->find($idprops);
+          $entityManager->remove($props);
+          $entityManager->flush();
+       }
+        
+      }
+      }
       $question->setIdType($typeRepository->find($_POST['type']));
       $question->setIdVideo($videoRepository->find($_POST['video']));
 
@@ -957,7 +965,7 @@ class ModuleQuizzController extends AbstractController
   public function deletePallier(Request $request, userinterface $user, $idPallier): Response
   {
 
-    $this->getDoctrine()->getRepository(Question::class)->updatePallier($idPallier);
+    $this->getDoctrine()->getRepository(Pallier::class)->updatePallier($idPallier);
 
     $repository_pallier = $this->getDoctrine()->getRepository(Pallier::class);
     $pallier = $repository_pallier->find($idPallier);
@@ -966,6 +974,24 @@ class ModuleQuizzController extends AbstractController
     $manager->remove($pallier);
     $manager->flush();
     $message = sprintf('Pallier supprimé !');
+    $this->addFlash('', $message);
+
+    return $this->redirectToRoute("module_formations");
+  }
+
+  /**
+   * @Route("/deleteQuestion/{questionId} ", name="deleteQuestion")
+   */
+  public function deleteQuestion(Request $request, userinterface $user, $questionId): Response
+  {
+
+    $repository_question = $this->getDoctrine()->getRepository(Question::class);
+    $question = $repository_question->find($questionId);
+
+    $manager = $this->getDoctrine()->getManager();
+    $manager->remove($question);
+    $manager->flush();
+    $message = sprintf('Question supprimé !');
     $this->addFlash('', $message);
 
     return $this->redirectToRoute("module_formations");

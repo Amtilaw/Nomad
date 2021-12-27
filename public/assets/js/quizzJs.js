@@ -30,6 +30,7 @@ let questionValidate = true;
 let temp = player.api("time");
 let seconde = 0;
 let typeProposition;
+console.log(typeProposition);
 let questionsSize = Object.keys(json).length;
 
 for (let i = 0; i < questionsSize; i++) {
@@ -86,6 +87,7 @@ function showModal() {
 
 function sendUserRespond(userRes) {
   const url = controllerUserRespondPath;
+  console.log(userRes);
   let answerId = [];
   for (
     let i = 0;
@@ -103,6 +105,28 @@ function sendUserRespond(userRes) {
       answer: userRes,
       answerId: answerId,
       realAnswer: json[countQuestion]["propositions"],
+    },
+  })
+    .done(function (data) {
+      console.log(data);
+    })
+    .fail(function () {
+      console.log("fail");
+    });
+}
+
+function enregistreRespond(input) {
+  const url = controllerenregistreRespondPath;
+  let answerId = [];
+
+  $.ajax({
+    type: "post",
+    url: url,
+    data: {
+      question_id: json[countQuestion]["id"],
+      user: "Jeanjean",
+      reponseDonne: input,
+      answerId: answerId,
     },
   })
     .done(function (data) {
@@ -137,14 +161,18 @@ function renderQuizz() {
   document.getElementById("boardProps").innerHTML = "";
   $("#titrePallier").html(json[countQuestion]["titrePallier"]);
   $("#titreQuestion").html(json[countQuestion]["libelle"]);
-  //type == 1 == qcm
-  if (getTypeQuestion() == "qcm") {
-    if (Object.keys(json[countQuestion]["propositions"]).length == 2) {
-      typeProposition = "radio";
-    } else {
-      typeProposition = "checkbox";
-    }
 
+
+    if (getTypeQuestion() == "text") {
+    document.getElementById(
+      "boardProps"
+    ).innerHTML += `<input type="textArea" name="box" id="proposition1" >`;
+  }
+  //type == 1 == qcm
+  
+  if (getTypeQuestion() == "chek") {
+
+     typeProposition = "checkbox"
     let jsonLibelle;
     for (
       let i = 0;
@@ -163,14 +191,29 @@ function renderQuizz() {
     <span class="subject" id="propositionInput${i}"> ${jsonLibelle} </label>`;
     }
   }
-  if (getTypeQuestion() == "text") {
-    document.getElementById(
-      "boardProps"
-    ).innerHTML += `<input type="textarea" name="box" id="proposition1" >
-    <label for="proposition1" class="box label1">
+
+
+
+  if (getTypeQuestion() == "qcm") {
+      typeProposition = "radio";
+    let jsonLibelle;
+    for (
+      let i = 0;
+      i < Object.keys(json[countQuestion]["propositions"]).length;
+      i++
+    ) {
+      jsonLibelle =
+        json[countQuestion]["propositions"][i]["libelle"] + "</span> </div>";
+
+      document.getElementById(
+        "boardProps"
+      ).innerHTML += `<input type="${typeProposition}" name="box" id="proposition${i}" >
+    <label for="proposition${i}" class="box label${i}">
     <div class="course">
-    <span class="circle"> </span> `;
-  }
+    <span class="circle"> </span> 
+    <span class="subject" id="propositionInput${i}"> ${jsonLibelle} </label>`;
+    }
+  } 
 }
 
 function validateQuestion() {
@@ -180,6 +223,7 @@ function validateQuestion() {
     for (var i = 0, len = radios.length; i < len; i++) {
       if (radios[i].checked) {
         userRes.push(1);
+       console.log(userRes);
         questionValidate = true;
       }
       userRes.push(0);
@@ -188,12 +232,14 @@ function validateQuestion() {
     sendUserRespond(userRes);
 
     if (questionValidate == true) return true;
-  } else {
-    let textAreaRespond = document.getElementById("proposition1").value;
-    sendUserRespond(textAreaRespond);
-    return true;
+  } 
+  if (getTypeQuestion() == "text") {
+    let input = document.getElementById("proposition1").value;
+    enregistreRespond(input);
+    questionValidate = true;
+    if (questionValidate == true) return true;
   }
-  return false;
+  return true;
 }
 
 // verifie si l'utilisateur a avancé dans la vidéo return true si oui
@@ -236,4 +282,5 @@ function renderContextualMenue() {
 function getTypeQuestion() {
   if (json[countQuestion]["type"] == 1) return "qcm";
   if (json[countQuestion]["type"] == 2) return "text";
+  if (json[countQuestion]["type"] == 3) return "chek";
 }
