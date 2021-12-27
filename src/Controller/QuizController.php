@@ -22,11 +22,12 @@ use Symfony\Component\Security\Core\User\UserInterface;
 class QuizController extends AbstractController
 {
   /**
-   * @Route("/quiz/index{idVideo}{idModule}", name="quiz")
+   * @Route("/quiz/index/{idVideo}/{idModule}", name="quiz")
    */
   public function index($idVideo, $idModule,QuestionRepository $questionRepository,VideoRepository $videoRepository,
   PropositionRepository $propositionRepository): Response
   {
+   
     $questions = $questionRepository->questionByVideoAndPallier($idVideo, $idModule);
     dump($questions);
     $videoName = $videoRepository->getVideoName($idVideo);

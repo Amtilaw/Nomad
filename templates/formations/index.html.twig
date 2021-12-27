@@ -99,6 +99,7 @@
 										<a class="iconHerarchy" href="{{ path('module_createFormation') }}">
 											<i class="material-icons">add</i>
 										</a>
+										
 									</div>
 								</div>
 
@@ -145,6 +146,11 @@
 																<i class="material-icons" title="Afficher les modules">expand_more</i>
 															</a>
 														</span>
+																												<span>
+														<a class="iconHerarchy" href="{{ path('module_module',{id_formation : formation.id}) }}">
+											<i class="material-icons">add</i>
+										                </a>
+														</span>0+
 													</td>
 												</tr>
 												<tbody id="{{ 'modules-' ~ count}}" hidden>
@@ -166,6 +172,7 @@
 																<i class="material-icons">expand_more</i>
 															</a>
 														</span>
+
 													</td>
 
 														</tr>
