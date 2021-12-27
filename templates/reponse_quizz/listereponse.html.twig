@@ -148,14 +148,8 @@
 
 															<td>{{v.libelle}}</td>
 															<td>{{v.type}}</td>
-															
-															{% if v.proposition != null %}
-															<td>{{v.proposition}}</td>
-															{% endif %}
-
-															{% if v.proposition == null %}
 															<td>{{v.answer}}</td>
-															{% endif %}
+													
 															
 																{% if bonne_reponse.ques == v.idquestion %}
 																<td>{{bonne_reponse.libelle}}</td>

@@ -77,13 +77,18 @@ class ReponseQuizzController extends AbstractController
     public function listeparmodule($id_user,$id_module,ReponseRepository $reponseRepository,PropositionRepository $propositionRepository ,QuestionRepository $questionRepository): Response
     {
         $reponse_par_module_utilisateur = $reponseRepository->reponseParModuleUtilisateurQuestion($id_module, $id_user);
+        
          $toute_les_proposition = $propositionRepository->findall();
+         $lesquestion = $questionRepository->findIdModule($id_module);
          $toute_les_question = $questionRepository->findall();
         $proposition_attandue = [];
+        $i = 0;
          foreach ($toute_les_proposition as $proposition) {
             
+            if ($proposition->getId() == $reponse_par_module_utilisateur[$i]["proposition_id"]) {
+          
             if ($proposition->getIsCorrect() == 1) {
-               
+                    dump($proposition);
                 $idquestion= $proposition->getIdQuestion();
                 $question = $questionRepository->find($idquestion);
                 $iddelaquestion = $question->getId();
@@ -96,8 +101,11 @@ class ReponseQuizzController extends AbstractController
 
                 ]; 
             }
+            $i=$i++;
+        }
+           
          }
-
+        
 
         return $this->render('reponse_quizz/listereponse.html.twig', [
             'pageTitle' => 'reponse',

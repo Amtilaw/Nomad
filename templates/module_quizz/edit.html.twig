@@ -180,7 +180,12 @@
 		</div>
 
 	</div>
-</div></div></div>{% endblock %}{% block baseJavascripts %}<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script><script>let countProps = 2;
+</div></div></div>
+{% endblock %}
+{% block baseJavascripts %}
+<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+<script>
+let countProps = 2;
 let pallierJson;
 $('#newPallier').css('display', 'none');
 $("#idPallier").change(function () {

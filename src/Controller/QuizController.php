@@ -132,6 +132,7 @@ class QuizController extends AbstractController
     }
     $entityManager = $this->getDoctrine()->getManager();
     for ($i = 0; $i < count($request->request->get("answerId")); $i++) {
+      dump($request->request->get("answerId")[$i]);
       $reponse = new Reponse();
       $reponse->setQuestionId($request->request->get("question_id"));
       $idprop = $request->request->get("answerId")[$i];
@@ -139,7 +140,7 @@ class QuizController extends AbstractController
       $reponse->setPropositionValue($request->request->get("answer")[$i]);
       // log($request->request->get("realAnswer")[$i]);
       $answer = $request->request->get("answer")[$i];
-      dump(array('$answer'));
+      // dump(array('$answer'));
       $reponse->setAnswer($request->request->get("answer")[$i]);
       $reponse->setUserId($userId);
       $dateTime = new \DateTime();
@@ -149,6 +150,7 @@ class QuizController extends AbstractController
       $reponse->setResultIntermediaire(1);
       else
         $reponse->setResultIntermediaire(0);
+        dump($reponse);
       $entityManager->persist($reponse);
       $entityManager->flush();
     }
@@ -191,6 +193,87 @@ class QuizController extends AbstractController
       $entityManager->flush();
 
     
+    return new JsonResponse(['sucess' => 'yes']);
+  }
+
+  /**
+   * @Route("/enregistreChekRespond", name="enregistreChekRespond")
+   */
+  public function enregistreChekRespond(Request $request, UserInterface $userI,PropositionRepository $propositionRepository)
+  {
+    $userId = $request->get("userId");
+    if ($userId == null or $userId == '') {
+      $rolesI = $userI->getRoles();
+      foreach ($rolesI as $rI) {
+        $roleI = $rI;
+      }
+      if ($roleI == 'ROLE_FINANCIAL') {
+        $userId = $userI->getParent();
+      }
+      if ($roleI == 'ROLE_COMPANY' or $roleI == 'ROLE_USER') {
+        $userId = $userI->getId();
+      }
+    }
+    $entityManager = $this->getDoctrine()->getManager();
+    $reponseDonne = $request->request->get("reponseDonne");
+    dump($reponseDonne);
+
+    $reponse = new Reponse();
+    $reponse->setQuestionId($request->request->get("question_id"));
+    $reponse->setUserId($userId);
+    $dateTime = new \DateTime();
+    $dateTime->format('Y-m-d H:i:s');
+    $reponse->setCreatedAt($dateTime);
+    $reponseDonne = $request->request->get("reponseDonne");
+    $proposition_id = $reponseDonne;
+    $reponse->setPropositionId($proposition_id);
+    $proposition = $propositionRepository->find($proposition_id)->getLibelle();
+    // dd($reponse);
+    $reponse->setAnswer($proposition);
+    $entityManager->persist($reponse);
+    $entityManager->flush();
+
+
+    return new JsonResponse(['sucess' => 'yes']);
+  }
+  /**
+   * @Route("/enregistreRadioRespond", name="enregistreRadioRespond")
+   */
+  public function enregistreRadioRespond(Request $request, UserInterface $userI, PropositionRepository $propositionRepository)
+  {
+    $userId = $request->get("userId");
+    if ($userId == null or $userId == '') {
+      $rolesI = $userI->getRoles();
+      foreach ($rolesI as $rI) {
+        $roleI = $rI;
+      }
+      if ($roleI == 'ROLE_FINANCIAL') {
+        $userId = $userI->getParent();
+      }
+      if ($roleI == 'ROLE_COMPANY' or $roleI == 'ROLE_USER') {
+        $userId = $userI->getId();
+      }
+    }
+    $entityManager = $this->getDoctrine()->getManager();
+    $reponseDonne = $request->request->get("reponseDonne");
+    dump($reponseDonne);
+
+    $reponse = new Reponse();
+    $reponse->setQuestionId($request->request->get("question_id"));
+    $reponse->setUserId($userId);
+    $dateTime = new \DateTime();
+    $dateTime->format('Y-m-d H:i:s');
+    $reponse->setCreatedAt($dateTime);
+    $reponseDonne = $request->request->get("reponseDonne");
+    $proposition_id = $reponseDonne;
+    $reponse->setPropositionId($proposition_id);
+    $proposition = $propositionRepository->find($proposition_id)->getLibelle();
+    // dd($reponse);
+    $reponse->setAnswer($proposition);
+    $entityManager->persist($reponse);
+    $entityManager->flush();
+
+
     return new JsonResponse(['sucess' => 'yes']);
   }
 }
