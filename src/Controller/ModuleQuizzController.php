@@ -567,7 +567,7 @@ class ModuleQuizzController extends AbstractController
     }
 
     return $this->render('formations/index.html.twig', [
-      'pageTitle' => 'Formations évaluation',
+      'pageTitle' => "Formations d'évaluation",
       'rootTemplate' => 'module_quizz',
       'pageIcon' => 'group',
       'rootPage' => 'lists',
