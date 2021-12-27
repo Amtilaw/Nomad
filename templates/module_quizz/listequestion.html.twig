@@ -163,13 +163,20 @@
 																	</a>
 																</span>
 																<span>
-																<a href="{{ path('module_deleteFormation',{formationId: v.id}) }}">
+																<a href="{{ path('module_deleteQuestion',{questionId: v.id}) }}">
 																	<i class="material-icons" title="Supprimer la question" onclick="showAlertDelete({{v.id}}, '{{v.libelle}}')">delete</i>
-							                                    </a>
+                                                               </a>
 
 
 																</span>
 																{% if v.id_type_id == 1 %}
+																<span>
+																	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
+																		<i class="material-icons" title="Afficher les propositions">Les proposition</i>
+																	</a>
+																</span>
+																{% endif %}
+																{% if v.id_type_id == 3 %}
 																<span>
 																	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
 																		<i class="material-icons" title="Afficher les propositions">Les proposition</i>
