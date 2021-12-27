@@ -1,0 +1,225 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Question
+{% endblock %}
+
+{% block baseStylesheets %}
+	<link rel="stylesheet" href="{{ asset('bower_components/select2/dist/css/select2.min.css') }}">
+	<link rel="stylesheet" href="{{ asset('assets/css/customizedStyle.css') }}">
+
+{% endblock %}
+
+{% block body %}
+
+	<div id="page_content" class="height-700">
+
+		<div id="page_content_inner" class="height-700">
+
+			<div class="md-card height-700">
+				<div class="uk-grid uk-grid uk-grid-collapse uk-grid-divider uk-flex" data-uk-grid-match>
+
+					<div class="uk-width-large-1-6 uk-width-medium-1-3 js_collapsible_column height-700">
+
+						<div class="md-card-toolbar {{pageColor}}">
+							<div
+								class="md-card-toolbar-actions uk-hidden-small">
+								{# <i class="md-icon material-icons js_hidden">&#xE5D5;</i> #}
+								<a href="#" data-column-toggle>
+									<i class="md-icon material-icons" title="Collapse">format_indent_decrease</i>
+									<i class="md-icon material-icons" style="display: none" title="Expand">format_indent_increase</i>
+								</a>
+							</div>
+							<h1 class="md-card-toolbar-heading-text js_hidden uk-text-overflow pageTitle">
+								<i class="material-icons">{{pageIcon}}</i>
+								<span>{{pageTitle}}</span>
+							</h1>
+						</div>
+
+						{# menu contextuel #}
+						{% include  'module_quizz/component/contextual_menu.html.twig' %}
+
+					</div>
+
+					<div
+						class="uk-flex-item-1">
+
+						{# nav bar contextuel #}
+						{% include rootTemplate ~ '/component/partials/contextual_secondary_nav_'~ rootPage ~'_Proposition.html.twig' %}
+
+
+						<div class="md-card-content mostly-customized-scrollbar mainScroll">
+
+							{# {{dump(module)}} #}
+							<!-- Tabs content -->
+
+								<div class="tab-pane fade show active" id="ex1-tabs-1" role="tabpanel" aria-labelledby="ex1-tab-1"> <div class="pt-15 pb-15 borderBottom height50">
+									<h3 class="m-0 fz18 grisFonce title2">
+									 Liste des module repondue 
+									</h3>
+								</div>
+								<div class="pt-2 pb-2">
+									<div class="pt-15 pb-15 borderBottom">
+										<p class="textContent">Liste des module quelle un utlisateur a repondue
+										</p>
+									</div>
+
+									<div class="message">
+										<div class="message-icon">
+											<i class="material-icons">info</i>
+										</div>
+										<div class="message-content">
+											<p>
+												Certains produits Google Cloud n'utilisent pas les contacts essentiels pour envoyer des notifications.
+												                                                Il est donc possible que des notifications soient adressées aux comptes principaux disposant de certains rôles
+												                                                IAM (par exemple, administrateur de la facturation ou propriétaire du projet) plutôt qu'aux membres de la liste
+												                                                de contacts que vous configurez ici.
+											</p>
+										</div>
+									</div>
+
+
+									<div class="blogFilter">
+										<div class="filterTitle">
+											<span class="text_dark">
+												<i class="material-icons" style="margin-right: 5px">filter_list</i>
+												<span id="valueFilter">Filtre</span>
+											</span>
+										</div>
+										<div id="inputSearch" class="borderRight">
+											<select class="selectFilter" id="select_adv_1" name="select_adv_1" multiple>
+												<option value="2" selected>Venus</option>
+												<option value="3" selected>Earth</option>
+											</select>
+
+										</div>
+										<div class="floatLeftIcon">
+											<div class="iconGoSearch">
+
+												<a 
+                                                {# href="{{ path('module_createFormation') }}" #}
+                                                >
+													<i class="material-icons">account_circle</i>
+												</a>
+
+
+											</div>
+
+											<div class="iconExporter">
+												<i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
+											</div>
+											<a class="iconHerarchy" 
+                                            {# href="{{ path('module_createProposition',{questionId: questionId}) }}" #}
+                                            >
+												<i class="material-icons">add</i>
+											</a>
+										</div>
+									</div>
+									<div class="table-responsive uk-overflow-containe">
+										<table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_align">
+											<thead>
+												<tr>
+													<th scope="col" class="checkBoxNomad" data-name="Select" data-priority="5">
+														<input type="checkbox" class="ts_checkbox_all" id="check-all"/>
+													</th>
+                                                    <th scope="col" class="left-align">Type</th>
+													<th scope="col">module</th>
+													<th scope="col">fait le </th>
+													<th scope="col">par</th>
+
+
+													<th scope="col"></th>
+
+
+													<th scope="col">/</th>
+												</tr>
+											</thead>
+											<tbody id="contentTable">
+
+												{% for v in reponse %}
+                                                {% set id_module = v.moduleid %}
+                                                {% set id_user = v.iduser %}
+                                               <tr href="{{ path('reponse_liste',{id_module: id_module,id_user : id_user}) }}">
+                                                
+															<td class="checkBoxNomad">
+																<input type="checkbox" class="ts_checkbox" data-md-icheck/>
+															</td>
+															<td class="checkBoxNomad">
+
+																<i class="material-icons" data-uk-tooltip title="Categorie">person</i>
+
+															</td>
+
+															<td><a href="{{ path('reponse_liste',{id_module: id_module,id_user : id_user}) }}">{{v.nom}}</a></td>
+															<td><a href="{{ path('reponse_liste',{id_module: id_module,id_user : id_user}) }}">{{v.created_at}}</a></td>
+                                                            <td> <a href="{{ path('reponse_liste',{id_module: id_module,id_user : id_user}) }}">{{v.firstname}}</a></td>
+
+															<td></td>
+															<td class="blackIcon">
+																<span>
+																	{# <a href="{{ path('module_editProposition',{PropositionId: v.id}) }}"> #}
+																		<i class="material-icons">edit</i>
+																	</a>
+																</span>
+																<span>
+																	{# <a href="{{ path('module_deleteProposition',{PropositionId: v.id}) }}"> #}
+																		<i class="material-icons">delete</i>
+
+																	</span>
+																</td>
+															</td>
+                                                    
+														</tr>
+												
+												{% endfor %}
+
+											</tbody>
+										</table>
+									</div>
+								</div>
+							</div>
+							<!-- Tabs content -->
+						</div>
+					</div>
+					<div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
+						<div class="md-card-toolbar md-bg-grey-100">
+							<div class="md-card-toolbar-actions uk-hidden-small">
+								<a href="#" data-column-toggle>
+									<i class="md-icon material-icons" title="Collapse">format_indent_increase</i>
+									<i class="md-icon material-icons" style="display: none" title="Expand">format_indent_decrease</i>
+								</a>
+							</div>
+							<h3 class="md-card-toolbar-heading-text js_hidden">
+								Filtres
+							</h3>
+						</div>
+						{# Filters #}
+						{% include rootTemplate ~ '/component/contextual_filters.html.twig' %}
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+{% endblock %}
+
+{% block baseJavascripts %}
+
+	<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+
+	<!-- tablesorter -->
+	<script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.min.js')}}"></script>
+	<script src="{{asset('bower_components/tablesorter/dist/js/jquery.tablesorter.widgets.min.js')}}"></script>
+	<script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-alignChar.min.js')}}"></script>
+	<script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-columnSelector.min.js')}}"></script>
+	<script src="{{asset('bower_components/tablesorter/dist/js/widgets/widget-print.min.js')}}"></script>
+	<script src="{{asset('bower_components/tablesorter/dist/js/extras/jquery.tablesorter.pager.min.js')}}"></script>
+	<!-- ionrangeslider -->
+	<script src="{{asset('bower_components/ion.rangeslider/js/ion.rangeSlider.min.js')}}"></script>
+	<script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
+	<script src="{{ asset('assets/js/nomad/global.js') }}"></script>
+
+	<!-- Start Export xls -->
+	<script src="{{ asset('assets/js/exportXls/xlsx.full.min.js') }}"></script>
+	<script src="{{ asset('assets/js/exportXls/FileServer.min.js') }}"></script>
+	<script> </script>
+	<!-- End Export xls -->
+{% endblock %}

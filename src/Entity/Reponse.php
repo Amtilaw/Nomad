@@ -38,7 +38,7 @@ class Reponse
     private $proposition_value;
 
     /**
-     * @ORM\Column(type="smallint")
+     * @ORM\Column(type="string")
      */
     private $answer;
 
@@ -105,12 +105,12 @@ class Reponse
         return $this;
     }
 
-    public function getAnswer(): ?int
+    public function getAnswer(): ?string
     {
         return $this->answer;
     }
 
-    public function setAnswer(int $answer): self
+    public function setAnswer(string $answer): self
     {
         $this->answer = $answer;
 
