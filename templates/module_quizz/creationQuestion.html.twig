@@ -187,30 +187,20 @@
 </div>
 {% endblock %}
 {% block baseJavascripts %}
-<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}">
-</script>
-<script>
-let countProps = 2;
+	<script src="{{ asset('bower_components/jquery-ui/jquery-ui.min.js') }}"></script>
+	<script>
+		let countProps = 2;
 let pallierJson;
-$("#newPallier").css("display", "none");
-
-
-$("#haveAVideo").change(function () {
-if (this.checked) {
+$('#newPallier').css('display', 'none');
+$("#idPallier").change(function () {
+if ($("#idPallier :selected").val() == 0) {
+console.log("yes");
 $("#newPallier").css("display", "block");
-let vr = $("#idVideoForm").val();
-getPalliersByVideo(vr);
 } else {
 $("#newPallier").css("display", "none");
 }
 });
 
-function add(){
-console.log("#newPallier")
-
-
-$("#newPallier").css("display", "block");
-}
 $("#typeProps").change(function () {
 if (this.value == 1) {
 $("#propositionsAdd").css("display", "block");
@@ -225,9 +215,6 @@ getPalliersByVideo(this.value);
 
 
 function getPalliersByVideo(idVideo) {
-const url = "{{ path('module_createQuestion', {idModule : idModule}) }}";
-
-
 
 console.log(idVideo);
 
@@ -253,12 +240,6 @@ newProps.innerHTML = ` <label for="exampleFormControlInput1" class="form-label">
 											<input type="checkbox" data-switchery data-switchery-color="#3367d6" id="correct${countProps}" name="correct${countProps}" > <label for="correct">Is correct</label> `
 $("#newPropsAdd").append(newProps);
 }
-
-function addPalier() {
-$("#newPallier").css("display", "block");
-
-
-}
-
-</script>
+	</script>
 {% endblock %}
+

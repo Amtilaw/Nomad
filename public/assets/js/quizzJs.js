@@ -137,6 +137,52 @@ function enregistreRespond(input) {
     });
 }
 
+function enregistreChekRespond(checkbox) {
+  const url = controllerenregistreChekRespondPath;
+  let answerId = [];
+  console.log(checkbox["value"]);
+  
+  $.ajax({
+    type: "post",
+    url: url,
+    data: {
+      question_id: json[countQuestion]["id"],
+      user: "Jeanjean",
+      reponseDonne: checkbox["value"],
+      answerId: answerId,
+    },
+  })
+    .done(function (data) {
+      console.log(data);
+    })
+    .fail(function () {
+      console.log("fail");
+    });
+}
+
+function enregistreRadioRespond(radio) {
+  const url = controllerenregistreRadioRespondPath;
+  let answerId = [];
+  console.log(radio);
+  console.log(radio["value"]);
+  $.ajax({
+    type: "post",
+    url: url,
+    data: {
+      question_id: json[countQuestion]["id"],
+      user: "Jeanjean",
+      reponseDonne: radio["value"],
+      answerId: answerId,
+    },
+  })
+    .done(function (data) {
+      console.log(data);
+    })
+    .fail(function () {
+      console.log("fail");
+    });
+}
+
 function nextQuestionRender() {
   let canGoToNextQuestion = validateQuestion();
   if (canGoToNextQuestion == true) {
@@ -169,12 +215,10 @@ function renderQuizz() {
     ).innerHTML += `<label for="exampleFormControlInput1" class="form-label">Votre réponse</label>
                     <input type="text" class="md-input label-fixed customizedInput" name="box" id="proposition1">`;
   }
-  //type == 1 == qcm
-  
   if (getTypeQuestion() == "chek") {
-
-     typeProposition = "checkbox"
+    typeProposition = "checkbox";
     let jsonLibelle;
+    let jsonIdproposition;
     for (
       let i = 0;
       i < Object.keys(json[countQuestion]["propositions"]).length;
@@ -182,33 +226,32 @@ function renderQuizz() {
     ) {
       jsonLibelle =
         json[countQuestion]["propositions"][i]["libelle"] + "</span> </div>";
-
+       jsonIdproposition = json[countQuestion]["propositions"][i]["id"];
       document.getElementById(
         "boardProps"
-      ).innerHTML += `<input type="${typeProposition}" name="box" id="proposition${i}" >
+      ).innerHTML += `<input type="${typeProposition}" name="box" id="proposition${i}" value="${jsonIdproposition}">
     <label for="proposition${i}" class="box label${i}">
     <div class="course">
     <span class="circle"> </span> 
     <span class="subject" id="propositionInput${i}"> ${jsonLibelle} </label>`;
     }
   }
-
-
-
   if (getTypeQuestion() == "qcm") {
       typeProposition = "radio";
     let jsonLibelle;
+     let jsonIdproposition;
     for (
       let i = 0;
       i < Object.keys(json[countQuestion]["propositions"]).length;
       i++
     ) {
-      jsonLibelle =
-        json[countQuestion]["propositions"][i]["libelle"] + "</span> </div>";
+      jsonLibelle = json[countQuestion]["propositions"][i]["libelle"] + "</span> </div>";
+      jsonIdproposition = json[countQuestion]["propositions"][i]["id"];
+      jsonproposition = json[countQuestion]["propositions"][i]["libelle"];
 
       document.getElementById(
         "boardProps"
-      ).innerHTML += `<input type="${typeProposition}" name="box" id="proposition${i}" >
+      ).innerHTML += `<input type="${typeProposition}" name="box" id="proposition${i}" value="${jsonIdproposition}"value2="${jsonproposition}">
     <label for="proposition${i}" class="box label${i}">
     <div class="course">
     <span class="circle"> </span> 
@@ -218,25 +261,50 @@ function renderQuizz() {
 }
 
 function validateQuestion() {
-  if (getTypeQuestion() == "qcm") {
-    let radios = document.getElementsByName("box");
-    let userRes = [];
-    for (var i = 0, len = radios.length; i < len; i++) {
-      if (radios[i].checked) {
-        userRes.push(1);
-       console.log(userRes);
-        questionValidate = true;
-      }
-      userRes.push(0);
-    }
+  // if (getTypeQuestion() == "qcm") {
+  //   let radios = document.getElementsByName("box");
+  //   let userRes = [];
+  //   for (var i = 0, len = radios.length; i < len; i++) {
+  //     if (radios[i].checked) {
+  //       userRes.push(1);
+  //      console.log(userRes);
+  //       questionValidate = true;
+  //     }
+  //     userRes.push(0);
+  //   }
 
-    sendUserRespond(userRes);
+  //   sendUserRespond(userRes);
 
-    if (questionValidate == true) return true;
-  } 
+  //   if (questionValidate == true) return true;
+  // } 
   if (getTypeQuestion() == "text") {
     let input = document.getElementById("proposition1").value;
     enregistreRespond(input);
+    questionValidate = true;
+    if (questionValidate == true) return true;
+  }
+  if (getTypeQuestion() == "chek") {
+    let checkbox = document.getElementsByName("box");
+    for (var i = 0, len = checkbox.length; i < len; i++) {
+      if (checkbox[i].checked) {
+        reponseDonne = checkbox[i];
+        enregistreChekRespond(reponseDonne);
+      }
+    }
+    
+    questionValidate = true;
+    if (questionValidate == true) return true;
+  }
+  if (getTypeQuestion() == "qcm") {
+    let radio= document.getElementsByName("box");
+    for (var i = 0, len = radio.length; i < len; i++) {
+      console.log(radio[i].checked)
+      if (radio[i].checked) {
+        reponseDonne = radio[i];
+        enregistreRadioRespond(reponseDonne);
+      }
+    }
+    
     questionValidate = true;
     if (questionValidate == true) return true;
   }

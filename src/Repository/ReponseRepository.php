@@ -24,16 +24,14 @@ class ReponseRepository extends ServiceEntityRepository
         $conn = $this->getEntityManager()->getConnection();
         
 
-        $sql= "SELECT `module`.`id` as `moduleid`,question.libelle as `libelle`, `module`.`nom`,`reponse`.`answer`,`reponse`.`created_at`,
-`proposition`.`libelle` as `proposition`,`question`.`id` as `idquestion`,`module`.`nom`,`user`.`username`,`user`.`firstname` ,`user`.`id` ,proposition.is_correct,
-type.nom as type
-FROM `question` 
-join `reponse`ON `question`.`id`=`reponse`.`question_id`
-join `module`ON `question`.`id_module_id`=`module`.`id`
-join`user`ON `reponse`.`user_id`=`user`.`id`
-left join `proposition`ON `proposition`.`id_question_id`=`question`.`id`
-join type on type.id = question.id_type_id
-where module.id = $id_module AND user.id=$id_user";
+        $sql= "SELECT `module`.`id` as `moduleid`,question.libelle as `libelle`, `module`.`nom`,`reponse`.`answer`,`reponse`.`created_at`,`question`.`id` as `idquestion`,
+        `module`.`nom`,`user`.`username`,`user`.`firstname` ,`user`.`id` ,type.nom as type, reponse.proposition_id
+        FROM `question` 
+        join `reponse`ON `question`.`id`=`reponse`.`question_id`
+        join `module`ON `question`.`id_module_id`=`module`.`id`
+        join`user`ON `reponse`.`user_id`=`user`.`id`
+        join type on type.id = question.id_type_id
+        where module.id = $id_module AND user.id=$id_user";
 
 
         $stmt = $conn->prepare($sql);
