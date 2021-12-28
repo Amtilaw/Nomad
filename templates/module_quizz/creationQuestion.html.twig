@@ -50,11 +50,7 @@
 
 							<h1>Création d'une question</h1>
 							<div style="margin:30px">
-<form action="{{ path('module_createQuestion', {idModule : idModule}) }}" method="POST">
-
-
-
-
+								<form action="{{ path('module_createQuestion', {idModule : idModule}) }}" method="POST">
 									<div class="md-card-content">
 										<div class="uk-grid">
 											<div class="uk-width-1-1">
@@ -71,7 +67,7 @@
 
 															<div class="uk-width-1 md-input-filled">
 																<br>
-																<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
+																<label for="exampleFormControlInput1" class="form-label">Libellé de la question</label>
 																<input type="text" class="md-input label-fixed customizedInput" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle">
 															</div>
 
@@ -82,16 +78,16 @@
 															<div class="uk-width-medium-1-2 md-input-filled">
 																<label for="lvl" class="form-label">Difficulté de la question</label>
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="lvl">
-																	<option selected>Choisisser la difficulté de la question</option>
+																	<option selected>Choisissez la difficulté de la question</option>
 																	{% for level in levels %}
 																		<option value="{{ level.id }}" {{ level.selected }}>{{ level.nom }}</option>
 																	{% endfor %}
 																</select>
 															</div>
 															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">type de question</label>
+																<label for="lvl" class="form-label">Type de question</label>
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="type">
-																	<option selected>choix du type de question </option>
+																	<option selected>Choix du type de question</option>
 																	{% for type in types %}
 																		<option value="{{ type.id }}">{{ type.nom }}</option>
 																	{% endfor %}
@@ -106,7 +102,7 @@
 														<div class="uk-grid" data-uk-grid-margin>
 
 															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">video selection</label>
+																<label for="lvl" class="form-label">Sélection de la video</label>
 
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="video" id="idVideoForm">
 																	{% for video in videos %}
@@ -115,7 +111,7 @@
 																</select>
 															</div>
 															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">Pallier selection</label>
+																<label for="lvl" class="form-label">Sélection du pallier</label>
 
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
 																<option value="0" onclick="addPalier()">Nouveau pallier</option>
@@ -134,7 +130,7 @@
 															</div>
 															<div class="uk-width-1 md-input-filled">
                                                                 <br>
-																<label for="exampleFormControlInput1" class="form-label">titre du pallier</label>
+																<label for="exampleFormControlInput1" class="form-label">Titre du pallier</label>
 																<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
 															</div>
 

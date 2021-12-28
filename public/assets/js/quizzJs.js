@@ -166,7 +166,8 @@ function renderQuizz() {
     if (getTypeQuestion() == "text") {
     document.getElementById(
       "boardProps"
-    ).innerHTML += `<input type="textArea" name="box" id="proposition1" >`;
+    ).innerHTML += `<label for="exampleFormControlInput1" class="form-label">Votre réponse</label>
+                    <input type="text" class="md-input label-fixed customizedInput" name="box" id="proposition1">`;
   }
   //type == 1 == qcm
   
