@@ -109,8 +109,8 @@
 											<div class="iconExporter">
 												<i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
 											</div>
-											{# <a class="iconHerarchy" href="{{ path('module_createQuestion', {moduleId}) }}"> #}
-											<a class="iconHerarchy" href="{{ path('module_createQuestion',{idModule: moduleId}) }}">
+											{# <a class="iconHerarchy" href="{{ path('Question_createQuestion', {moduleId}) }}"> #}
+											<a class="iconHerarchy" href="{{ path('Question_createQuestion',{idModule: moduleId}) }}">
 												<i class="material-icons">add</i>
 											</a>
 
@@ -158,12 +158,12 @@
 															<td></td>
 															<td class="blackIcon">
 																<span>
-																	<a href="{{ path('module_edit',{categoryId: v.id}) }}">
+																	<a href="{{ path('Question_edit',{categoryId: v.id}) }}">
 																		<i class="material-icons" title="Modifier la question">edit</i>
 																	</a>
 																</span>
 																<span>
-																<a href="{{ path('module_deleteQuestion',{questionId: v.id}) }}">
+																<a href="{{ path('Question_deleteQuestion',{questionId: v.id}) }}">
 																	<i class="material-icons" title="Supprimer la question" onclick="showAlertDelete({{v.id}}, '{{v.libelle}}')">delete</i>
                                                                </a>
 
@@ -171,14 +171,14 @@
 																</span>
 																{% if v.id_type_id == 1 %}
 																<span>
-																	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
+																	<a href="{{ path('Proposition_Proposition',{questionId: v.id}) }}">
 																		<i class="material-icons" title="Afficher les propositions">Les proposition</i>
 																	</a>
 																</span>
 																{% endif %}
 																{% if v.id_type_id == 3 %}
 																<span>
-																	<a href="{{ path('module_Proposition',{questionId: v.id}) }}">
+																	<a href="{{ path('Proposition_Proposition',{questionId: v.id}) }}">
 																		<i class="material-icons" title="Afficher les propositions">Les proposition</i>
 																	</a>
 																</span>

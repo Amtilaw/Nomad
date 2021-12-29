@@ -5,42 +5,9 @@ namespace App\Controller;
 use App\Repository\QuestionRepository;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
-use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Annotation\Route;
 use Symfony\Component\HttpFoundation\Request;
-use Symfony\Component\HttpFoundation\RedirectResponse;
-use Symfony\Component\HttpFoundation\JsonResponse;
-use App\Entity\NmdPartner;
-use App\Entity\NmdUserConfiguration;
-use App\Entity\User;
-use Symfony\Component\Security\Core\Security;
-use Symfony\Component\Security\Core\User\UserInterface;
-use DateTime;
-use App\Entity\NmdCategorieProduct;
-
-
-use App\Form\FormationType;
-use App\Form\ModuleType;
-use App\Form\LevelType;
-use App\Entity\Formation;
-use App\Entity\Module;
-use App\Entity\Level;
-use App\Entity\Question;
-use App\Entity\Pallier;
-use App\Entity\Type;
-use App\Entity\Proposition;
 use App\Entity\Video;
-use App\Repository\ModuleRepository;
-use App\Repository\NmdProductRepository;
-use App\Repository\PallierRepository;
-use App\Repository\PropositionRepository;
-use App\Repository\VideoRepository;
-use Doctrine\ORM\Mapping\Id;
-use phpDocumentor\Reflection\Types\Null_;
-use PhpParser\Node\Expr\Cast\Object_;
-use PhpParser\Node\Name;
-use PHPUnit\TextUI\XmlConfiguration\File;
-use Symfony\Component\Validator\Constraints\Json;
 
 /**
  * @Route("/upload", name="upload_")
@@ -58,9 +25,9 @@ class upload extends AbstractController
         
 
         if (isset($_POST['submit'])) {
-            $message = sprintf('Création de question abandonnée');
+            $message = sprintf('ajout de video abandonnée');
             $this->addFlash('', $message);
-            return $this->redirectToRoute('module_formations');
+            return $this->redirectToRoute('video_listevideos');
         }
 
         $entityManager = $this->getDoctrine()->getManager();
@@ -80,7 +47,7 @@ class upload extends AbstractController
 
                    
         
-$target_dir = "C:/Users/nolan/Nomad-2/public/assets/";
+$target_dir = "C:/Users/nolan/Nomad-2/public/assets/User/";
 $target_file = $target_dir . basename($_FILES["fileToUpload"]["name"]);
 $uploadOk = 1;
 $videoFileType = strtolower(pathinfo($target_file,PATHINFO_EXTENSION));
@@ -130,6 +97,6 @@ if ($uploadOk == 0) {
   
     }
 
-        return $this->redirectToRoute('module_listeVideos');
+        return $this->redirectToRoute('video_listeVideos');
 }
 }

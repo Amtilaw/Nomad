@@ -96,7 +96,7 @@
 										<div class="iconExporter">
 											<i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
 										</div>
-										<a class="iconHerarchy" href="{{ path('module_createFormation') }}">
+										<a class="iconHerarchy" href="{{ path('Formation_createFormation') }}">
 											<i class="material-icons">add</i>
 										</a>
 										
@@ -160,7 +160,7 @@
 															<td></td>
 															<td></td>
 															<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.id}}</td>
-															<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px; cursor: pointer;" onclick='location.href="{{ path('module_listequestion',{moduleId: module.id}) }}"'>{{module.nom}}</td>
+															<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px; cursor: pointer;" onclick='location.href="{{ path('Question_listequestion',{moduleId: module.id}) }}"'>{{module.nom}}</td>
 															<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px;">{{module.level}}</td>
 															<td></td>
                                                             <td class="blackIcon">
@@ -183,7 +183,7 @@
 															<td></td>
 															<td></td>
 															<td></td>
-															<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px; cursor: pointer;" onclick='location.href="{{ path('module_listequestion',{moduleId: module.id}) }}"'>{{module.id}}</td>
+															<td style="white-space: nowrap; text-overflow:ellipsis; overflow: hidden; max-width:1px; cursor: pointer;" onclick='location.href="{{ path('Question_listequestion',{moduleId: module.id}) }}"'>{{module.id}}</td>
 															<td></td>
 
 															<td></td>
@@ -225,7 +225,7 @@
 															<div class="md-card">
 																<div class="md-card-content">
 																	<h4 class="heading_b uk-margin-bottom">{{formation.nom}}</h4>
-																	<a href="{{ path('module_listequestion',{moduleId: module.id}) }}">
+																	<a href="{{ path('Question_listequestion',{moduleId: module.id}) }}">
 																		Module {{ module.nom }}
 																	</a>
 																	<br>
@@ -351,7 +351,7 @@ expandsV[count - 1].innerHTML = `
 
 function showAlertDelete(formation, formationId){
 	let txt = "Confirmer la supression de la formation : " + formation;
-	let url = '{{ path('module_deleteFormation', {formationId: 'formationIds'}) }}';
+	let url = '{{ path('Formation_deleteFormation', {formationId: 'formationIds'}) }}';
 	url = url.replace("formationIds", formationId);
 	if (confirm(txt)){
 		//go to deleteFormation

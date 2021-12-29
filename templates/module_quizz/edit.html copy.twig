@@ -53,7 +53,7 @@
 							<h1>Modification d'une question</h1>
 							<div style="margin:30px">
 
-								<form action="{{ path('module_edit',{categoryId}) }}" method="POST">
+								<form action="{{ path('Question_edit',{categoryId}) }}" method="POST">
 
 
 									<div class="md-card-content">
@@ -318,7 +318,7 @@ $("#newPropsAdd").append(newProps);
 }
 
 function getPalliersByVideo(idVideo) {
-const url = "{{ path('module_edit',{categoryId}) }}";
+const url = "{{ path('Question_edit',{categoryId}) }}";
 
 console.log(idVideo);
 

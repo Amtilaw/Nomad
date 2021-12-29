@@ -84,9 +84,21 @@ class ReponseQuizzController extends AbstractController
         $proposition_attandue = [];
         $i = 0;
          foreach ($toute_les_proposition as $proposition) {
+            foreach ($reponse_par_module_utilisateur as $reponse) {
+
+            $idprop = $proposition->getId();
+            // dump($idprop);
             
-            if ($proposition->getId() == $reponse_par_module_utilisateur[$i]["proposition_id"]) {
-          
+            
+            if (isset($reponse[$i]["proposition_id"])) {
+                $idrep = $reponse[$i]["proposition_id"];
+            }
+                // dump($idrep);
+                if (isset($idrep)) {
+                    dump($idrep);
+                }  
+            if (isset($reponse[$i]["proposition_id"]) && $idprop  == $idrep) {
+  
             if ($proposition->getIsCorrect() == 1) {
                     dump($proposition);
                 $idquestion= $proposition->getIdQuestion();
@@ -101,11 +113,19 @@ class ReponseQuizzController extends AbstractController
 
                 ]; 
             }
-            $i=$i++;
+        }else {
+                    $proposition_attandue = [
+                        "prop" => NULL,
+                        "ques" => 0,
+                        "libelle" => "LIBRE",
+
+                    ]; 
+            }
+            $i=$i+1;
         }
-           
-         }
-        
+    }
+
+
 
         return $this->render('reponse_quizz/listereponse.html.twig', [
             'pageTitle' => 'reponse',

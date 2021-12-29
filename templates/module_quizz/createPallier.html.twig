@@ -124,7 +124,7 @@
 
       let ul = document.getElementById("ulMenue");
     let li = document.createElement("li");
-     li.innerHTML = `<a href="{{ path('module_formations') }}">
+     li.innerHTML = `<a href="{{ path('Formation_formations') }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>
@@ -137,7 +137,7 @@
 
       ul.prepend(li);
       li = document.createElement("li");
-     li.innerHTML = `<a href="{{ path('module_listequestion', {moduleId: idModule}) }}">
+     li.innerHTML = `<a href="{{ path('Question_listequestion', {moduleId: idModule}) }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>

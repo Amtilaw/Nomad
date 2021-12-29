@@ -93,7 +93,7 @@
                                         <div class="floatLeftIcon">
                                             <div class="iconGoSearch">
                                                 
-                                                    <a href="{{ path('module_createFormation') }}">
+                                                    <a href="{{ path('Formation_createFormation') }}">
                                                         <i class="material-icons">account_circle</i>
                                                     </a>
 
@@ -150,7 +150,7 @@
                                                             <td></td>
                                                                 <td class="blackIcon">
                                                                     <span>
-                                                                       <a href="{{ path('module_editPallier',{pallierId: p.id}) }}">
+                                                                       <a href="{{ path('Question_editPallier',{pallierId: p.id}) }}">
                                                                             <i class="material-icons">edit</i>
                                                                         </a>
                                                                     </span>
@@ -252,7 +252,7 @@
        
       let ul = document.getElementById("ulMenue");
     let li = document.createElement("li");
-     li.innerHTML = `<a href="{{ path('module_formations') }}">
+     li.innerHTML = `<a href="{{ path('Formation_formations') }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>
@@ -265,7 +265,7 @@
 
       ul.prepend(li);
       li = document.createElement("li");
-     li.innerHTML = `<a href="{{ path('module_listequestion', {moduleId: moduleId}) }}">
+     li.innerHTML = `<a href="{{ path('Question_listequestion', {moduleId: moduleId}) }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>

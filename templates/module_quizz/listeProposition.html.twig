@@ -97,7 +97,7 @@
                                         <div class="floatLeftIcon">
                                             <div class="iconGoSearch">
                                                 
-                                                    <a href="{{ path('module_createFormation') }}">
+                                                    <a href="{{ path('Formation_createFormation') }}">
                                                         <i class="material-icons">account_circle</i>
                                                     </a>
 
@@ -107,7 +107,7 @@
                                             <div class="iconExporter">
                                                 <i class="material-icons" id="iconExporter" onclick="exportToCsv()">file_download</i>
                                             </div>
-                                            <a class="iconHerarchy" href="{{ path('module_createProposition',{questionId: questionId}) }}">
+                                            <a class="iconHerarchy" href="{{ path('Proposition_createProposition',{questionId: questionId}) }}">
                                                 <i class="material-icons">add</i>
                                             </a>
                                         </div>
@@ -155,12 +155,12 @@
                                                             <td></td>
                                                                 <td class="blackIcon">
                                                                     <span>
-                                                                       <a href="{{ path('module_editProposition',{PropositionId: v.id}) }}">
+                                                                       <a href="{{ path('Proposition_editProposition',{PropositionId: v.id}) }}">
                                                                             <i class="material-icons">edit</i>
                                                                         </a>
                                                                     </span>
                                                                     <span >
-                                                                    <a href="{{ path('module_deleteProposition',{PropositionId: v.id}) }}">
+                                                                    <a href="{{ path('Proposition_deleteProposition',{PropositionId: v.id}) }}">
                                                                         <i class="material-icons">delete</i>
                                                                         
                                                                     </span>
@@ -257,7 +257,7 @@
         }
        let li = document.createElement("li");
      
-                li.innerHTML = `<a href="{{ path('module_formations') }}">
+                li.innerHTML = `<a href="{{ path('Formation_formations') }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>
@@ -270,7 +270,7 @@
       let ul = document.getElementById("ulMenue");
       ul.prepend(li);
     li = document.createElement("li");
-     li.innerHTML = `<a href="{{ path('module_formations') }}">
+     li.innerHTML = `<a href="{{ path('Formation_formations') }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>
@@ -283,7 +283,7 @@
 
       ul.prepend(li);
       li = document.createElement("li");
-     li.innerHTML = `<a href="{{ path('module_listequestion', {moduleId: idModule}) }}">
+     li.innerHTML = `<a href="{{ path('Question_listequestion', {moduleId: idModule}) }}">
                 <div class="md-list-addon-element">
                     <i class="md-list-addon-icon material-icons">ii</i>
                 </div>

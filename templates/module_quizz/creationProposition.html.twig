@@ -50,7 +50,7 @@
 
 							<h1>Création proposition</h1>
 							<div style="margin:30px">
-								<form action="{{ path('module_createProposition',{questionId:questionId}) }}" method="POST">
+								<form action="{{ path('Proposition_createProposition',{questionId:questionId}) }}" method="POST">
 <div class="md-card-content">
 	<div class="uk-grid">
 		<div class="uk-width-1-1">
@@ -167,7 +167,7 @@ getPalliersByVideo(this.value);
 
 
 function getPalliersByVideo(idVideo) {
-const url = "{{ path('module_createQuestion') }}";
+const url = "{{ path('Question_createQuestion') }}";
 
 console.log(idVideo);
 

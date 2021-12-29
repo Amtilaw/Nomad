@@ -50,7 +50,7 @@
 
 							<h1>Modification d'une question</h1>
 							<div style="margin:30px">
-								<form action="{{ path('module_edit',{categoryId}) }}" method="POST">
+								<form action="{{ path('Question_edit',{categoryId}) }}" method="POST">
 
 
 									<div class="md-card-content">
@@ -114,7 +114,7 @@
 																<label for="lvl" class="form-label">Pallier selection</label>
 
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
-                                                                    <option value="{{palier_actuel.id}}">palier actuelle : {{palier_actuel.titre_groupe_question}}</option>
+                                                                    <option value="{{palier_actuel.id}}">palier actuelle : {{titre_actuel}}</option>
 
 																	<option value="0">Nouveau pallier</option>
 																	{% for pallier in listePallier %}
@@ -211,7 +211,7 @@ getPalliersByVideo(this.value);
 
 
 function getPalliersByVideo(idVideo) {
-const url = "{{ path('module_edit', {categoryId : categoryId}) }}";
+const url = "{{ path('Question_edit', {categoryId : categoryId}) }}";
 
 
 
