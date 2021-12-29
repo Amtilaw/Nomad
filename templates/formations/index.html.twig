@@ -52,8 +52,8 @@
 					<div
 						class="md-card-content mostly-customized-scrollbar mainScroll">
 
-					<button class="md-btn md-btn-primary submitbTN" type="button" onclick="toggleListing()">
-							Changer d'affichage
+					<button class="md-btn md-btn-primary submitbTN" type="button" onclick="toggleListing(this)">
+							Afficher en listes
 						</button>
 
 						<!-- Tabs content -->
@@ -74,7 +74,7 @@
 									</div>
 								</div>
 
-
+							<div class="table-responsive uk-overflow-container" id="tabListing" hidden>
 								<div class="blogFilter">
 									<div class="filterTitle">
 										<span class="text_dark">
@@ -102,8 +102,6 @@
 										
 									</div>
 								</div>
-
-								<div class="table-responsive uk-overflow-container" id="tabListing" hidden>
 									<table class="table uk-table uk-table-hover uk-table-align-vertical uk-table-nowrap tablesorter tablesorter-altair" id="ts_align">
 										<thead>
 											<tr>
@@ -247,6 +245,7 @@
 					</div>
 
 				</div>
+			</div>
 
 				<div class="uk-width-large-1-5 uk-width-medium-1-3 js_collapsible_column collapsed">
 
@@ -281,22 +280,21 @@
 <script src="{{asset('bower_components/select2/dist/js/select2.min.js')}}"></script>
 <script>
 
-function toggleListing() {
+function toggleListing(button) {
   var tabs = document.getElementById("tabListing");
   var cards = document.getElementById("cardListing");
   if (tabs.hidden == false) {
     $(tabs).fadeOut("slow");
-	cards.hidden = false;
 	$(cards).fadeIn("slow");
+	cards.hidden = false;
 	tabs.hidden = true;
-	this.innerHTML = "Affichage en liste";
   } else {
     $(cards).fadeOut("slow");
-	tabs.hidden = false;
 	$(tabs).fadeIn("slow");
+	tabs.hidden = false;
 	cards.hidden = true;
-	this.innerHTML = "Affichage en cartes";
   }
+  button.textContent = (tabs.hidden?"Afficher en listes" : "Afficher en cartes");
 }
 
 

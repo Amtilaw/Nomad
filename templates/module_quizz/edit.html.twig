@@ -69,7 +69,7 @@
 
 															<div class="uk-width-1 md-input-filled">
 																<br>
-																<label for="exampleFormControlInput1" class="form-label">Libelle de la question</label>
+																<label for="exampleFormControlInput1" class="form-label">Libellé de la question</label>
 																<input type="text" class="md-input label-fixed customizedInput" id="libelleQuestion" placeholder="Est-ce une question?" name="questionLibelle" value="{{ categoryInfos.libelle }}">
 															</div>
 
@@ -77,16 +77,16 @@
 															<div class="uk-width-medium-1-2 md-input-filled">
 																<label for="lvl" class="form-label">Difficulté de la question</label>
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="lvl">
-																	<option value="{{level.id}}">level precedament selectioner : {{level.nom}}</option>
+																	<option value="{{level.id}}">Niveau précédemment sélectionné: {{level.nom}}</option>
 																	{% for level in levels %}
 																		<option value="{{ level.id }}" {{ level.selected }}>{{ level.nom }}</option>
 																	{% endfor %}
 																</select>
 															</div>
 															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">type de question</label>
+																<label for="lvl" class="form-label">Type de question</label>
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="type">
-																	<option value="{{type.id}}">type actuelle : {{type.nom}}</option>
+																	<option value="{{type.id}}">Type actuel: {{type.nom}}</option>
 																	{% for type in types %}
 																		<option value="{{ type.id }}">{{ type.nom }}</option>
 																	{% endfor %}
@@ -100,10 +100,10 @@
 														<div class="uk-grid" data-uk-grid-margin>
 
 															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">video selection</label>
+																<label for="lvl" class="form-label">Sélection de la vidéo</label>
                                                     
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="video" id="idVideoForm">
-																	<option value="{{video.id}}" selected>video actuelle : {{video.url}}</option>
+																	<option value="{{video.id}}" selected>Vidéo actuelle: {{video.url}}</option>
 																	{% for video in videos %}
 																		<option value="{{ video.id }}">{{ video.url }}</option>
 																	{% endfor %}
@@ -111,7 +111,7 @@
 															</div>
 
 															<div class="uk-width-medium-1-2 md-input-filled">
-																<label for="lvl" class="form-label">Pallier selection</label>
+																<label for="lvl" class="form-label">Sélection du pallier</label>
 
 																<select class="md-input label-fixed customizedInput" aria-label="Default select example" name="palliers" id="idPallier">
                                                                     <option value="{{palier_actuel.id}}">palier actuelle : {{titre_actuel}}</option>
@@ -125,12 +125,12 @@
 															<div id="newPallier" class="uk-width-1 md-input-filled">
 																<div class="uk-width-1 md-input-filled">
 																	<br>
-																	<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette video</label>
+																	<label for="exampleFormControlInput1" class="form-label">Ajouter un nouveau pallier pour cette vidéo</label>
 																	<input type="text" class="md-input label-fixed customizedInput" id="pallier" placeholder="minute.seconde" name="pallier">
 																</div>
 																<div class="uk-width-1 md-input-filled">
 																	<br>
-																	<label for="exampleFormControlInput1" class="form-label">titre du pallier</label>
+																	<label for="exampleFormControlInput1" class="form-label">Titre du pallier</label>
 																	<input type="text" class="md-input label-fixed customizedInput" id="titrePallier" placeholder="" name="titrePallier">
 																</div>
 
@@ -148,7 +148,7 @@
 						</div>
 						<br>
 						<div class="col-12">
-							<button class="btn btn-primary" type="submit"> la question</button>
+							<button class="btn btn-primary" type="submit">Ajouter la question</button>
 							<button class="md-btn md-btn-default cancelBtn" name="submit" value="annuler" href="javascript:void(0)">ANNULER</button>
 						</div>
 					</form>
